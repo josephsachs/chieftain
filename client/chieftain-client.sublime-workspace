@@ -1,0 +1,393 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"text-",
+				"text-orientation"
+			],
+			[
+				"ali",
+				"vertical-align"
+			],
+			[
+				"address",
+				"address_line_2"
+			],
+			[
+				"inline",
+				"inline-block"
+			],
+			[
+				"Patient",
+				"PatientSexChoice"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "package.json",
+			"settings":
+			{
+				"buffer_size": 0,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"json",
+				"JSON Reindent: reindent file or selection"
+			],
+			[
+				"python",
+				"Start Python Live Coding"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Install Package Control"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/josephsachs/Documents/dev/chieftain/client"
+	],
+	"file_history":
+	[
+		"/Users/josephsachs/Documents/dev/clickedin/index.html",
+		"/Users/josephsachs/Desktop/pseudo-linkedin.html",
+		"/Users/josephsachs/Documents/dev/authservice-server-src/package.json",
+		"/Users/josephsachs/Documents/curseforge/minecraft/Instances/Dark Continent/config/iceandfire-common.toml",
+		"/Users/josephsachs/Documents/curseforge/minecraft/Instances/Dark Continent/config/incontrol/spawn.json",
+		"/Users/josephsachs/Documents/curseforge/minecraft/Instances/Dark Continent/config/epicsiegemod-common.toml",
+		"/Users/josephsachs/Documents/curseforge/minecraft/Instances/Dark Continent/config/grimoireofgaia-spawning.toml",
+		"/Users/josephsachs/Documents/curseforge/minecraft/Instances/Dark Continent/config/grimoireofgaia-common.toml",
+		"/Users/josephsachs/Documents/curseforge/minecraft/Instances/Dark Continent/config/twilightforest-common.toml",
+		"/Users/josephsachs/Documents/curseforge/minecraft/Instances/Dark Continent/config/incontrol/summonaid.json",
+		"/Users/josephsachs/Documents/curseforge/minecraft/Instances/Dark Continent/config/incontrol/spawner.json",
+		"/Users/josephsachs/Documents/curseforge/minecraft/Instances/Dark Continent/epicsiegemod.toml",
+		"/Users/josephsachs/IdleFantasyGPT/Assets/Utils/ChatGPTAPI.cs",
+		"/Users/josephsachs/Documents/dev/minare/.gitignore",
+		"/Users/josephsachs/Documents/dev/minare/start.sh",
+		"/Users/josephsachs/Documents/dev/project-minare/vertx/src/main/java/com/minare/controller/WebSocketController.java",
+		"/Users/josephsachs/Documents/dev/project-minare/start.sh",
+		"/Users/josephsachs/Documents/dev/project-minare/vertx/src/main/java/com/minare/scenario/MapBuilder.java",
+		"/Users/josephsachs/Documents/dev/project-minare/vertx/src/main/java/com/minare/world/RandomNumberHandler.java",
+		"/Users/josephsachs/Documents/dev/project-minare/vertx/src/main/java/com/minare/controller/MapViewController.java",
+		"/Users/josephsachs/Documents/dev/project-minare/vertx/src/main/java/com/minare/controller/HelloController.java",
+		"/Users/josephsachs/Documents/dev/project-minare/vertx/src/main/java/com/minare/MainVerticle.java",
+		"/Users/josephsachs/Documents/dev/project-minare/vertx/start-vertx.sh",
+		"/Users/josephsachs/Documents/dev/project-minare/.gitignore",
+		"/Users/josephsachs/Documents/dev/project-minare/vertx/pom.xml",
+		"/Users/josephsachs/Downloads/generated-lorebook-v2.lorebook",
+		"/Users/josephsachs/Downloads/Example.lorebook.json",
+		"/Users/josephsachs/Downloads/generated-lorebook.json",
+		"/Users/josephsachs/Documents/dev/setup_psyche.sh",
+		"/Users/josephsachs/Documents/dev/psyche/psyche/src/index.js",
+		"/Users/josephsachs/PsycheV1/Assets/Core/Mindlet.cs",
+		"/Users/josephsachs/PsycheV1/Assets/Core/IController.cs",
+		"/Users/josephsachs/PsycheV1/Assets/Core/CoreController.cs",
+		"/Users/josephsachs/Documents/tokyopicnic-tropes.html",
+		"/Users/josephsachs/IdleFantasyGPT/Assets/Configs/openai-api.json",
+		"/Users/josephsachs/Documents/dev/muds/eclipse/typeclasses/characters.py",
+		"/Users/josephsachs/Documents/dev/muds/eclipse/commands/cmd_skills.py",
+		"/Users/josephsachs/Documents/dev/muds/eclipse/world/world_data.json",
+		"/Users/josephsachs/Documents/dev/muds/eclipse/reset.sh",
+		"/Users/josephsachs/Documents/dev/muds/nereids/typeclasses/npc_builder.py",
+		"/Users/josephsachs/Documents/dev/muds/nereids/typeclasses/npc.py",
+		"/Users/josephsachs/Documents/dev/langchain-tutorial/tutorial1.py",
+		"/Users/josephsachs/Documents/dev/langchain-tutorial/tutorial2.py",
+		"/Users/josephsachs/Documents/dev/langchain-tutorial/.env",
+		"/Users/josephsachs/Documents/dev/langchain-tutorial/alphavantage_test.py",
+		"/Users/josephsachs/Library/Application Support/Sublime Text 3/Packages/User/langchain-tutorial-python.sublime-build",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/src/typeclasses/Aamir,Aaron,Abbey,Abbie,Abbot,Abbott,Abby,Abdel,Ab",
+		"/Users/josephsachs/Documents/dev/eclipse-wanderers/package.json",
+		"/Users/josephsachs/Documents/Paradox Interactive/Crusader Kings III/mod/xaxia.mod",
+		"/Users/josephsachs/Documents/Paradox Interactive/Crusader Kings III/mod/xaxia(1).mod",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/src/world/test.py",
+		"/Users/josephsachs/Documents/dev/muds/station-to-station/world/test.py",
+		"/Users/josephsachs/Documents/dev/muds/station-to-station/world/boilerplate.py",
+		"/Users/josephsachs/Documents/dev/meathooks-js/params.json",
+		"/Users/josephsachs/Documents/dev/meathooks-js/index.js",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/src/typeclasses/generators/language_models/language_model.py",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/src/world/scripts.py",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/codedeploy/copy_src.sh",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/src/typeclasses/generators.py",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/src/world/language_model.py",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/src/world/nai_api.py",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/src/typeclasses/dialog.py",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/src/typeclasses/NPC.py",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/codedeploy/reload_evennia.sh",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/appspec.yml",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/README.md",
+		"/Users/josephsachs/Documents/dev/evennia-aws/appspec.yml",
+		"/Users/josephsachs/Documents/dev/evennia-aws/codedeploy/reload_evennia.sh",
+		"/Users/josephsachs/Documents/dev/evennia-aws/codedeploy/copy_src.sh",
+		"/Users/josephsachs/Documents/dev/evennia-aws/cloudformation/main.yml",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/codedeploy/install.sh",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/launch-data/start_evennia.sh",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/codedeploy/restart_server.sh",
+		"/Users/josephsachs/Documents/dev/evennia-aws/launch-data/start_evennia.sh",
+		"/Users/josephsachs/Documents/dev/evennia-aws/codedeploy/install.sh",
+		"/Users/josephsachs/Documents/dev/evennia-aws/README.md",
+		"/Users/josephsachs/Documents/dev/gala-eclipse/launch-data/setup_extras.sh",
+		"/Users/josephsachs/Documents/dev/evennia-aws/src/.gitignore",
+		"/Users/josephsachs/Documents/dev/evennia-aws/.gitignore",
+		"/Users/josephsachs/Documents/dev/evennia-aws/launch-data/install_evennia.sh",
+		"/Users/josephsachs/Documents/dev/evennia-aws/launch-data/provision.sh",
+		"/Users/josephsachs/Documents/dev/evennia-aws/launch-data/install_python3.sh",
+		"/Users/josephsachs/Documents/dev/evennia-aws/launch-data/setup_extras.sh",
+		"/Users/josephsachs/Documents/dev/evennia-aws/codedeploy-scripts/restart_server.sh",
+		"/Users/josephsachs/Documents/dev/evennia-ai/cloudformation/create_venv.sh",
+		"/Users/josephsachs/Documents/dev/evennia-ai/cloudformation/install_pip.sh",
+		"/Users/josephsachs/Documents/dev/evennia-ai/cloudformation/master.yml",
+		"/Users/josephsachs/Documents/dev/evennia-ai/cloudformation/pipeline.yml",
+		"/Users/josephsachs/Documents/dev/evennia-ai/cloudformation/create_evennia_project.sh",
+		"/Users/josephsachs/Documents/dev/evennia-ai/cloudformation/master2.yml",
+		"/Users/josephsachs/Downloads/hazulog",
+		"/Users/josephsachs/Documents/dev/meathooks/index2.js",
+		"/Users/josephsachs/Documents/dev/novelai-api/.pre-commit-config.yaml",
+		"/Users/josephsachs/Documents/dev/novelai-api/README.md",
+		"/Users/josephsachs/Documents/dev/meathooks/package-lock.json",
+		"/Users/josephsachs/Documents/Paradox Interactive/Crusader Kings III/mod/Grail.mod",
+		"/Users/josephsachs/Documents/Paradox Interactive/Crusader Kings III/mod/ugc_2253278582.mod",
+		"/Users/josephsachs/Documents/Paradox Interactive/Crusader Kings III/mod/ugc_2241203093.mod",
+		"/Users/josephsachs/Documents/Paradox Interactive/Crusader Kings III/mod/ugc_2524797018.mod",
+		"/Users/josephsachs/Documents/Paradox Interactive/Crusader Kings III/mod/Grail/descriptor.mod",
+		"/Users/josephsachs/Desktop/rpgm-parsing-tool.html",
+		"/Users/josephsachs/Desktop/Map001-JP.json",
+		"/Users/josephsachs/Library/Application Support/Steam/steamapps/common/Europa Universalis IV/localisation/countries_l_english.yml",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/common/countries/Colombia.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/history/countries/COL - Colombia.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done.mod",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/common/country_tags/00_countries.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/customizable_localization/00_start_screen.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/customizable_localization/00_customizable_localization.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/common/scripted_triggers/00_scripted_triggers_FR.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/localisation/converted_heresies_l_english.yml",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/customizable_localization/ZZZ_added_converter_customizable_localization.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/Shirazid/common/country_tags/00_countries.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/Shirazid/localisation/replace/converter_l_english.yml",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/Shirazid/localisation/xyu_ideas_l_english.yml",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/Shirazid/common/ideas/01_extra_ideas_b.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/Shirazid/common/scripted_triggers/00_scripted_triggers_FR.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/Shirazid/history/countries/BRZ - Brazil.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/Shirazid/common/countries/x_x_2232.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/Shirazid/common/countries/x_x_2775.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/localisation/xyu_ideas_l_english.yml",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/common/ideas/01_extra_ideas_b.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/common/custom_ideas/00_adm_custom_ideas.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/common/religions/99_converted_dynamic_faith_107-from-shiite.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/common/ideas/00_basic_ideas.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/common/custom_ideas/02_newer_ideas.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/common/government_reforms/ZZZ_enhanced_converter_reforms_feudal.txt",
+		"/Users/josephsachs/Documents/Paradox Interactive/Europa Universalis IV/mod/1437_04_29_Done/common/event_modifiers/99_converter_modifiers.txt"
+	],
+	"find":
+	{
+		"height": 24.0
+	},
+	"find_in_files":
+	{
+		"height": 98.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"scrollbar_highlights": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"use_gitignore": false,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "package.json",
+					"selected": true,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JSON/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"stack_multiselect": false,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 24.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 377.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/User/langchain-tutorial-python.sublime-build",
+	"project": "chieftain-client.sublime-project",
+	"replace":
+	{
+		"height": 44.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 501.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 264.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
