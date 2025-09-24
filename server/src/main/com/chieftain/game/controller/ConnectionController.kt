@@ -1,4 +1,4 @@
-package com.minare.game.controller
+package com.chieftain.game.controller
 
 import com.minare.controller.ConnectionController
 import com.minare.core.transport.models.Connection

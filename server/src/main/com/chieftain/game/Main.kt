@@ -1,6 +1,6 @@
-package com.minare.game
+package com.chieftain.game
 
-import com.minare.Game.GameApplication
+import com.chieftain.Game.GameApplication
 import com.minare.core.MinareApplication
 import org.slf4j.LoggerFactory
 

@@ -1,4 +1,4 @@
-package com.minare.game.controller
+package com.chieftain.game.controller
 
 import com.minare.controller.OperationController
 import com.minare.core.operation.interfaces.MessageQueue

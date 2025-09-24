@@ -1,4 +1,4 @@
-package com.minare.game.controller
+package com.chieftain.game.controller
 
 import com.google.inject.Provider
 import com.minare.application.interfaces.AppState

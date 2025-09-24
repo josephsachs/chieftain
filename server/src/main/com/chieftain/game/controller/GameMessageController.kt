@@ -1,4 +1,4 @@
-package com.minare.game.controller
+package com.chieftain.game.controller
 
 import com.google.inject.Inject
 import com.google.inject.Singleton

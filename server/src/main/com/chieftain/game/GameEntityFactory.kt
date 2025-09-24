@@ -1,8 +1,8 @@
-package com.minare.game
+package com.chieftain.game
 
 import com.minare.core.entity.factories.EntityFactory
 import com.minare.core.entity.models.Entity
-import com.minare.game.models.Node
+import com.chieftain.game.models.Node
 import org.slf4j.LoggerFactory
 import javax.inject.Singleton
 import kotlin.reflect.KClass

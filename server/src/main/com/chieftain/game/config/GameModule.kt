@@ -1,4 +1,4 @@
-package com.minare.game.config
+package com.chieftain.game.config
 
 import com.google.inject.PrivateModule
 import com.google.inject.Provides
@@ -10,11 +10,11 @@ import com.minare.controller.MessageController
 import com.minare.controller.OperationController
 import com.minare.core.config.DatabaseNameProvider
 import com.minare.core.entity.factories.EntityFactory
-import com.minare.game.GameEntityFactory
-import com.minare.game.controller.GameChannelController
-import com.minare.game.controller.GameConnectionController
-import com.minare.game.controller.GameMessageController
-import com.minare.game.controller.GameOperationController
+import com.chieftain.game.GameEntityFactory
+import com.chieftain.game.controller.GameChannelController
+import com.chieftain.game.controller.GameConnectionController
+import com.chieftain.game.controller.GameMessageController
+import com.chieftain.game.controller.GameOperationController
 import kotlinx.coroutines.CoroutineScope
 import org.slf4j.LoggerFactory
 import kotlin.coroutines.CoroutineContext

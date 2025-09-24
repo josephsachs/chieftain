@@ -1,9 +1,9 @@
-package com.minare.Game
+package com.chieftain.Game
 
 import com.minare.core.MinareApplication
-import com.minare.game.config.GameModule
-import com.minare.game.controller.GameChannelController
-import com.minare.game.NodeGraphBuilder
+import com.chieftain.game.config.GameModule
+import com.chieftain.game.controller.GameChannelController
+import com.chieftain.game.NodeGraphBuilder
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpHeaders
 import io.vertx.ext.web.Router

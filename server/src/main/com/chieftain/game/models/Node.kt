@@ -1,4 +1,4 @@
-package com.minare.game.models
+package com.chieftain.game.models
 
 import com.minare.core.entity.annotations.*
 import com.minare.core.entity.models.Entity

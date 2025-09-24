@@ -1,7 +1,7 @@
-package com.minare.game
+package com.chieftain.game
 
 import com.minare.core.entity.factories.EntityFactory
-import com.minare.game.models.Node
+import com.chieftain.game.models.Node
 import org.jgrapht.graph.DefaultEdge
 import org.jgrapht.graph.SimpleDirectedGraph
 import org.slf4j.LoggerFactory
