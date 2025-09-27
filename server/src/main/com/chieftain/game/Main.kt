@@ -1,14 +1,14 @@
-package com.chieftain.game
+package com.chieftain
 
-import com.chieftain.Game.GameApplication
+import com.chieftain.game.GameApplication
 import com.minare.core.MinareApplication
 import org.slf4j.LoggerFactory
 
 /**
  * Main entry point for running the Game application
  */
-object GameMain {
-    private val log = LoggerFactory.getLogger(GameMain::class.java)
+object Main {
+    private val log = LoggerFactory.getLogger(Main::class.java)
 
     @JvmStatic
     fun main(args: Array<String>) {

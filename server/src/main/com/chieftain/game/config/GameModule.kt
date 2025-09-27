@@ -54,5 +54,5 @@ class GameModule : PrivateModule(), DatabaseNameProvider {
         return CoroutineScope(coroutineContext)
     }
 
-    override fun getDatabaseName(): String = "node_graph"
+    override fun getDatabaseName(): String = "chieftain_game"
 }

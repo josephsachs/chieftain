@@ -1,4 +1,4 @@
-package com.chieftain.Game
+package com.chieftain.game
 
 import com.minare.core.MinareApplication
 import com.chieftain.game.config.GameModule
@@ -36,7 +36,7 @@ class GameApplication : MinareApplication() {
 
             channelController.setDefaultChannel(defaultChannelId)
 
-            initializeNodeGraph(defaultChannelId)
+            //initializeNodeGraph(defaultChannelId)
 
             log.info("Game application started with default channel: $defaultChannelId")
         } catch (e: Exception) {
