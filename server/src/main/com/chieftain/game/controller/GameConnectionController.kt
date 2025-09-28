@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class GameConnectionController @Inject constructor(
     private val channelController: GameChannelController,
-    private val syncCommandHandler: SyncCommandHandler
+    private val syncCommandHandler: SyncCommandHandler,
 ) : ConnectionController() {
     private val log = LoggerFactory.getLogger(GameConnectionController::class.java)
 

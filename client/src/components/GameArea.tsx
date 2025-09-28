@@ -1,13 +1,20 @@
 import { useState, useEffect, useRef } from 'react';
+import GameMap from './GameMap';
 
 interface LogMessage {
   timestamp: string;
   message: string;
 }
 
-interface MapTile {
+interface MapZone {
   _id: string;
   type: string;
+  state?: {
+    x?: number;
+    y?: number;
+    terrain?: string;
+    [key: string]: any;
+  };
   [key: string]: any;
 }
 
@@ -17,7 +24,7 @@ const GameArea = () => {
   const [connectionId, setConnectionId] = useState<string | null>(null);
   const [upSocket, setUpSocket] = useState<WebSocket | null>(null);
   const [downSocket, setDownSocket] = useState<WebSocket | null>(null);
-  const [mapData, setMapData] = useState<MapTile[]>([]);
+  const [mapData, setMapData] = useState<MapZone[]>([]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -69,10 +76,10 @@ const GameArea = () => {
           } else if (message.type === 'sync' && message.data) {
             if (message.data.entities) {
               addMessage(`Received ${message.data.entities.length} entities from sync`);
-              // Filter for MapTile entities
-              const mapTiles = message.data.entities.filter((e: any) => e.type === 'MapTile');
-              setMapData(mapTiles);
-              addMessage(`Found ${mapTiles.length} map tiles`);
+              // Filter for map_zone entities
+              const mapZones = message.data.entities.filter((e: any) => e.type === 'map_zone');
+              setMapData(mapZones);
+              addMessage(`Found ${mapZones.length} map zones`);
             }
           }
         } catch (e) {
@@ -123,12 +130,12 @@ const GameArea = () => {
             const updateCount = Object.keys(message.updates).length;
             addMessage(`Received batch update with ${updateCount} entities`);
             
-            // Update map data with any MapTile updates
+            // Update map data with any map_zone updates
             Object.values(message.updates).forEach((update: any) => {
-              if (update.type === 'MapTile') {
+              if (update.type === 'map_zone') {
                 setMapData(prev => {
                   const newData = [...prev];
-                  const index = newData.findIndex(tile => tile._id === update._id);
+                  const index = newData.findIndex(zone => zone._id === update._id);
                   if (index >= 0) {
                     newData[index] = update;
                   } else {
@@ -185,16 +192,18 @@ const GameArea = () => {
 
   return (
     <div className="h-screen w-screen bg-gray-900 flex flex-col">
-      {/* Debug Messages - inline on page */}
-      <div className="p-2">
+      {/* Debug Messages - fixed height */}
+      <div className="p-2 h-24 flex-shrink-0 overflow-hidden">
         <div className="text-green-400 font-mono text-xs mb-1">
           Status: {connectionStatus}
         </div>
-        {messages.slice(-5).map((msg, index) => (
-          <div key={index} className="text-green-400 font-mono text-xs leading-tight opacity-60">
-            <span className="text-gray-500">{msg.timestamp}</span> {msg.message}
-          </div>
-        ))}
+        <div className="h-16 overflow-hidden">
+          {messages.slice(-5).map((msg, index) => (
+            <div key={index} className="text-green-400 font-mono text-xs leading-tight opacity-60">
+              <span className="text-gray-500">{msg.timestamp}</span> {msg.message}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Game Map */}
@@ -202,20 +211,6 @@ const GameArea = () => {
         {connectionStatus === 'fully-connected' && (
           <GameMap mapData={mapData} />
         )}
-      </div>
-    </div>
-  );
-};
-
-// Placeholder GameMap component
-const GameMap = ({ mapData }: { mapData: MapTile[] }) => {
-  return (
-    <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-      <div className="text-white font-mono">
-        <div>Map loaded with {mapData.length} tiles</div>
-        <div className="text-sm text-gray-400 mt-2">
-          Canvas rendering will go here
-        </div>
       </div>
     </div>
   );

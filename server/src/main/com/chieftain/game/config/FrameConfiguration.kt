@@ -25,7 +25,7 @@ open class GameFrameConfiguration {
      * Trade-off: Faster = faster response and more reliable ordering but
      *     more processor overhead
      */
-    val frameDurationMs: Long = 500
+    val frameDurationMs: Long = 5000L
 
     /**
      *

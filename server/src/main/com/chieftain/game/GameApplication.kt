@@ -3,14 +3,14 @@ package com.chieftain.game
 import com.minare.core.MinareApplication
 import com.chieftain.game.config.GameModule
 import com.chieftain.game.controller.GameChannelController
-import com.chieftain.game.NodeGraphBuilder
+import com.chieftain.game.scenario.GameInitializer
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpHeaders
+import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.ext.web.handler.StaticHandler
 import io.vertx.kotlin.coroutines.await
-import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 /**
@@ -26,19 +26,23 @@ class GameApplication : MinareApplication() {
     @Inject
     lateinit var nodeGraphBuilder: NodeGraphBuilder
 
+    @Inject
+    lateinit var gameInitializer: GameInitializer
+
     /**
      * Application-specific initialization logic that runs after the server starts.
      */
     override suspend fun onApplicationStart() {
         try {
             val defaultChannelId = channelController.createChannel()
-            log.info("Created default channel: $defaultChannelId")
+            log.info("CHIEFTAIN: Created default channel: $defaultChannelId")
 
             channelController.setDefaultChannel(defaultChannelId)
 
             //initializeNodeGraph(defaultChannelId)
+            gameInitializer.initialize()
 
-            log.info("Game application started with default channel: $defaultChannelId")
+            log.info("CHIEFTAIN: Game application started with default channel: $defaultChannelId")
         } catch (e: Exception) {
             log.error("Failed to start Game application", e)
             throw e
@@ -55,7 +59,7 @@ class GameApplication : MinareApplication() {
             .listen(serverPort)
             .await()
 
-        log.info("Main application HTTP server started on port {}", serverPort)
+        log.info("Main application HTTP server started on port $serverPort")
 
         // Register specific routes FIRST
         router.get("/client").handler { ctx ->

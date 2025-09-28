@@ -3,6 +3,7 @@ package com.chieftain.game
 import com.minare.core.entity.factories.EntityFactory
 import com.minare.core.entity.models.Entity
 import com.chieftain.game.models.Node
+import com.chieftain.game.models.entity.MapZone
 import org.slf4j.LoggerFactory
 import javax.inject.Singleton
 import kotlin.reflect.KClass
@@ -18,6 +19,7 @@ class GameEntityFactory : EntityFactory {
 
     init {
         classes["node"] = Node::class.java
+        classes["map_zone"] = MapZone::class.java
         classes["entity"] = Entity::class.java
 
         log.info("Registered entity types: ${classes.keys.joinToString()}")
@@ -36,6 +38,7 @@ class GameEntityFactory : EntityFactory {
         val normalizedType = type.lowercase()
         return when (normalizedType) {
             "node" -> Node()
+            "map_zone" -> MapZone()
             else -> {
                 if (normalizedType != "entity") {
                     log.warn("Unknown entity type requested: $type, returning generic Entity")
@@ -49,6 +52,7 @@ class GameEntityFactory : EntityFactory {
     override fun <T : Entity> createEntity(entityClass: Class<T>): T {
         return when {
             Node::class.java.isAssignableFrom(entityClass) -> Node() as T
+            MapZone::class.java.isAssignableFrom(entityClass) -> MapZone() as T
             Entity::class.java.isAssignableFrom(entityClass) -> Entity() as T
             else -> {
                 log.warn("Unknown entity class requested: ${entityClass.name}, returning generic Entity")
@@ -64,6 +68,7 @@ class GameEntityFactory : EntityFactory {
     override fun getTypeList(): List<KClass<*>> {
         return listOf(
             Node::class,
+            MapZone::class,
             Entity::class
         )
     }

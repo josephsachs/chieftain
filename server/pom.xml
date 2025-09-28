@@ -13,7 +13,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <kotlin.version>1.9.22</kotlin.version>
-        <main.class>com.chieftain.Main</main.class>
+        <main.class>com.chieftain.game.Main</main.class>
     </properties>
 
     <dependencies>
@@ -22,11 +22,24 @@
             <artifactId>minare-framework</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.6</version>
+        </dependency>
     </dependencies>
 
     <build>
         <sourceDirectory>src/main</sourceDirectory>
         <finalName>chieftain-app</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
 
         <plugins>
             <plugin>
