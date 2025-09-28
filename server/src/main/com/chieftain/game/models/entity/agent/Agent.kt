@@ -1,6 +1,6 @@
 package chieftain.game.models.entity.agent
 
-abstract class Agent {
+interface Agent {
 
     companion object {
         enum class SkillType {

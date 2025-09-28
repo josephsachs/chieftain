@@ -1,6 +1,5 @@
 package com.chieftain.game.models.entity.mapfeature
 
-import com.chieftain.game.models.entity.MapZone.Companion.TerrainType
 import com.minare.core.entity.annotations.Child
 import com.minare.core.entity.annotations.EntityType
 import com.minare.core.entity.annotations.Mutable
@@ -12,9 +11,6 @@ class MapFeature: Entity() {
     init {
         type = "map_feature"
     }
-
-    @State
-    var entityReference: String = ""
 
     @State
     var location: Pair<Int, Int> = Pair(0, 0)
@@ -40,7 +36,7 @@ class MapFeature: Entity() {
             companion object {
                 fun fromString(value: String): MapFeatureType {
                     return MapFeatureType.values().find { it.value == value }
-                        ?: throw IllegalArgumentException("Unknown terrain type: $value")
+                        ?: throw IllegalArgumentException("Unknown map feature type: $value")
                 }
             }
 

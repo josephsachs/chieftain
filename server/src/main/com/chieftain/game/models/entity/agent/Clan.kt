@@ -8,10 +8,15 @@ import com.chieftain.game.models.entity.Religion
 import com.minare.core.entity.annotations.EntityType
 import com.minare.core.entity.annotations.Mutable
 import com.minare.core.entity.annotations.State
+import com.minare.core.entity.models.Entity
 import java.util.*
 
 @EntityType("clan")
-class Clan: Agent(), Polity {
+class Clan: Entity(), Agent, Polity {
+    init {
+        type = "clan"
+    }
+
     @State
     var name: String = ""
 
@@ -22,33 +27,33 @@ class Clan: Agent(), Polity {
     @State
     var culture: Culture.Companion.CultureGroup = Culture.Companion.CultureGroup.UNASSIGNED
 
-    @State
-    @Mutable
+    //@State
+    //@Mutable
     //@Relationship(type=RelationshipType.PEER)
-    var leader: Character = Character()
+    //var leader: Character = Character()
 
-    @State
-    @Mutable
+    //@State
+    //@Mutable
     //@Relationship(type=RelationshipType.PEER)
-    var religion: Religion = Religion()
+    //var religion: Religion = Religion()
 
-    @State
-    @Mutable
-    var depot: Depot = Depot()
+    //@State
+    //@Mutable
+    //var depot: Depot = Depot()
 
-    @State
-    @Mutable
-    var skills: Map<String, Int> = mapOf()
+    //@State
+    //@Mutable
+    //var skills: Map<String, Int> = mapOf()
 
     @State
     @Mutable
     var location: Pair<Int, Int> = Pair(0, 0)
 
-    @State
-    @Mutable
-    var path: Queue<Pair<Int, Int>>? = null
+    //@State
+    //@Mutable
+    //var path: Queue<Pair<Int, Int>>? = null
 
-    @State
-    @Mutable
-    var memory: AgentMemory = AgentMemory()
+    //@State
+    //@Mutable
+    //var memory: AgentMemory = AgentMemory()
 }

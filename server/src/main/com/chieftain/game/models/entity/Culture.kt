@@ -22,7 +22,7 @@ class Culture {
             companion object {
                 fun fromString(value: String): CultureGroup {
                     return CultureGroup.values().find { it.value == value }
-                        ?: throw IllegalArgumentException("Unknown terrain type: $value")
+                        ?: throw IllegalArgumentException("Unknown culture group: $value")
                 }
             }
 

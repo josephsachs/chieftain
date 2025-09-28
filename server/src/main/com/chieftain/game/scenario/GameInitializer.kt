@@ -18,7 +18,7 @@ class GameInitializer @Inject constructor(
         verticleLogger.logInfo("Chieftain: Initializing map")
 
         mapInitializer.initialize()
-        //agentInitializer.initialize(agentData)
+        agentInitializer.initialize()
 
         vertx.eventBus().publish(ADDRESS_INITIALIZE_GAME_COMPLETE, JsonObject())
 

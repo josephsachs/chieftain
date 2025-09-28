@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
+import MapRenderer from './MapRenderer';
 
 interface MapZone {
   _id: string;
@@ -18,20 +19,9 @@ interface GameMapProps {
   mapData: MapZone[];
 }
 
-const TERRAIN_COLORS: { [key: string]: string } = {
-  GRASSLAND: '#4CAF50',
-  MEADOW: '#8BC34A',
-  SCRUB: '#CDDC39',
-  WOODLAND: '#2E7D32',
-  ROCKLAND: '#795548',
-  DRYLAND: '#FFC107',
-  // Add more terrain types as needed
-};
-
-const DEFAULT_COLOR = '#9E9E9E';
-
 const GameMap: React.FC<GameMapProps> = ({ mapData }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rendererRef = useRef<MapRenderer | null>(null);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 });
@@ -40,22 +30,20 @@ const GameMap: React.FC<GameMapProps> = ({ mapData }) => {
   const [infoPanelPos, setInfoPanelPos] = useState({ x: 0, y: 0 });
 
   // Hex grid constants
-  const HEX_WIDTH = 96;
-  const HEX_HEIGHT = 96;
   const HEX_RADIUS = 48;
   const BORDER_PADDING = 50;
 
-  // Calculate hex vertices for flat-top hexagon
-  const getHexVertices = (centerX: number, centerY: number): [number, number][] => {
-    const vertices: [number, number][] = [];
-    for (let i = 0; i < 6; i++) {
-      const angle = (Math.PI / 3) * i;
-      const x = centerX + HEX_RADIUS * Math.cos(angle);
-      const y = centerY + HEX_RADIUS * Math.sin(angle);
-      vertices.push([x, y]);
+  // Initialize renderer when canvas is ready
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    try {
+      rendererRef.current = new MapRenderer(canvas);
+    } catch (error) {
+      console.error('Failed to initialize MapRenderer:', error);
     }
-    return vertices;
-  };
+  }, []);
 
   // Convert pixel coordinates back to hex grid coordinates
   const pixelToGrid = (pixelX: number, pixelY: number): [number, number] => {
@@ -92,14 +80,6 @@ const GameMap: React.FC<GameMapProps> = ({ mapData }) => {
     return candidates.length > 0 ? [candidates[0].x, candidates[0].y] : [gridX, gridY];
   };
 
-  // Check if a point is inside a hexagon
-  const isPointInHex = (pointX: number, pointY: number, hexCenterX: number, hexCenterY: number): boolean => {
-    const distance = Math.sqrt(
-      Math.pow(pointX - hexCenterX, 2) + 
-      Math.pow(pointY - hexCenterY, 2)
-    );
-    return distance <= HEX_RADIUS;
-  };
   const gridToPixel = (gridX: number, gridY: number): [number, number] => {
     const hexWidth = HEX_RADIUS * 2;
     const hexHeight = HEX_RADIUS * Math.sqrt(3);
@@ -119,89 +99,16 @@ const GameMap: React.FC<GameMapProps> = ({ mapData }) => {
     return [pixelX, pixelY];
   };
 
-  // Draw a single hexagon
-  const drawHex = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, color: string) => {
-    const vertices = getHexVertices(centerX, centerY);
-    
-    ctx.beginPath();
-    ctx.moveTo(vertices[0][0], vertices[0][1]);
-    for (let i = 1; i < vertices.length; i++) {
-      ctx.lineTo(vertices[i][0], vertices[i][1]);
-    }
-    ctx.closePath();
-    
-    // Fill hex
-    ctx.fillStyle = color;
-    ctx.fill();
-    
-    // Draw border
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-  };
-
   // Render the map
   const renderMap = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const renderer = rendererRef.current;
+    if (!renderer) return;
     
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Apply panning transform
-    ctx.save();
-    ctx.translate(pan.x, pan.y);
-    
-    // Calculate grid dimensions from map data
-    let maxX = 0;
-    let maxY = 0;
-    
-    if (mapData.length > 0) {
-      mapData.forEach(zone => {
-        if (zone.state?.location?.first !== undefined && zone.state?.location?.second !== undefined) {
-          maxX = Math.max(maxX, zone.state.location.first);
-          maxY = Math.max(maxY, zone.state.location.second);
-        }
-      });
-    }
-    
-    // Create a map of grid positions to MapZones
-    const zoneMap = new Map<string, MapZone>();
-    mapData.forEach(zone => {
-      if (zone.state?.location?.first !== undefined && zone.state?.location?.second !== undefined) {
-        const key = `${zone.state.location.first},${zone.state.location.second}`;
-        zoneMap.set(key, zone);
-      }
+    renderer.render(mapData, pan, {
+      showSelection: true,
+      selectedHex: selectedHex
     });
-    
-    // Render all grid positions based on actual data dimensions
-    for (let y = 0; y <= maxY; y++) {
-      for (let x = 0; x <= maxX; x++) {
-        const [pixelX, pixelY] = gridToPixel(x, y);
-        const key = `${x},${y}`;
-        const zone = zoneMap.get(key);
-        
-        let color = DEFAULT_COLOR;
-        if (zone?.state?.terrainType) {
-          color = TERRAIN_COLORS[zone.state.terrainType] || DEFAULT_COLOR;
-        }
-        
-        drawHex(ctx, pixelX, pixelY, color);
-        
-        // Highlight selected hex
-        if (selectedHex && selectedHex.x === x && selectedHex.y === y) {
-          ctx.strokeStyle = '#FFD700'; // Gold color for selection
-          ctx.lineWidth = 3;
-          ctx.stroke();
-        }
-      }
-    }
-    
-    ctx.restore();
-  }, [mapData, pan]);
+  }, [mapData, pan, selectedHex]);
 
   // Handle canvas resize
   const resizeCanvas = useCallback(() => {

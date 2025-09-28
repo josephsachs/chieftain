@@ -1,6 +1,5 @@
 package chieftain.game.models.entity.mapfeature
 
-import chieftain.game.models.entity.agent.Character
 import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
 import com.minare.core.entity.annotations.EntityType
 import com.minare.core.entity.annotations.Mutable

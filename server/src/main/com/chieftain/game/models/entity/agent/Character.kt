@@ -4,7 +4,7 @@ import com.chieftain.game.models.entity.Culture
 import com.minare.core.entity.annotations.*
 
 @EntityType("character")
-class Character: Agent() {
+class Character: Agent {
     @State
     var name: String = ""
 
