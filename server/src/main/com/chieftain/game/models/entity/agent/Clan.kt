@@ -11,10 +11,10 @@ import com.minare.core.entity.annotations.State
 import com.minare.core.entity.models.Entity
 import java.util.*
 
-@EntityType("clan")
+@EntityType("Clan")
 class Clan: Entity(), Agent, Polity {
     init {
-        type = "clan"
+        type = "Clan"
     }
 
     @State
@@ -26,6 +26,10 @@ class Clan: Entity(), Agent, Polity {
 
     @State
     var culture: Culture.Companion.CultureGroup = Culture.Companion.CultureGroup.UNASSIGNED
+
+    @State
+    @Mutable
+    var behavior: ClanBehavior = ClanBehavior.WANDERING
 
     //@State
     //@Mutable
@@ -56,4 +60,11 @@ class Clan: Entity(), Agent, Polity {
     //@State
     //@Mutable
     //var memory: AgentMemory = AgentMemory()
+
+    companion object {
+        enum class ClanBehavior(value: String) {
+            NONE ("None"),
+            WANDERING ("Wandering")
+        }
+    }
 }

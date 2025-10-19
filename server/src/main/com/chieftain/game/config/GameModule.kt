@@ -1,5 +1,6 @@
 package com.chieftain.game.config
 
+import com.chieftain.application.config.GameFrameConfiguration
 import com.google.inject.PrivateModule
 import com.google.inject.Provides
 import com.google.inject.Singleton
@@ -15,6 +16,9 @@ import com.chieftain.game.controller.GameChannelController
 import com.chieftain.game.controller.GameConnectionController
 import com.chieftain.game.controller.GameMessageController
 import com.chieftain.game.controller.GameOperationController
+import com.minare.application.config.FrameConfiguration
+import com.minare.application.config.GameTaskConfiguration
+import com.minare.application.config.TaskConfiguration
 import kotlinx.coroutines.CoroutineScope
 import org.slf4j.LoggerFactory
 import kotlin.coroutines.CoroutineContext
@@ -30,8 +34,11 @@ class GameModule : PrivateModule(), DatabaseNameProvider {
     private val log = LoggerFactory.getLogger(GameModule::class.java)
 
     override fun configure() {
-        bind(EntityFactory::class.java).annotatedWith(Names.named("userEntityFactory"))
-            .to(GameEntityFactory::class.java).`in`(Singleton::class.java)
+        bind(EntityFactory::class.java)
+            .annotatedWith(Names.named("user"))
+            .to(GameEntityFactory::class.java)
+        bind(FrameConfiguration::class.java).to(GameFrameConfiguration::class.java).`in`(Singleton::class.java)
+        bind(TaskConfiguration::class.java).to(GameTaskConfiguration::class.java).`in`(Singleton::class.java)
 
         bind(ChannelController::class.java).to(GameChannelController::class.java).`in`(Singleton::class.java)
         bind(ConnectionController::class.java).to(GameConnectionController::class.java).`in`(Singleton::class.java)
@@ -39,7 +46,9 @@ class GameModule : PrivateModule(), DatabaseNameProvider {
         bind(MessageController::class.java).to(GameMessageController::class.java).`in`(Singleton::class.java)
 
         // Expose the named user factory (framework will wrap it)
-        expose(EntityFactory::class.java).annotatedWith(Names.named("userEntityFactory"))
+        expose(EntityFactory::class.java).annotatedWith(Names.named("user"))
+        expose(FrameConfiguration::class.java)
+        expose(TaskConfiguration::class.java)
         expose(ChannelController::class.java)
         expose(ConnectionController::class.java)
         expose(OperationController::class.java)

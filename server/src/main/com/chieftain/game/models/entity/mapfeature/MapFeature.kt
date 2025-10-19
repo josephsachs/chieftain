@@ -6,10 +6,10 @@ import com.minare.core.entity.annotations.Mutable
 import com.minare.core.entity.annotations.State
 import com.minare.core.entity.models.Entity
 
-@EntityType("map_feature")
+@EntityType("MapFeature")
 class MapFeature: Entity() {
     init {
-        type = "map_feature"
+        type = "MapFeature"
     }
 
     @State

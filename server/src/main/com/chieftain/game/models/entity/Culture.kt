@@ -1,11 +1,15 @@
 package com.chieftain.game.models.entity
 
-import com.chieftain.game.models.entity.MapZone.Companion.TerrainType
 import com.minare.core.entity.annotations.EntityType
 import com.minare.core.entity.annotations.State
+import com.minare.core.entity.models.Entity
 
-@EntityType("culture")
-class Culture {
+@EntityType("Culture")
+class Culture: Entity() {
+    init {
+        type = "Culture"
+    }
+
     @State
     var name: String = ""
 

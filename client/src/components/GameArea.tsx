@@ -77,7 +77,7 @@ const GameArea = () => {
             if (message.data.entities) {
               addMessage(`Received ${message.data.entities.length} entities from sync`);
               // Filter for map_zone entities
-              const mapZones = message.data.entities.filter((e: any) => e.type === 'map_zone');
+              const mapZones = message.data.entities.filter((e: any) => e.type === 'MapZone');
               setMapData(mapZones);
               addMessage(`Found ${mapZones.length} map zones`);
             }

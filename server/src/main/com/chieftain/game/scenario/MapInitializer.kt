@@ -31,7 +31,7 @@ class MapInitializer @Inject constructor(
         val entities = mutableListOf<Entity>()
         val defaultChannelId = gameChannelController.getDefaultChannel()
 
-        log.info("CHIEFTAIN: Default channel: $defaultChannelId")
+        log.info("Set default channel: $defaultChannelId")
 
         readMapData().forEach { jsonObject ->
             val mapZone = entityFactory.createEntity(MapZone::class.java) as MapZone

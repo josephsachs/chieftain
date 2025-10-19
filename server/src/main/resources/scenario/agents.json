@@ -3,7 +3,16 @@
     "name": "Zemar",
     "population": 35,
     "culture": "Canaanite",
+    "behavior": "None",
     "x": 4,
     "y": 4
+  },
+  {
+    "name": "Baalel",
+    "population": 35,
+    "culture": "Canaanite",
+    "behavior": "None",
+    "x": 4,
+    "y": 5
   }
 ]

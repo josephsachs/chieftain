@@ -23,12 +23,6 @@ class GameApplication : MinareApplication() {
     @Inject
     lateinit var channelController: GameChannelController
 
-    @Inject
-    lateinit var nodeGraphBuilder: NodeGraphBuilder
-
-    @Inject
-    lateinit var gameInitializer: GameInitializer
-
     /**
      * Application-specific initialization logic that runs after the server starts.
      */
@@ -39,14 +33,23 @@ class GameApplication : MinareApplication() {
 
             channelController.setDefaultChannel(defaultChannelId)
 
-            //initializeNodeGraph(defaultChannelId)
-            gameInitializer.initialize()
+            getGameInitializer().initialize()
 
             log.info("CHIEFTAIN: Game application started with default channel: $defaultChannelId")
         } catch (e: Exception) {
             log.error("Failed to start Game application", e)
             throw e
         }
+    }
+
+    override suspend fun onWorkerStart() {
+        // Initialize the singletons
+        getGameInitializer()
+    }
+
+    private fun getGameInitializer(): GameInitializer {
+        // IMPORTANT: Gotta get these from tne injector, because GameState depends on the CP subsystem
+        return injector.getInstance(GameInitializer::class.java)
     }
 
     override suspend fun setupApplicationRoutes() {
@@ -104,29 +107,6 @@ class GameApplication : MinareApplication() {
             .setFilesReadOnly(true)
 
         router.route("/*").handler(staticHandler)
-    }
-
-    /**
-     * Creates a sample node graph with parent/child relationships
-     * using JGraphT to generate an asymmetric tree structure
-     */
-    private suspend fun initializeNodeGraph(channelId: String) {
-        try {
-            val (rootNode, allNodes) = nodeGraphBuilder.buildAsymmetricTree(
-                maxDepth = 4,
-                maxBranchingFactor = 3,
-                totalNodes = 25,
-                randomSeed = 42L
-            )
-
-            val nodesAdded = channelController.addEntitiesToChannel(allNodes, channelId)
-            log.info("Added $nodesAdded nodes to channel $channelId")
-
-            log.info("Game initialized successfully")
-        } catch (e: Exception) {
-            log.error("Failed to initialize node graph", e)
-            throw e
-        }
     }
 
     companion object {
