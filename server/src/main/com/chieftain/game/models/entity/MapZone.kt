@@ -4,10 +4,10 @@ import com.minare.core.entity.annotations.EntityType
 import com.minare.core.entity.annotations.State
 import com.minare.core.entity.models.Entity
 
-@EntityType("map_zone")
+@EntityType("MapZone")
 class MapZone: Entity() {
     init {
-        type = "map_zone"
+        type = "MapZone"
     }
 
     @State

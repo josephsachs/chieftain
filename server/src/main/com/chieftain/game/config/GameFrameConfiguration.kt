@@ -1,5 +1,6 @@
 package com.chieftain.application.config
 
+import com.minare.application.config.FrameConfiguration
 import com.minare.application.config.FrameConfiguration.Companion.AutoSession
 
 /**
@@ -10,7 +11,7 @@ import com.minare.application.config.FrameConfiguration.Companion.AutoSession
  * parameters. Overridable by application.
  *
  */
-open class GameFrameConfiguration {
+class GameFrameConfiguration: FrameConfiguration() {
     /**
      *
      *     Frame settings
@@ -25,7 +26,16 @@ open class GameFrameConfiguration {
      * Trade-off: Faster = faster response and more reliable ordering but
      *     more processor overhead
      */
-    val frameDurationMs: Long = 5000L
+    override val frameDurationMs: Long = 20000
+
+    /**
+     * How many frames ahead to prepare during normal operation.
+     * Provides smooth operation without excessive pre-computation.
+     *
+     * Default: 2 frames
+     * Balances low latency with operational buffer
+     */
+    override val normalOperationLookahead: Int = 100
 
     /**
      *
@@ -38,7 +48,8 @@ open class GameFrameConfiguration {
      * NEVER
      * FRAMES_PER_SESSION
      */
-    val autoSession: AutoSession = AutoSession.FRAMES_PER_SESSION
+    override val autoSession: AutoSession = AutoSession.FRAMES_PER_SESSION
+
     /**
      * Number of frames between automatic sessions.
      * Sessions save snapshots, clear coordination memory
@@ -47,7 +58,7 @@ open class GameFrameConfiguration {
      * Default: 1000 frames
      * Trade-off: More frequent = faster recovery but more frequent pauses
      */
-    val framesPerSession: Long = 10000
+    override val framesPerSession: Long = 500
 
     /**
      *
@@ -58,35 +69,26 @@ open class GameFrameConfiguration {
     /**
      * Allow frame manifests to complete processing before hard pause
      */
-    val flushOperationsOnDetach: Boolean = true
+    override val flushOperationsOnDetach: Boolean = true
 
     /**
      * Detach uses soft pause, buffering new input
      */
-    val bufferInputDuringDetach: Boolean = true
+    override val bufferInputDuringDetach: Boolean = true
 
     /**
      * Replay uses soft pause, buffering new input
      */
-    val bufferInputDuringReplay: Boolean = true
+    override val bufferInputDuringReplay: Boolean = true
 
     /**
      * Resume assigns operations from stale frames to new session,
      * preserving temporal order
      */
-    val assignOperationsOnResume: Boolean = false
+    override val assignOperationsOnResume: Boolean = false
 
     /**
      * Resume replays to current frameInProgress before returning play to State
      */
-    val replayOnResume: Boolean = false
-
-    /**
-     * How many frames ahead to prepare during normal operation.
-     * Provides smooth operation without excessive pre-computation.
-     *
-     * Default: 2 frames
-     * Balances low latency with operational buffer
-     */
-    val normalOperationLookahead: Int = 2
+    override val replayOnResume: Boolean = false
 }

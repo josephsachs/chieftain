@@ -7,10 +7,10 @@ import com.minare.core.entity.annotations.Parent
 import com.minare.core.entity.annotations.State
 import com.minare.core.entity.models.Entity
 
-@EntityType("town")
+@EntityType("Town")
 class Town: Entity() {
     init {
-        type = "town"
+        type = "Town"
     }
 
     @State
