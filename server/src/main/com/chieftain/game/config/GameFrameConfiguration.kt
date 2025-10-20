@@ -26,7 +26,7 @@ class GameFrameConfiguration: FrameConfiguration() {
      * Trade-off: Faster = faster response and more reliable ordering but
      *     more processor overhead
      */
-    override val frameDurationMs: Long = 20000
+    override val frameDurationMs: Long = 10000
 
     /**
      * How many frames ahead to prepare during normal operation.
