@@ -29,23 +29,23 @@ class GameTurnHandler @Inject constructor(
      */
     suspend fun handleFrame(game: Game) {
         // TEMPORARY DEBUG
-        log.info("TURN_LOOP: Handling frame")
+        log.info("TURN_LOOP: Handling frame, ${game.turnPhase} phase processing is ${game.turnProcessing}")
 
         if (!game.turnProcessing) {
             // TEMPORARY DEBUG
             log.info("TURN_LOOP: Handling ${game.turnPhase}")
 
-            setGameProperties(game.turnPhase, true)
+            setGameTurnProcessing(true)
 
             when (game.turnPhase) {
                 TurnPhase.ACT -> {
-                    handleAct(game)
+                    handleAct()
                 }
                 TurnPhase.EXECUTE -> {
-                    handleExecute(game)
+                    handleExecute()
                 }
                 TurnPhase.RESOLVE -> {
-                    handleResolve(game)
+                    handleResolve()
                 }
             }
         }
@@ -54,7 +54,7 @@ class GameTurnHandler @Inject constructor(
     /**
      * ACT phase
      */
-    suspend fun handleAct(game: Game) {
+    suspend fun handleAct() {
         val clans = entityController.findByIds(
             stateStore.findKeysByType("Clan")
         )
@@ -79,7 +79,7 @@ class GameTurnHandler @Inject constructor(
     /**
      * EXECUTE phase
      */
-    suspend fun handleExecute(game: Game) {
+    suspend fun handleExecute() {
         val clans = entityController.findByIds(
             stateStore.findKeysByType("Clan")
         )
@@ -104,7 +104,7 @@ class GameTurnHandler @Inject constructor(
     /**
      * RESOLVE phase
      */
-    suspend fun handleResolve(game: Game) {
+    suspend fun handleResolve() {
         val clans = entityController.findByIds(
             stateStore.findKeysByType("Clan")
         )
@@ -168,7 +168,9 @@ class GameTurnHandler @Inject constructor(
         })
     }
 
-    private suspend fun setGameProperties(turnPhase: TurnPhase, isProcesing: Boolean) {
+    private suspend fun setGameProperties(turnPhase: TurnPhase?, isProcessing: Boolean?) {
+        if (turnPhase == null && isProcessing == null) return
+
         val game = entityController
             .findByIds(stateStore.findKeysByType("Game"))
             .firstNotNullOf { it.value } as Game
@@ -176,15 +178,22 @@ class GameTurnHandler @Inject constructor(
         // TEMPORARY DEBUG
         log.info("TURN_LOOP: Got game with id ${game._id}")
         // TEMPORARY DEBUG
-        log.info("TURN_LOOP: Setting properties")
+        log.info("TURN_LOOP: Setting properties ${turnPhase} processing to ${isProcessing}")
 
         val properties = JsonObject()
-            .put("properties", JsonObject()
-                .put("turnPhase", turnPhase)
-                .put("turnProcessing", isProcesing)
-            )
+
+        if (turnPhase !== null) properties.put("turnPhase", turnPhase)
+        if (isProcessing !== null) properties.put("turnProcessing", isProcessing)
 
         entityController.saveProperties(game._id!!, properties)
+
+        // TEMPORARY DEBUG
+        val foundEntity = entityController.findByIds(listOf(game._id!!)).firstNotNullOf { it.value } as Game
+        log.info("TURN_LOOP: After save found entity ${foundEntity._id} with ${foundEntity.turnPhase} processing is ${foundEntity.turnProcessing}")
+    }
+
+    private suspend fun setGameTurnProcessing(isProcessing: Boolean) {
+        setGameProperties(null, isProcessing)
     }
 
     private suspend fun incrementGameTurn() {
@@ -198,10 +207,7 @@ class GameTurnHandler @Inject constructor(
         log.info("TURN_LOOP: Incrementing turn")
 
         val properties = JsonObject()
-            .put("properties",
-                JsonObject()
-                    .put("turn", game.currentTurn + 1)
-            )
+            .put("currentTurn", game.currentTurn + 1)
 
         entityController.saveProperties(game._id!!, properties)
     }

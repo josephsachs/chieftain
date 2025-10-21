@@ -22,9 +22,15 @@ class GameInitializer @Inject constructor(
     suspend fun initialize() {
         verticleLogger.logInfo("Chieftain: Initializing map")
 
-        entityController.create(
+        val gameEntity = entityController.create(
             entityFactory.createEntity(Game::class.java)
-        )
+        ) as Game
+
+        entityController.saveProperties(gameEntity._id!!,
+            JsonObject()
+                .put("turnPhase", gameEntity.turnPhase)
+                .put("turnProcessing", gameEntity.turnProcessing)
+            )
 
         mapInitializer.initialize()
         agentInitializer.initialize()
