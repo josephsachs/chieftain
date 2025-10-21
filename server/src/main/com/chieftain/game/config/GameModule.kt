@@ -20,6 +20,8 @@ import com.google.inject.AbstractModule
 import com.minare.application.config.FrameConfiguration
 import com.minare.application.config.GameTaskConfiguration
 import com.minare.application.config.TaskConfiguration
+import io.vertx.core.Vertx
+import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.CoroutineScope
 import org.slf4j.LoggerFactory
 import kotlin.coroutines.CoroutineContext
@@ -62,9 +64,6 @@ class GameModule : AbstractModule(), DatabaseNameProvider {
         bind(MessageController::class.java)
             .to(GameMessageController::class.java)
             .`in`(Singleton::class.java)
-
-        // No expose() needed - everything is automatically visible
-        // No requireBinding() needed - everything from parent is visible
 
         log.info("GameModule configured with custom EntityFactory and controllers")
     }
