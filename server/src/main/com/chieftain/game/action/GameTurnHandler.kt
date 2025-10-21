@@ -51,20 +51,10 @@ class GameTurnHandler @Inject constructor(
      * ACT phase
      */
     suspend fun handleAct() {
-        val clans = entityController.findByIds(
-            stateStore.findKeysByType("Clan")
-        )
-
         try {
-            for ((key, clan) in clans) {
-                clanTurnHandler.handleTurn(clan as Clan)
-            }
+            clanTurnHandler.handleTurn(TurnPhase.ACT)
         } finally {
-            eventBusUtils.sendWithTracing(
-                ADDRESS_ACT_PHASE_COMPLETE,
-                JsonObject()
-                    .put("Clans", clans.size)
-            )
+            eventBusUtils.sendWithTracing(ADDRESS_ACT_PHASE_COMPLETE, JsonObject())
         }
     }
 
@@ -72,20 +62,10 @@ class GameTurnHandler @Inject constructor(
      * EXECUTE phase
      */
     suspend fun handleExecute() {
-        val clans = entityController.findByIds(
-            stateStore.findKeysByType("Clan")
-        )
-
         try {
-            for ((key, clan) in clans) {
-                clanTurnHandler.handleTurn(clan as Clan)
-            }
+            clanTurnHandler.handleTurn(TurnPhase.EXECUTE)
         } finally {
-            eventBusUtils.sendWithTracing(
-                ADDRESS_EXECUTE_PHASE_COMPLETE,
-                JsonObject()
-                    .put("Clans", clans.size)
-            )
+            eventBusUtils.sendWithTracing(ADDRESS_EXECUTE_PHASE_COMPLETE, JsonObject())
         }
     }
 
@@ -93,20 +73,10 @@ class GameTurnHandler @Inject constructor(
      * RESOLVE phase
      */
     suspend fun handleResolve() {
-        val clans = entityController.findByIds(
-            stateStore.findKeysByType("Clan")
-        )
-
         try {
-            for ((key, clan) in clans) {
-                clanTurnHandler.handleTurn(clan as Clan)
-            }
+            clanTurnHandler.handleTurn(TurnPhase.RESOLVE)
         } finally {
-            eventBusUtils.sendWithTracing(
-                ADDRESS_RESOLVE_PHASE_COMPLETE,
-                JsonObject()
-                    .put("Clans", clans.size)
-            )
+            eventBusUtils.sendWithTracing(ADDRESS_RESOLVE_PHASE_COMPLETE, JsonObject())
         }
     }
 
