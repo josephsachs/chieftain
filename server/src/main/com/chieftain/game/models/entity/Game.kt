@@ -38,17 +38,13 @@ class Game: Entity() {
     suspend fun task() {
         if (gameState.isGamePaused()) return
 
-        log.info("TURN_LOOP: Game task function found phase ${turnPhase}")
-
         gameTaskHandler.handle()
     }
 
     @FixedTask
     suspend fun fixedTask() {
-        log.info("TURN_LOOP: Started fixed task found phase ${turnPhase}")
         if (gameState.isGamePaused()) return
 
-        log.info("TURN_LOOP: Processing...")
         gameTurnHandler.handleFrame(this)
     }
 }
