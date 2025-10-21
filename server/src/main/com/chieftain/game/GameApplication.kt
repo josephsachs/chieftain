@@ -1,5 +1,6 @@
 package com.chieftain.game
 
+import chieftain.game.action.GameTurnHandler
 import com.minare.core.MinareApplication
 import com.chieftain.game.config.GameModule
 import com.chieftain.game.controller.GameChannelController
@@ -22,6 +23,8 @@ class GameApplication : MinareApplication() {
 
     @Inject
     lateinit var channelController: GameChannelController
+    @Inject
+    lateinit var gameTurnHandler: GameTurnHandler
 
     /**
      * Application-specific initialization logic that runs after the server starts.
@@ -34,6 +37,8 @@ class GameApplication : MinareApplication() {
             channelController.setDefaultChannel(defaultChannelId)
 
             getGameInitializer().initialize()
+
+            gameTurnHandler.registerEventListeners()
 
             log.info("CHIEFTAIN: Game application started with default channel: $defaultChannelId")
         } catch (e: Exception) {

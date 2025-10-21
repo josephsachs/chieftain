@@ -66,8 +66,8 @@ class MapInitializer @Inject constructor(
 
                     mapFeature.childRef = entityController.create(town)._id!!
 
-                    entityController.save(
-                        mapFeature._id,
+                    entityController.saveState(
+                        mapFeature._id!!,
                         JsonObject().put("childRef", mapFeature.childRef)
                     )
 
