@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory
 class Game: Entity() {
     @Inject private lateinit var gameState: GameState
     @Inject private lateinit var gameTaskHandler: GameTaskHandler
-    @Inject private lateinit var gameTurnHandler: GameTurnHandler
 
     private val log = LoggerFactory.getLogger(Game::class.java)
 
@@ -39,12 +38,5 @@ class Game: Entity() {
         if (gameState.isGamePaused()) return
 
         gameTaskHandler.handle()
-    }
-
-    @FixedTask
-    suspend fun fixedTask() {
-        if (gameState.isGamePaused()) return
-
-        gameTurnHandler.handleFrame(this)
     }
 }

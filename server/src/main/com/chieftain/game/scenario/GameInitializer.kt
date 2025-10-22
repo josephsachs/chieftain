@@ -13,7 +13,6 @@ import io.vertx.core.json.JsonObject
 class GameInitializer @Inject constructor(
     private val mapInitializer: MapInitializer,
     private val agentInitializer: AgentInitializer,
-    private val gameState: GameState,
     private val entityController: EntityController,
     private val entityFactory: GameEntityFactory,
     private val vertx: Vertx,
@@ -38,8 +37,6 @@ class GameInitializer @Inject constructor(
         vertx.eventBus().publish(ADDRESS_INITIALIZE_GAME_COMPLETE, JsonObject())
 
         verticleLogger.logInfo("Chieftain: Game initialized")
-
-        gameState.resumeGameClock()
     }
 
     companion object {

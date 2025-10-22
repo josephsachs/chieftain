@@ -25,10 +25,10 @@ class ClanTurnHandler @Inject constructor(
             }
             Clan.Companion.ClanBehavior.WANDERING -> {
                 // Pick a legal direction and move
-                log.info("Clan ${clan.name} decides to wander")
+                log.info("TURN_LOOP: Clan ${clan.name} decides to wander")
             }
             else -> {
-                throw IllegalStateException("ClanTurnHandler found clan ${clan._id} with undefined behavior ${clan.behavior}")
+                throw IllegalStateException("TURN_LOOP: ClanTurnHandler found clan ${clan._id} with undefined behavior ${clan.behavior}")
             }
         }
     }
@@ -71,7 +71,7 @@ class ClanTurnHandler @Inject constructor(
                 )
             }
             else -> {
-                throw IllegalStateException("ClanTurnHandler found clan ${clan._id} with undefined behavior ${clan.behavior}")
+                throw IllegalStateException("TURN_LOOP: ClanTurnHandler found clan ${clan._id} with undefined behavior ${clan.behavior}")
             }
         }
 
