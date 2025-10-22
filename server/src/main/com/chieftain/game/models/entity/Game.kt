@@ -39,19 +39,12 @@ class Game: Entity() {
         if (gameState.isGamePaused()) return
 
         gameTaskHandler.handle()
-
-        // Check if turn
-        // then turn handle
     }
 
     @FixedTask
     suspend fun fixedTask() {
-        log.info("TURN_LOOP: Started fixed task")
         if (gameState.isGamePaused()) return
-        if (turnProcessing) return
 
-        log.info("TURN_LOOP: Processing...")
-        turnProcessing = true
         gameTurnHandler.handleFrame(this)
     }
 }

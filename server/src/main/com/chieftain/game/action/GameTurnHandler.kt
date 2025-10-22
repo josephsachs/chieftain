@@ -28,182 +28,122 @@ class GameTurnHandler @Inject constructor(
      * Called each frame, pipe should be clear
      */
     suspend fun handleFrame(game: Game) {
-        // TEMPORARY DEBUG
-        log.info("TURN_LOOP: Handling frame")
-
         if (!game.turnProcessing) {
-            // TEMPORARY DEBUG
-            log.info("TURN_LOOP: Handling ${game.turnPhase}")
-
-            setGameProperties(game.turnPhase, true)
+            setGameTurnProcessing(true)
 
             when (game.turnPhase) {
                 TurnPhase.ACT -> {
-                    handleAct(game)
+                    handleAct()
                 }
                 TurnPhase.EXECUTE -> {
-                    handleExecute(game)
+                    handleExecute()
                 }
                 TurnPhase.RESOLVE -> {
-                    handleResolve(game)
+                    handleResolve()
                 }
             }
+
+            log.info("TURN_LOOP: Handling ${game.turnPhase}")
         }
     }
 
     /**
      * ACT phase
      */
-    suspend fun handleAct(game: Game) {
-        val clans = entityController.findByIds(
-            stateStore.findKeysByType("Clan")
-        )
-
-        log.info("clans acting: ${clans.size}")
-
+    suspend fun handleAct() {
         try {
-            for ((key, clan) in clans) {
-                log.info("clan: ${key}")
-
-                clanTurnHandler.handleTurn(clan as Clan)
-            }
+            clanTurnHandler.handleTurn(TurnPhase.ACT)
         } finally {
-            eventBusUtils.publishWithTracing(
-                ADDRESS_ACT_PHASE_COMPLETE,
-                JsonObject()
-                    .put("Clans", clans.size)
-            )
+            eventBusUtils.sendWithTracing(ADDRESS_ACT_PHASE_COMPLETE, JsonObject())
         }
     }
 
     /**
      * EXECUTE phase
      */
-    suspend fun handleExecute(game: Game) {
-        val clans = entityController.findByIds(
-            stateStore.findKeysByType("Clan")
-        )
-
-        log.info("clans executing: ${clans.size}")
-
+    suspend fun handleExecute() {
         try {
-            for ((key, clan) in clans) {
-                log.info("clan: ${key}")
-
-                clanTurnHandler.handleTurn(clan as Clan)
-            }
+            clanTurnHandler.handleTurn(TurnPhase.EXECUTE)
         } finally {
-            eventBusUtils.publishWithTracing(
-                ADDRESS_EXECUTE_PHASE_COMPLETE,
-                JsonObject()
-                    .put("Clans", clans.size)
-            )
+            eventBusUtils.sendWithTracing(ADDRESS_EXECUTE_PHASE_COMPLETE, JsonObject())
         }
     }
 
     /**
      * RESOLVE phase
      */
-    suspend fun handleResolve(game: Game) {
-        val clans = entityController.findByIds(
-            stateStore.findKeysByType("Clan")
-        )
-
-        log.info("clans resolving: ${clans.size}")
-
+    suspend fun handleResolve() {
         try {
-            for ((key, clan) in clans) {
-                log.info("clan: ${key}")
-
-                clanTurnHandler.handleTurn(clan as Clan)
-            }
+            clanTurnHandler.handleTurn(TurnPhase.RESOLVE)
         } finally {
-            eventBusUtils.publishWithTracing(
-                ADDRESS_RESOLVE_PHASE_COMPLETE,
-                JsonObject()
-                    .put("Clans", clans.size)
-            )
-            eventBusUtils.publishWithTracing(
-                ADDRESS_TURN_COMPLETE,
-                JsonObject()
-                    .put("Clans", clans.size)
-            )
+            eventBusUtils.sendWithTracing(ADDRESS_RESOLVE_PHASE_COMPLETE, JsonObject())
         }
     }
 
     suspend fun registerEventListeners() {
-        // TEMPORARY DEBUG
-        log.info("TURN_LOOP: Registering events")
-
         vertx.eventBus().consumer<JsonObject>(ADDRESS_ACT_PHASE_COMPLETE, { message ->
-            // TEMPORARY DEBUG
-            log.info("TURN_LOOP: Received act complete event")
             scope.launch {
                 setGameProperties(TurnPhase.EXECUTE, false)
             }
         })
 
         vertx.eventBus().consumer<JsonObject>(ADDRESS_EXECUTE_PHASE_COMPLETE, { message ->
-            // TEMPORARY DEBUG
-            log.info("TURN_LOOP: Received execute complete event")
             scope.launch {
                 setGameProperties(TurnPhase.RESOLVE, false)
             }
         })
 
         vertx.eventBus().consumer<JsonObject>(ADDRESS_RESOLVE_PHASE_COMPLETE, { message ->
-            // TEMPORARY DEBUG
-            log.info("TURN_LOOP: Received resolve complete event")
             scope.launch {
                 setGameProperties(TurnPhase.ACT, false)
+
+                eventBusUtils.sendWithTracing(ADDRESS_TURN_COMPLETE, JsonObject())
             }
         })
 
         vertx.eventBus().consumer<JsonObject>(ADDRESS_TURN_COMPLETE, { message ->
-            // TEMPORARY DEBUG
-            log.info("TURN_LOOP: Received turn complete event")
             scope.launch {
                 incrementGameTurn()
             }
         })
     }
 
-    private suspend fun setGameProperties(turnPhase: TurnPhase, isProcesing: Boolean) {
-        val game = entityController
-            .findByIds(stateStore.findKeysByType("Game"))
-            .firstNotNullOf { it.value } as Game
-
-        // TEMPORARY DEBUG
-        log.info("TURN_LOOP: Got game with id ${game._id}")
-        // TEMPORARY DEBUG
-        log.info("TURN_LOOP: Setting properties")
+    private suspend fun setGameProperties(turnPhase: TurnPhase?, isProcessing: Boolean?) {
+        val game = getGame()
 
         val properties = JsonObject()
-            .put("properties", JsonObject()
-                .put("turnPhase", turnPhase)
-                .put("turnProcessing", isProcesing)
-            )
+
+        if (turnPhase !== null) properties.put("turnPhase", turnPhase)
+        if (isProcessing !== null) properties.put("turnProcessing", isProcessing)
 
         entityController.saveProperties(game._id!!, properties)
     }
 
+    private suspend fun setGameTurnProcessing(isProcessing: Boolean) {
+        setGameProperties(null, isProcessing)
+    }
+
     private suspend fun incrementGameTurn() {
-        val game = entityController
+        val game = getGame()
+
+        log.info("TURN_LOOP: game: id = ${game._id} ; currentTurn = ${game.currentTurn} ; turnPhase = ${game.turnPhase} ; isProcessing = ${game.turnProcessing}")
+
+        val properties = JsonObject().put("currentTurn", (game.currentTurn + 1))
+
+        try {
+            entityController.saveProperties(game._id!!, properties)
+        }
+        finally {
+            val gameTest = getGame()
+
+            log.info("TURN_LOOP: New turn ${gameTest.currentTurn}")
+        }
+    }
+
+    private suspend fun getGame(): Game {
+        return entityController
             .findByIds(stateStore.findKeysByType("Game"))
             .firstNotNullOf { it.value } as Game
-
-        // TEMPORARY DEBUG
-        log.info("TURN_LOOP: Got game with id ${game._id}")
-        // TEMPORARY DEBUG
-        log.info("TURN_LOOP: Incrementing turn")
-
-        val properties = JsonObject()
-            .put("properties",
-                JsonObject()
-                    .put("turn", game.currentTurn + 1)
-            )
-
-        entityController.saveProperties(game._id!!, properties)
     }
 
     companion object {

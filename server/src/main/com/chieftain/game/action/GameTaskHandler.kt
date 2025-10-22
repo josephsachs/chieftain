@@ -25,13 +25,10 @@ class GameTaskHandler @Inject constructor(
             stateStore.findKeysByType("Clan")
         )
 
-        log.info("clans: ${clans.size}")
-
         try {
             for ((key, clan) in clans) {
-                log.info("clan: ${key}")
-
-                clanTurnHandler.handleTask(clan as Clan)
+                clan as Clan
+                clanTurnHandler.handleTask(clan)
             }
         } finally {
             eventBusUtils.publishWithTracing(
