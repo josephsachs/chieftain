@@ -29,7 +29,7 @@ class GameApplication : MinareApplication() {
     /**
      * Application-specific initialization logic that runs after the server starts.
      */
-    override suspend fun onApplicationStart() {
+    override suspend fun onCoordinatorStart() {
         try {
             val defaultChannelId = channelController.createChannel()
             log.info("CHIEFTAIN: Created default channel: $defaultChannelId")
