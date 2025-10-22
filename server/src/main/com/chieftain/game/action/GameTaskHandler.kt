@@ -13,33 +13,22 @@ import io.vertx.core.json.JsonObject
 @Singleton
 class GameTaskHandler @Inject constructor(
     private val mapDataCache: MapDataCache,
-    private val clanTurnHandler: ClanTurnHandler,
-    private val entityController: EntityController,
-    private val stateStore: StateStore,
     private val eventBusUtils: EventBusUtils
 ) {
     private var log = LoggerFactory.getLogger(GameTaskHandler::class.java)
 
     suspend fun handle() {
-        val clans = entityController.findByIds(
-            stateStore.findKeysByType("Clan")
-        )
-
         try {
-            for ((key, clan) in clans) {
-                clan as Clan
-                clanTurnHandler.handleTask(clan)
-            }
+            log.info("TURN_LOOP: Game tasks handling...")
         } finally {
             eventBusUtils.publishWithTracing(
-                ADDRESS_TASK_COMPLETE,
+                ADDRESS_GAME_TASKS_COMPLETE,
                 JsonObject()
-                    .put("Clans", clans.size)
             )
         }
     }
 
     companion object {
-        const val ADDRESS_TASK_COMPLETE = "turn.handler.task.complete"
+        const val ADDRESS_GAME_TASKS_COMPLETE = "turn.handler.game.tasks.complete"
     }
 }

@@ -1,18 +1,24 @@
 package chieftain.game.models.entity.agent
 
 import chieftain.game.models.entity.Polity
-import com.chieftain.game.models.data.AgentMemory
-import com.chieftain.game.models.data.Depot
 import com.chieftain.game.models.entity.Culture
-import com.chieftain.game.models.entity.Religion
-import com.minare.core.entity.annotations.EntityType
-import com.minare.core.entity.annotations.Mutable
-import com.minare.core.entity.annotations.State
+import com.chieftain.game.scenario.GameState
+import com.google.inject.Inject
+import com.minare.controller.EntityController
+import com.minare.core.entity.annotations.*
 import com.minare.core.entity.models.Entity
-import java.util.*
+import io.vertx.core.json.JsonObject
+import org.slf4j.LoggerFactory
 
 @EntityType("Clan")
 class Clan: Entity(), Agent, Polity {
+    private val log = LoggerFactory.getLogger(Clan::class.java)
+
+    @Inject
+    private lateinit var entityController: EntityController
+    @Inject
+    private lateinit var gameState: GameState
+
     init {
         type = "Clan"
     }
@@ -29,6 +35,9 @@ class Clan: Entity(), Agent, Polity {
 
     @State
     @Mutable
+    var location: Pair<Int, Int> = Pair(0, 0)
+
+    @Property
     var behavior: ClanBehavior = ClanBehavior.WANDERING
 
     //@State
@@ -49,10 +58,6 @@ class Clan: Entity(), Agent, Polity {
     //@Mutable
     //var skills: Map<String, Int> = mapOf()
 
-    @State
-    @Mutable
-    var location: Pair<Int, Int> = Pair(0, 0)
-
     //@State
     //@Mutable
     //var path: Queue<Pair<Int, Int>>? = null
@@ -60,6 +65,20 @@ class Clan: Entity(), Agent, Polity {
     //@State
     //@Mutable
     //var memory: AgentMemory = AgentMemory()
+
+    @Task
+    suspend fun chooseBehavior() {
+        if (gameState.isGamePaused()) return
+
+        var deltas = JsonObject()
+
+        deltas
+            .put("behavior", ClanBehavior.WANDERING)
+
+        log.info("TURN_LOOP: Clan ${this.name} setting properties with ${deltas}")
+
+        entityController.saveProperties(this._id!!, deltas)
+    }
 
     companion object {
         enum class ClanBehavior(value: String) {
