@@ -2,23 +2,14 @@ package com.chieftain.game.scenario
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import com.minare.core.frames.worker.FrameWorkerVerticle.Companion.ADDRESS_NEXT_FRAME
 import com.minare.core.utils.PushVar
-import io.vertx.core.Vertx
-import io.vertx.core.json.JsonObject
 import org.slf4j.LoggerFactory
 
 @Singleton
 class GameState @Inject constructor(
     private val pushVarFactory: PushVar.Factory,
-    private val vertx: Vertx
 ) {
     private val log = LoggerFactory.getLogger(GameState::class.java)
-
-    private val eventBus = vertx.eventBus()
-
-    private var currentFrame: Long = 0L
-    private var currentTask: Long = 0L
 
     private val _gameClockState = pushVarFactory.create(
         address = "game.clock.state",

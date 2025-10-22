@@ -1,17 +1,23 @@
 package com.chieftain.game
 
+import chieftain.game.GameStateVerticle
 import chieftain.game.action.GameTurnHandler
 import com.minare.core.MinareApplication
 import com.chieftain.game.config.GameModule
 import com.chieftain.game.controller.GameChannelController
 import com.chieftain.game.scenario.GameInitializer
+import com.chieftain.game.scenario.GameState
+import com.minare.core.frames.coordinator.FrameCoordinatorVerticle.Companion.ADDRESS_NEXT_FRAME
+import io.vertx.core.DeploymentOptions
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpHeaders
 import io.vertx.core.impl.logging.LoggerFactory
+import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.ext.web.handler.StaticHandler
 import io.vertx.kotlin.coroutines.await
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -23,8 +29,6 @@ class GameApplication : MinareApplication() {
 
     @Inject
     lateinit var channelController: GameChannelController
-    @Inject
-    lateinit var gameTurnHandler: GameTurnHandler
 
     /**
      * Application-specific initialization logic that runs after the server starts.
@@ -36,9 +40,17 @@ class GameApplication : MinareApplication() {
 
             channelController.setDefaultChannel(defaultChannelId)
 
-            getGameInitializer().initialize()
-
-            gameTurnHandler.registerEventListeners()
+            try {
+                getGameState()
+                getGameInitializer().initialize()
+            } finally {
+                createVerticle(
+                    GameStateVerticle::class.java,
+                    DeploymentOptions()
+                        .setInstances(1)
+                        .setConfig(JsonObject().put("role", "coordinator"))
+                )
+            }
 
             log.info("CHIEFTAIN: Game application started with default channel: $defaultChannelId")
         } catch (e: Exception) {
@@ -49,12 +61,17 @@ class GameApplication : MinareApplication() {
 
     override suspend fun onWorkerStart() {
         // Initialize the singletons
+        getGameState()
         getGameInitializer()
     }
 
     private fun getGameInitializer(): GameInitializer {
         // IMPORTANT: Gotta get these from tne injector, because GameState depends on the CP subsystem
         return injector.getInstance(GameInitializer::class.java)
+    }
+
+    private fun getGameState(): GameState {
+        return injector.getInstance(GameState::class.java)
     }
 
     override suspend fun setupApplicationRoutes() {
