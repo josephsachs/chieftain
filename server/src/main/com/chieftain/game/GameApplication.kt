@@ -1,13 +1,11 @@
 package com.chieftain.game
 
 import chieftain.game.GameStateVerticle
-import chieftain.game.action.GameTurnHandler
 import com.minare.core.MinareApplication
 import com.chieftain.game.config.GameModule
 import com.chieftain.game.controller.GameChannelController
 import com.chieftain.game.scenario.GameInitializer
 import com.chieftain.game.scenario.GameState
-import com.minare.core.frames.coordinator.FrameCoordinatorVerticle.Companion.ADDRESS_NEXT_FRAME
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpHeaders
@@ -17,7 +15,6 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.BodyHandler
 import io.vertx.ext.web.handler.StaticHandler
 import io.vertx.kotlin.coroutines.await
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**

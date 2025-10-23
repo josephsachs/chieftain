@@ -22,7 +22,7 @@ class Game: Entity() {
         type = "Game"
     }
 
-    private val name: String = "MyGame"
+    var name: String = "MyGame"
 
     @Property
     var currentTurn: Int = 0

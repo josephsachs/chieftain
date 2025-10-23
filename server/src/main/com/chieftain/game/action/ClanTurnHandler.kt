@@ -18,21 +18,6 @@ class ClanTurnHandler @Inject constructor(
 ) {
     private val log = LoggerFactory.getLogger(ClanTurnHandler::class.java)
 
-    suspend fun handleTask(clan: Clan) {
-        when (clan.behavior) {
-            Clan.Companion.ClanBehavior.NONE -> {
-                // Nothing
-            }
-            Clan.Companion.ClanBehavior.WANDERING -> {
-                // Pick a legal direction and move
-                log.info("TURN_LOOP: Clan ${clan.name} decides to wander")
-            }
-            else -> {
-                throw IllegalStateException("TURN_LOOP: ClanTurnHandler found clan ${clan._id} with undefined behavior ${clan.behavior}")
-            }
-        }
-    }
-
     suspend fun handleTurn(turnPhase: GameTurnHandler.Companion.TurnPhase): JsonObject {
         val clans = entityController.findByIds(
             stateStore.findKeysByType("Clan")

@@ -1,7 +1,8 @@
 package chieftain.game.models.entity.agent
 
 import chieftain.game.models.entity.Polity
-import com.chieftain.game.models.entity.Culture
+import com.chieftain.game.controller.GameChannelController
+import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
 import com.chieftain.game.scenario.GameState
 import com.google.inject.Inject
 import com.minare.controller.EntityController
@@ -17,6 +18,8 @@ class Clan: Entity(), Agent, Polity {
     @Inject
     private lateinit var entityController: EntityController
     @Inject
+    private lateinit var channelController: GameChannelController
+    @Inject
     private lateinit var gameState: GameState
 
     init {
@@ -31,7 +34,7 @@ class Clan: Entity(), Agent, Polity {
     var population: Int = 0
 
     @State
-    var culture: Culture.Companion.CultureGroup = Culture.Companion.CultureGroup.UNASSIGNED
+    var culture: CultureGroup = CultureGroup.UNASSIGNED
 
     @State
     @Mutable
@@ -75,9 +78,24 @@ class Clan: Entity(), Agent, Polity {
         deltas
             .put("behavior", ClanBehavior.WANDERING)
 
-        log.info("TURN_LOOP: Clan ${this.name} setting properties with ${deltas}")
-
         entityController.saveProperties(this._id!!, deltas)
+
+        var msg = "TURN_LOOP: Clan ${this.name} setting properties with ${deltas}"
+        log.info(msg)
+        try {
+            val defaultChannelId = channelController.getDefaultChannel()
+            if (defaultChannelId.isNullOrBlank()) {
+                log.info("BROADCAST: No default channel ID")
+                return
+            }
+            log.info("BROADCAST: Broadcasting to channel $defaultChannelId")
+            channelController.broadcastToChannel(
+                defaultChannelId,
+                JsonObject().put("console", msg)
+            )
+        } catch (e: Exception) {
+            log.error("BROADCAST: Exception occurred in game task: ${e}")
+        }
     }
 
     companion object {

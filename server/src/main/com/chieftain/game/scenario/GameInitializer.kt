@@ -1,5 +1,6 @@
 package com.chieftain.game.scenario
 
+import chieftain.game.action.GameTurnHandler.Companion.TurnPhase
 import chieftain.game.models.entity.Game
 import com.chieftain.game.GameEntityFactory
 import com.google.inject.Inject
@@ -19,18 +20,23 @@ class GameInitializer @Inject constructor(
     private val verticleLogger: VerticleLogger
 ) {
     suspend fun initialize() {
-        verticleLogger.logInfo("Chieftain: Initializing map")
-
-        val gameEntity = entityController.create(
+        verticleLogger.logInfo("Chieftain: Initializing game")
+        var gameEntity = entityController.create(
             entityFactory.createEntity(Game::class.java)
         ) as Game
 
+        entityController.saveState(gameEntity._id!!,
+            JsonObject()
+                .put("name", "Chieftain 1.0")
+        )
+
         entityController.saveProperties(gameEntity._id!!,
             JsonObject()
-                .put("turnPhase", gameEntity.turnPhase)
-                .put("turnProcessing", gameEntity.turnProcessing)
+                .put("turnPhase", TurnPhase.ACT)
+                .put("turnProcessing", false)
             )
 
+        verticleLogger.logInfo("Chieftain: Initializing entities")
         mapInitializer.initialize()
         agentInitializer.initialize()
 
