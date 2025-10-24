@@ -98,8 +98,6 @@ class GameTurnHandler @Inject constructor(
     private suspend fun incrementGameTurn() {
         val game = getGame()
 
-        log.info("TURN_LOOP: game: id = ${game._id} ; currentTurn = ${game.currentTurn} ; turnPhase = ${game.turnPhase} ; isProcessing = ${game.turnProcessing}")
-
         val properties = JsonObject().put("currentTurn", (game.currentTurn + 1))
 
         try {

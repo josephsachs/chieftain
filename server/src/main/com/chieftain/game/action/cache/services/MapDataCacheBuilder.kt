@@ -26,8 +26,9 @@ class MapDataCacheBuilder @Inject constructor(
             stateStore.findKeysByType("MapZone")
         )
 
-        for(mapZone in allMapZones) {
-            mapZone as MapZone
+        for(item in allMapZones) {
+            val mapZone = item.value as MapZone
+
             val movementCost = 0
             val isPassable =
                 mapZone.terrainType !in listOf(

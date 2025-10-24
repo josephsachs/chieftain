@@ -59,16 +59,10 @@ class Clan: Entity(), Agent, Polity {
             .put("behavior", ClanBehavior.WANDERING)
 
         entityController.saveProperties(this._id!!, deltas)
-
-        try {
-            broadcastConsole("Clan ${this.name} AI setting properties with ${deltas}")
-        } catch (e: Exception) {
-            log.error("Exception occurred in game task: ${e}")
-        }
     }
 
     suspend fun queueWanderAction() {
-        log.info("BEHAVIOR: Clan $name is the wandering")
+        broadcastConsole("BEHAVIOR: Clan $name is wandering")
 
         var x = location.first
         var y = location.second
@@ -76,10 +70,17 @@ class Clan: Entity(), Agent, Polity {
 
         for (n in (x - 1) until (x + 2)) {
             for (m in (x - 1) until (x + 2)) {
+                if (n == 0 && m == 0) continue
+
                 log.info("BEHAVIOR: Searching zone $n, $m")
 
-                val item: MapCacheItem =
-                    sharedGameState.mapDataCache.get(n, m) ?: continue
+                val item: MapCacheItem? =
+                    sharedGameState.mapDataCache.get(n, m)
+
+                if (item == null) {
+                    log.info("BEHAVIOR: item was null")
+                    return
+                }
 
                 log.info("BEHAVIOR: found $item")
 
@@ -95,11 +96,11 @@ class Clan: Entity(), Agent, Polity {
 
         val destination = possibles.random() as MapCacheItem
 
-        broadcastConsole("Clan $name is the wandering to $destination")
-        log.info("BEHAVIOR: Clan $name is the wandering to $destination")
+        broadcastConsole("Clan $name is wandering to $destination")
 
         val operation = Operation()
             .entity(this._id!!)
+            .entityType(Clan::class.java)
             .delta(
                 JsonObject()
                     .put("location", Pair(destination.x, destination.y))
