@@ -1,15 +1,20 @@
-package com.chieftain.game.scenario
+package chieftain.game.action.cache
 
+import chieftain.game.action.cache.services.MapDataCacheBuilder.Companion.MapCacheItem
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import com.hazelcast.core.HazelcastInstance
+import com.minare.core.utils.DistributedGridMap
 import com.minare.core.utils.PushVar
-import org.slf4j.LoggerFactory
+import io.vertx.core.impl.logging.LoggerFactory
 
 @Singleton
-class GameState @Inject constructor(
-    private val pushVar: PushVar.Factory
+class SharedGameState @Inject constructor(
+    private val hazelcastInstance: HazelcastInstance,
+    private val pushVar: PushVar.Factory,
+    private val distributedGridMap: DistributedGridMap.Factory
 ) {
-    private val log = LoggerFactory.getLogger(GameState::class.java)
+    private val log = LoggerFactory.getLogger(SharedGameState::class.java)
 
     private val _gameClockState = pushVar.create(
         address = "game.clock.state",
@@ -29,6 +34,8 @@ class GameState @Inject constructor(
     fun resumeGameClock() {
         _gameClockState.set(GameClockState.RUNNING)
     }
+
+    val mapDataCache = distributedGridMap.create<MapCacheItem>(hazelcastInstance)
 
     companion object {
         enum class GameClockState {

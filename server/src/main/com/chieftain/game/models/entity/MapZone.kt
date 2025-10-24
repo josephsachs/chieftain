@@ -3,9 +3,10 @@ package com.chieftain.game.models.entity
 import com.minare.core.entity.annotations.EntityType
 import com.minare.core.entity.annotations.State
 import com.minare.core.entity.models.Entity
+import java.io.Serializable
 
 @EntityType("MapZone")
-class MapZone: Entity() {
+class MapZone: Entity(), Serializable {
     init {
         type = "MapZone"
     }

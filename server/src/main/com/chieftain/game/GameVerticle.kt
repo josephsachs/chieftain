@@ -1,7 +1,7 @@
 package chieftain.game
 
 import chieftain.game.action.GameTurnHandler
-import com.chieftain.game.scenario.GameState
+import chieftain.game.action.cache.SharedGameState
 import com.google.inject.Injector
 import com.minare.core.frames.coordinator.FrameCoordinatorVerticle.Companion.ADDRESS_NEXT_FRAME
 import io.vertx.core.json.JsonObject
@@ -11,17 +11,17 @@ import javax.inject.Inject
 
 class GameStateVerticle @Inject constructor(
     private var injector: Injector,
-    private var gameState: GameState
+    private var sharedGameState: SharedGameState
 ) : CoroutineVerticle() {
     lateinit var gameTurnHandler: GameTurnHandler
 
     override suspend fun start() {
         gameTurnHandler = injector.getInstance(GameTurnHandler::class.java)
-        gameState.resumeGameClock()
+        sharedGameState.resumeGameClock()
 
         vertx.eventBus().consumer<JsonObject>(ADDRESS_NEXT_FRAME, {
             launch {
-                if (gameState.isGamePaused()) return@launch
+                if (sharedGameState.isGamePaused()) return@launch
 
                 gameTurnHandler.handleFrame()
             }

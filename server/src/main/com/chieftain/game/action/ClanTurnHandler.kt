@@ -12,7 +12,6 @@ import io.vertx.core.json.JsonObject
 
 @Singleton
 class ClanTurnHandler @Inject constructor(
-    private val operationController: OperationController,
     private val entityController: EntityController,
     private val stateStore: StateStore,
 ) {
@@ -49,6 +48,8 @@ class ClanTurnHandler @Inject constructor(
                 // Nothing
             }
             Clan.Companion.ClanBehavior.WANDERING -> {
+                clan.queueWanderAction()
+
                 // Fetch a valid move and queue an operation
                 dataResponse.mergeIn(JsonObject()
                     .put("clanName", clan.name)

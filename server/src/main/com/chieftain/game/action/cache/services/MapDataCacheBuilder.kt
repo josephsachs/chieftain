@@ -1,0 +1,66 @@
+package chieftain.game.action.cache.services
+
+import chieftain.game.action.cache.SharedGameState
+import com.chieftain.game.models.entity.MapZone
+import com.chieftain.game.models.entity.MapZone.Companion.TerrainType
+import com.google.inject.Inject
+import com.google.inject.Singleton
+import com.minare.controller.EntityController
+import com.minare.core.storage.interfaces.StateStore
+import com.minare.core.utils.vertx.EventBusUtils
+import io.vertx.core.json.JsonObject
+import java.io.Serializable
+
+@Singleton
+class MapDataCacheBuilder @Inject constructor(
+    private val sharedGameState: SharedGameState,
+    private val entityController: EntityController,
+    private val stateStore: StateStore,
+    private val eventBusUtils: EventBusUtils
+) {
+    /**
+     * Rebuilds map data cache from current source of truth
+     */
+    suspend fun rebuild() {
+        val allMapZones = entityController.findByIds(
+            stateStore.findKeysByType("MapZone")
+        )
+
+        for(mapZone in allMapZones) {
+            mapZone as MapZone
+            val movementCost = 0
+            val isPassable =
+                mapZone.terrainType !in listOf(
+                    TerrainType.OCEAN,
+                    TerrainType.UNASSIGNED
+                )
+
+            sharedGameState.mapDataCache.put(
+                mapZone.location.first,
+                mapZone.location.second,
+                MapCacheItem(
+                    mapZone.location.first,
+                    mapZone.location.second,
+                    isPassable,
+                    movementCost
+                )
+            )
+        }
+
+        eventBusUtils.publishWithTracing(ADDRESS_MAP_CACHE_BUILT,
+            JsonObject()
+                .put("updatedTime", System.currentTimeMillis())
+        )
+    }
+
+    companion object {
+        const val ADDRESS_MAP_CACHE_BUILT = "chieftain.game.map.cache.built"
+
+        data class MapCacheItem(
+            val x: Int,
+            val y: Int,
+            val isPassable: Boolean,
+            val movementCost: Int
+        ) : Serializable {}
+    }
+}
