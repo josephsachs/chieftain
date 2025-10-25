@@ -1,11 +1,10 @@
 package chieftain.game.models.entity.agent
 
 import chieftain.game.models.entity.Polity
-import com.chieftain.game.controller.GameChannelController
 import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
 import chieftain.game.action.cache.SharedGameState
 import chieftain.game.action.cache.services.MapDataCacheBuilder.Companion.MapCacheItem
-import com.chieftain.game.controller.GameOperationController
+import chieftain.game.controller.ConsoleController
 import com.google.inject.Inject
 import com.minare.controller.EntityController
 import com.minare.controller.OperationController
@@ -24,7 +23,7 @@ class Clan: Entity(), Agent, Polity {
     @Inject
     private lateinit var entityController: EntityController
     @Inject
-    private lateinit var channelController: GameChannelController
+    private lateinit var consoleController: ConsoleController
     @Inject
     private lateinit var operationController: OperationController
     @Inject
@@ -67,15 +66,11 @@ class Clan: Entity(), Agent, Polity {
         var possibles: MutableList<MapCacheItem> = mutableListOf()
 
         for (n in (x - 1) until (x + 2)) {
-            for (m in (x - 1) until (x + 2)) {
+            for (m in (y - 1) until (y + 2)) {
                 if (n == 0 && m == 0) continue
 
-                val item: MapCacheItem? =
-                    sharedGameState.mapDataCache.get(n, m)
-
-                if (item == null) {
-                    continue
-                }
+                val item: MapCacheItem =
+                    sharedGameState.mapDataCache.get(n, m) ?: continue
 
                 if (item.isPassable) {
                     possibles.add(item)
@@ -89,8 +84,7 @@ class Clan: Entity(), Agent, Polity {
 
         val destination = possibles.random() as MapCacheItem
 
-        broadcastConsole("Clan $name is wandering to ${destination.x}, ${destination.y}")
-        log.info("BEHAVIOR: Clan $name is wandering to ${destination.x}, ${destination.y}")
+        consoleController.broadcast("Clan $name is wandering to ${destination.x}, ${destination.y}")
 
         val operation = Operation()
             .entity(this._id!!)
@@ -105,19 +99,6 @@ class Clan: Entity(), Agent, Polity {
         operation.build()
 
         operationController.queue(operation)
-    }
-
-    private suspend fun broadcastConsole(message: String) {
-        val defaultChannelId = channelController.getDefaultChannel()
-
-        if (defaultChannelId.isNullOrBlank()) {
-            return
-        }
-
-        channelController.broadcast(
-            defaultChannelId,
-            JsonObject().put("console", message)
-        )
     }
 
     companion object {

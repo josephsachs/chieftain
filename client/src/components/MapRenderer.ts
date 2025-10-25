@@ -1,16 +1,6 @@
-interface MapZone {
-  _id: string;
-  type: string;
-  state?: {
-    location?: {
-      x?: number;
-      y?: number;
-    };
-    terrainType?: string;
-    [key: string]: any;
-  };
-  [key: string]: any;
-}
+import { GameEntity } from '../models/GameEntity';
+import { MapZone, getMapZoneCoordinates, getTerrainColor } from '../models/MapZone';
+import { Clan, getClanCoordinates, getClanColor } from '../models/Clan';
 
 interface RenderOptions {
   showSelection?: boolean;
@@ -20,22 +10,10 @@ interface RenderOptions {
 class MapRenderer {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
-  
+
   // Hex grid constants
   private readonly HEX_RADIUS = 48;
   private readonly BORDER_PADDING = 50;
-  
-  // Terrain colors
-  private readonly TERRAIN_COLORS: { [key: string]: string } = {
-    GRASSLAND: '#4CAF50',
-    MEADOW: '#8BC34A',
-    SCRUB: '#CDDC39',
-    WOODLAND: '#2E7D32',
-    ROCKLAND: '#795548',
-    DRYLAND: '#FFC107',
-  };
-  
-  private readonly DEFAULT_COLOR = '#9E9E9E';
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -46,19 +24,24 @@ class MapRenderer {
     this.ctx = ctx;
   }
 
-  render(mapData: MapZone[], pan: { x: number; y: number }, options: RenderOptions = {}) {
+  render(
+    entities: GameEntity[],
+    pan: { x: number; y: number },
+    options: RenderOptions = {}
+  ) {
     this.clearCanvas();
     this.applyTransform(pan);
-    
-    const { maxX, maxY, zoneMap } = this.processMapData(mapData);
-    
+
+    // Process map data
+    const { maxX, maxY, zoneMap } = this.processMapData(entities);
+    const clanMap = this.processClans(entities);
+
     // Render terrain layer
     this.renderTerrainLayer(maxX, maxY, zoneMap, options);
-    
-    // Future layers will go here:
-    // this.renderTileLayer(maxX, maxY, zoneMap, options);
-    // this.renderOverlayLayer(maxX, maxY, zoneMap, options);
-    
+
+    // Render clans on top of terrain
+    this.renderClans(clanMap);
+
     this.restoreTransform();
   }
 
@@ -75,28 +58,47 @@ class MapRenderer {
     this.ctx.restore();
   }
 
-  private processMapData(mapData: MapZone[]) {
+  private processMapData(entities: GameEntity[]) {
     let maxX = 0;
     let maxY = 0;
-    
-    if (mapData.length > 0) {
-      mapData.forEach(zone => {
-        if (zone.state?.location?.x !== undefined && zone.state?.location?.y !== undefined) {
-          maxX = Math.max(maxX, zone.state.location.x);
-          maxY = Math.max(maxY, zone.state.location.y);
-        }
-      });
-    }
-    
+
+    const mapZones = entities.filter(e => e.type === 'MapZone') as MapZone[];
     const zoneMap = new Map<string, MapZone>();
-    mapData.forEach(zone => {
-      if (zone.state?.location?.x !== undefined && zone.state?.location?.y !== undefined) {
-        const key = `${zone.state.location.x},${zone.state.location.y}`;
+
+    mapZones.forEach(zone => {
+      const coords = getMapZoneCoordinates(zone);
+      if (coords) {
+        const [x, y] = coords;
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
+
+        const key = `${x},${y}`;
         zoneMap.set(key, zone);
       }
     });
-    
+
     return { maxX, maxY, zoneMap };
+  }
+
+  private processClans(entities: GameEntity[]) {
+    const clans = entities.filter(e => e.type === 'Clan') as Clan[];
+    const clanMap = new Map<string, Clan[]>();
+
+    clans.forEach(clan => {
+      const coords = getClanCoordinates(clan);
+      if (coords) {
+        const [x, y] = coords;
+        const key = `${x},${y}`;
+
+        if (!clanMap.has(key)) {
+          clanMap.set(key, []);
+        }
+
+        clanMap.get(key)?.push(clan);
+      }
+    });
+
+    return clanMap;
   }
 
   private renderTerrainLayer(maxX: number, maxY: number, zoneMap: Map<string, MapZone>, options: RenderOptions) {
@@ -105,21 +107,93 @@ class MapRenderer {
         const [pixelX, pixelY] = this.gridToPixel(x, y);
         const key = `${x},${y}`;
         const zone = zoneMap.get(key);
-        
-        let color = this.DEFAULT_COLOR;
+
+        let color = '#9E9E9E'; // Default color
         if (zone?.state?.terrainType) {
-          color = this.TERRAIN_COLORS[zone.state.terrainType] || this.DEFAULT_COLOR;
+          color = getTerrainColor(zone.state.terrainType);
         }
-        
+
         this.drawHex(pixelX, pixelY, color);
-        
+
         // Handle selection highlighting
-        if (options.showSelection && options.selectedHex && 
+        if (options.showSelection && options.selectedHex &&
             options.selectedHex.x === x && options.selectedHex.y === y) {
           this.drawSelectionHighlight(pixelX, pixelY);
         }
       }
     }
+  }
+
+  private renderClans(clanMap: Map<string, Clan[]>) {
+    clanMap.forEach((clans, key) => {
+      const [x, y] = key.split(',').map(Number);
+      const [pixelX, pixelY] = this.gridToPixel(x, y);
+
+      // If there's only one clan at this location
+      if (clans.length === 1) {
+        this.drawClan(pixelX, pixelY, clans[0]);
+      }
+      // If there are multiple clans at this location
+      else if (clans.length > 1) {
+        this.drawMultipleClans(pixelX, pixelY, clans);
+      }
+    });
+  }
+
+  private drawClan(centerX: number, centerY: number, clan: Clan) {
+    const color = getClanColor(clan);
+    const radius = this.HEX_RADIUS * 0.4; // Clan size relative to hex
+
+    // Draw clan circle
+    this.ctx.beginPath();
+    this.ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    this.ctx.fillStyle = color;
+    this.ctx.fill();
+
+    // Draw border
+    this.ctx.strokeStyle = '#333';
+    this.ctx.lineWidth = 2;
+    this.ctx.stroke();
+
+    // Draw clan name if available
+    if (clan.state?.name) {
+      this.ctx.font = '12px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'middle';
+      this.ctx.fillStyle = '#FFF';
+      this.ctx.fillText(clan.state.name, centerX, centerY);
+    }
+  }
+
+  private drawMultipleClans(centerX: number, centerY: number, clans: Clan[]) {
+    // Draw a stacked appearance for multiple clans
+    const baseRadius = this.HEX_RADIUS * 0.4;
+    const sliceAngle = (Math.PI * 2) / clans.length;
+
+    // Draw a segmented circle for the clans
+    for (let i = 0; i < clans.length; i++) {
+      const startAngle = i * sliceAngle;
+      const endAngle = (i + 1) * sliceAngle;
+
+      this.ctx.beginPath();
+      this.ctx.moveTo(centerX, centerY);
+      this.ctx.arc(centerX, centerY, baseRadius, startAngle, endAngle);
+      this.ctx.closePath();
+
+      this.ctx.fillStyle = getClanColor(clans[i]);
+      this.ctx.fill();
+
+      this.ctx.strokeStyle = '#333';
+      this.ctx.lineWidth = 1;
+      this.ctx.stroke();
+    }
+
+    // Draw count in the middle
+    this.ctx.font = '12px Arial';
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+    this.ctx.fillStyle = '#FFF';
+    this.ctx.fillText(clans.length.toString(), centerX, centerY);
   }
 
   private drawHex(centerX: number, centerY: number, color: string) {
