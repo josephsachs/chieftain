@@ -13,6 +13,7 @@ import com.minare.core.entity.annotations.*
 import com.minare.core.entity.models.Entity
 import com.minare.core.entity.models.serializable.Vector2
 import com.minare.core.operation.models.Operation
+import com.minare.core.operation.models.OperationType
 import io.vertx.core.json.JsonObject
 import org.slf4j.LoggerFactory
 
@@ -94,9 +95,13 @@ class Clan: Entity(), Agent, Polity {
         val operation = Operation()
             .entity(this._id!!)
             .entityType(Clan::class.java)
+            .action(OperationType.MUTATE)
             .delta(
                 JsonObject()
-                    .put("location", Pair(destination.x, destination.y))
+                    .put("location", JsonObject()
+                        .put("x", destination.x)
+                        .put("y", destination.y)
+                    )
             )
 
         operationController.queue(operation)
