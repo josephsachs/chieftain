@@ -8,6 +8,7 @@ import com.google.inject.Singleton
 import com.minare.controller.EntityController
 import com.minare.core.storage.interfaces.StateStore
 import com.minare.core.utils.vertx.EventBusUtils
+import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonObject
 import java.io.Serializable
 
@@ -18,6 +19,7 @@ class MapDataCacheBuilder @Inject constructor(
     private val stateStore: StateStore,
     private val eventBusUtils: EventBusUtils
 ) {
+    private val log = LoggerFactory.getLogger(MapDataCacheBuilder::class.java)
     /**
      * Rebuilds map data cache from current source of truth
      */
@@ -28,20 +30,27 @@ class MapDataCacheBuilder @Inject constructor(
 
         for(item in allMapZones) {
             val mapZone = item.value as MapZone
+            val x = mapZone.location.x
+            val y = mapZone.location.y
+
+            log.info("BEHAVIOR: MapZone ${mapZone}")
 
             val movementCost = 0
             val isPassable =
                 mapZone.terrainType !in listOf(
                     TerrainType.OCEAN,
-                    TerrainType.UNASSIGNED
+                    TerrainType.UNASSIGNED,
+                    TerrainType.ROCKLAND
                 )
 
+            log.info("BEHAVIOR: ${mapZone.terrainType} ${x}, ${y} $movementCost, $isPassable")
+
             sharedGameState.mapDataCache.put(
-                mapZone.location.first,
-                mapZone.location.second,
+                mapZone.location.x,
+                mapZone.location.y,
                 MapCacheItem(
-                    mapZone.location.first,
-                    mapZone.location.second,
+                    mapZone.location.x,
+                    mapZone.location.y,
                     isPassable,
                     movementCost
                 )

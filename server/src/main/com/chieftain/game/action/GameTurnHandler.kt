@@ -5,8 +5,8 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.minare.controller.EntityController
 import com.minare.core.storage.interfaces.StateStore
-import com.minare.core.utils.EventStateMachine
-import com.minare.core.utils.EventStateMachineContext
+import com.minare.core.utils.EventStateFlow
+import com.minare.core.utils.StateFlowContext
 import com.minare.core.utils.vertx.EventBusUtils
 import io.vertx.core.Vertx
 import io.vertx.core.impl.logging.LoggerFactory
@@ -25,30 +25,30 @@ class GameTurnHandler @Inject constructor(
 ) {
     private var log = LoggerFactory.getLogger(GameTurnHandler::class.java)
 
-    private val turnStateMachine: EventStateMachine
+    private val turnStateMachine: EventStateFlow
 
-    private val actAction: suspend (EventStateMachineContext) -> Unit = { context ->
+    private val actAction: suspend (StateFlowContext) -> Unit = { context ->
         log.info("TURN_LOOP: ACT Phase Start")
         setGameProperties(TurnPhase.ACT, true)
 
         clanTurnHandler.handleTurn(TurnPhase.ACT)
     }
 
-    private val executeAction: suspend (EventStateMachineContext) -> Unit = { context ->
+    private val executeAction: suspend (StateFlowContext) -> Unit = { context ->
         log.info("TURN_LOOP: EXECUTE Phase Start")
         setGameProperties(TurnPhase.EXECUTE, true)
 
         clanTurnHandler.handleTurn(TurnPhase.EXECUTE)
     }
 
-    private val resolveAction: suspend (EventStateMachineContext) -> Unit = { context ->
+    private val resolveAction: suspend (StateFlowContext) -> Unit = { context ->
         log.info("TURN_LOOP: RESOLVE Phase Start")
         setGameProperties(TurnPhase.RESOLVE, true)
 
         clanTurnHandler.handleTurn(TurnPhase.RESOLVE)
     }
 
-    private val turnEndAction: suspend (EventStateMachineContext) -> Unit = { _ ->
+    private val turnEndAction: suspend (StateFlowContext) -> Unit = { _ ->
         log.info("TURN_LOOP: Turn End Start (Cleanup)")
 
         setGameProperties(null, false)
@@ -61,7 +61,7 @@ class GameTurnHandler @Inject constructor(
     }
 
     init {
-        turnStateMachine = EventStateMachine(
+        turnStateMachine = EventStateFlow(
             eventKey = "GAME_TURN_LOOP",
             coroutineScope = scope,
             vertx = vertx,

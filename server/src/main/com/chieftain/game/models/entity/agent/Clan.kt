@@ -11,6 +11,7 @@ import com.minare.controller.EntityController
 import com.minare.controller.OperationController
 import com.minare.core.entity.annotations.*
 import com.minare.core.entity.models.Entity
+import com.minare.core.entity.models.serializable.Vector2
 import com.minare.core.operation.models.Operation
 import io.vertx.core.json.JsonObject
 import org.slf4j.LoggerFactory
@@ -44,7 +45,7 @@ class Clan: Entity(), Agent, Polity {
 
     @State
     @Mutable
-    var location: Pair<Int, Int> = Pair(0, 0)
+    var location: Vector2 = Vector2(0, 0)
 
     @Property
     var behavior: ClanBehavior = ClanBehavior.WANDERING
@@ -54,32 +55,29 @@ class Clan: Entity(), Agent, Polity {
         if (sharedGameState.isGamePaused()) return
 
         var deltas = JsonObject()
-
-        deltas
             .put("behavior", ClanBehavior.WANDERING)
 
         entityController.saveProperties(this._id!!, deltas)
     }
 
     suspend fun queueWanderAction() {
-        broadcastConsole("BEHAVIOR: Clan $name is wandering")
+        //broadcastConsole("BEHAVIOR: Clan $name is wandering")
+        log.info("BEHAVIOR: mapDataCache ${sharedGameState.mapDataCache.toDiagnosticString()}")
 
-        var x = location.first
-        var y = location.second
+        var x = location.x
+        var y = location.y
         var possibles: MutableList<MapCacheItem> = mutableListOf()
 
         for (n in (x - 1) until (x + 2)) {
             for (m in (x - 1) until (x + 2)) {
                 if (n == 0 && m == 0) continue
 
-                log.info("BEHAVIOR: Searching zone $n, $m")
-
                 val item: MapCacheItem? =
                     sharedGameState.mapDataCache.get(n, m)
 
                 if (item == null) {
                     log.info("BEHAVIOR: item was null")
-                    return
+                    continue
                 }
 
                 log.info("BEHAVIOR: found $item")

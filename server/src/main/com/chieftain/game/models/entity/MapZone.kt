@@ -3,6 +3,7 @@ package com.chieftain.game.models.entity
 import com.minare.core.entity.annotations.EntityType
 import com.minare.core.entity.annotations.State
 import com.minare.core.entity.models.Entity
+import com.minare.core.entity.models.serializable.Vector2
 import java.io.Serializable
 
 @EntityType("MapZone")
@@ -12,7 +13,7 @@ class MapZone: Entity(), Serializable {
     }
 
     @State
-    var location: Pair<Int, Int> = Pair(0, 0)
+    var location: Vector2 = Vector2(0, 0)
 
     @State
     var terrainType: TerrainType = TerrainType.UNASSIGNED

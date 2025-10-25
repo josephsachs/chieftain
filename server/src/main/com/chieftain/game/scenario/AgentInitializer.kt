@@ -10,6 +10,7 @@ import com.google.inject.Singleton
 import com.minare.controller.EntityController
 import com.minare.core.entity.factories.EntityFactory
 import com.minare.core.entity.models.Entity
+import com.minare.core.entity.models.serializable.Vector2
 import io.vertx.core.Vertx
 import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonArray
@@ -34,7 +35,7 @@ class AgentInitializer @Inject constructor(
             val clan = entityFactory.createEntity(Clan::class.java) as Clan
             clan.name = jsonObject.getString("name")
 
-            clan.location = Pair(
+            clan.location = Vector2(
                 jsonObject.getInteger("x"),
                 jsonObject.getInteger("y")
             )
