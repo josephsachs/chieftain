@@ -94,15 +94,15 @@ class Clan: Entity(), Agent, Polity {
 
         val operation = Operation()
             .entity(this._id!!)
-            .entityType(Clan::class.java)
+            .version(this.version)
+            .entityType(Clan::class)
             .action(OperationType.MUTATE)
             .delta(
                 JsonObject()
-                    .put("location", JsonObject()
-                        .put("x", destination.x)
-                        .put("y", destination.y)
-                    )
+                    .put("location", Vector2(destination.x, destination.y))
             )
+
+        operation.build()
 
         operationController.queue(operation)
     }
