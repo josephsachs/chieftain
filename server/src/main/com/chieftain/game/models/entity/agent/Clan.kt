@@ -61,9 +61,6 @@ class Clan: Entity(), Agent, Polity {
     }
 
     suspend fun queueWanderAction() {
-        //broadcastConsole("BEHAVIOR: Clan $name is wandering")
-        log.info("BEHAVIOR: mapDataCache ${sharedGameState.mapDataCache.toDiagnosticString()}")
-
         var x = location.x
         var y = location.y
         var possibles: MutableList<MapCacheItem> = mutableListOf()
@@ -76,11 +73,8 @@ class Clan: Entity(), Agent, Polity {
                     sharedGameState.mapDataCache.get(n, m)
 
                 if (item == null) {
-                    log.info("BEHAVIOR: item was null")
                     continue
                 }
-
-                log.info("BEHAVIOR: found $item")
 
                 if (item.isPassable) {
                     possibles.add(item)
@@ -94,7 +88,8 @@ class Clan: Entity(), Agent, Polity {
 
         val destination = possibles.random() as MapCacheItem
 
-        broadcastConsole("Clan $name is wandering to $destination")
+        broadcastConsole("Clan $name is wandering to ${destination.x}, ${destination.y}")
+        log.info("BEHAVIOR: Clan $name is wandering to ${destination.x}, ${destination.y}")
 
         val operation = Operation()
             .entity(this._id!!)

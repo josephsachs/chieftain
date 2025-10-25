@@ -3,8 +3,8 @@ interface MapZone {
   type: string;
   state?: {
     location?: {
-      first?: number;
-      second?: number;
+      x?: number;
+      y?: number;
     };
     terrainType?: string;
     [key: string]: any;
@@ -81,17 +81,17 @@ class MapRenderer {
     
     if (mapData.length > 0) {
       mapData.forEach(zone => {
-        if (zone.state?.location?.first !== undefined && zone.state?.location?.second !== undefined) {
-          maxX = Math.max(maxX, zone.state.location.first);
-          maxY = Math.max(maxY, zone.state.location.second);
+        if (zone.state?.location?.x !== undefined && zone.state?.location?.y !== undefined) {
+          maxX = Math.max(maxX, zone.state.location.x);
+          maxY = Math.max(maxY, zone.state.location.y);
         }
       });
     }
     
     const zoneMap = new Map<string, MapZone>();
     mapData.forEach(zone => {
-      if (zone.state?.location?.first !== undefined && zone.state?.location?.second !== undefined) {
-        const key = `${zone.state.location.first},${zone.state.location.second}`;
+      if (zone.state?.location?.x !== undefined && zone.state?.location?.y !== undefined) {
+        const key = `${zone.state.location.x},${zone.state.location.y}`;
         zoneMap.set(key, zone);
       }
     });

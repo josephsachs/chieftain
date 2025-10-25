@@ -33,8 +33,6 @@ class MapDataCacheBuilder @Inject constructor(
             val x = mapZone.location.x
             val y = mapZone.location.y
 
-            log.info("BEHAVIOR: MapZone ${mapZone}")
-
             val movementCost = 0
             val isPassable =
                 mapZone.terrainType !in listOf(
@@ -42,8 +40,6 @@ class MapDataCacheBuilder @Inject constructor(
                     TerrainType.UNASSIGNED,
                     TerrainType.ROCKLAND
                 )
-
-            log.info("BEHAVIOR: ${mapZone.terrainType} ${x}, ${y} $movementCost, $isPassable")
 
             sharedGameState.mapDataCache.put(
                 mapZone.location.x,

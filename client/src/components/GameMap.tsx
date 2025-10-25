@@ -6,8 +6,8 @@ interface MapZone {
   type: string;
   state?: {
     location?: {
-      first?: number;
-      second?: number;
+      x?: number;
+      y?: number;
     };
     terrainType?: string;
     [key: string]: any;
@@ -165,7 +165,7 @@ const GameMap: React.FC<GameMapProps> = ({ mapData }) => {
     
     // Find the zone at this grid position
     const zone = mapData.find(z => 
-      z.state?.location?.first === gridX && z.state?.location?.second === gridY
+      z.state?.location?.x === gridX && z.state?.location?.y === gridY
     );
     
     if (zone) {
