@@ -26,6 +26,7 @@ export enum TerrainType {
   WOODLAND = 'WOODLAND',
   ROCKLAND = 'ROCKLAND',
   DRYLAND = 'DRYLAND',
+  MARSH = 'MARSH',
   OCEAN = 'OCEAN'
 }
 
@@ -69,6 +70,7 @@ export function getTerrainColor(terrainType: TerrainType | string | undefined): 
     [TerrainType.WOODLAND]: '#2E7D32',
     [TerrainType.ROCKLAND]: '#795548',
     [TerrainType.DRYLAND]: '#FFC107',
+    [TerrainType.MARSH]: "#105249",
     [TerrainType.OCEAN]: '#2196F3',
     [TerrainType.UNASSIGNED]: '#9E9E9E'
   };

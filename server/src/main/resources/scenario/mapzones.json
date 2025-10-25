@@ -85,7 +85,7 @@
   {
     "x": 4,
     "y": 1,
-    "terrainType": "grassland"
+    "terrainType": "meadow"
   },
   {
     "x": 5,
@@ -148,12 +148,12 @@
   {
     "x": 4,
     "y": 2,
-    "terrainType": "grassland"
+    "terrainType": "meadow"
   },
   {
     "x": 5,
     "y": 2,
-    "terrainType": "grassland"
+    "terrainType": "meadow"
   },
   {
     "x": 6,
@@ -210,7 +210,7 @@
   {
     "x": 4,
     "y": 3,
-    "terrainType": "scrub"
+    "terrainType": "meadow"
   },
   {
     "x": 5,

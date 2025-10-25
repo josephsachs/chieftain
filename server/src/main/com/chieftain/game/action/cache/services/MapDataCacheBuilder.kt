@@ -1,6 +1,7 @@
 package chieftain.game.action.cache.services
 
 import chieftain.game.action.cache.SharedGameState
+import chieftain.game.models.entity.MapZoneResources
 import com.chieftain.game.models.entity.MapZone
 import com.chieftain.game.models.entity.MapZone.Companion.TerrainType
 import com.google.inject.Inject
@@ -48,7 +49,8 @@ class MapDataCacheBuilder @Inject constructor(
                     mapZone.location.x,
                     mapZone.location.y,
                     isPassable,
-                    movementCost
+                    movementCost,
+                    mapZone.resources
                 )
             )
         }
@@ -66,7 +68,8 @@ class MapDataCacheBuilder @Inject constructor(
             val x: Int,
             val y: Int,
             val isPassable: Boolean,
-            val movementCost: Int
+            val movementCost: Int,
+            val resources: MapZoneResources
         ) : Serializable {}
     }
 }

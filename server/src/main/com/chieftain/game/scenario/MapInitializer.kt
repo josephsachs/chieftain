@@ -1,5 +1,6 @@
 package com.chieftain.game.scenario
 
+import chieftain.game.models.entity.MapZoneResources
 import chieftain.game.models.entity.mapfeature.Town
 import com.chieftain.game.models.entity.mapfeature.MapFeature
 import com.chieftain.game.controller.GameChannelController
@@ -41,6 +42,17 @@ class MapInitializer @Inject constructor(
                 jsonObject.getInteger("y")
             )
             mapZone.terrainType = TerrainType.fromString(jsonObject.getString("terrainType"))
+
+            when (mapZone.terrainType) {
+                TerrainType.MEADOW -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 3)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 2)
+                }
+                else -> {
+                    // Pass
+                }
+            }
+
             entityController.create(mapZone) as MapZone
             entities.add(mapZone)
         }

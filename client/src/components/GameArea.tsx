@@ -35,13 +35,22 @@ const GameArea = () => {
   // Filter messages to display only certain types
   const shouldDisplayMessage = (message: any): boolean => {
     // Skip heartbeat messages
-    if (message.type === 'heartbeat' || message.type === 'heartbeat_response') {
+    if (message.type === 'heartbeat' ||
+        message.type === 'heartbeat_response' ||
+        message.type === 'down_socket_confirm') {
       return false;
     }
 
     // Skip entity sync messages unless they're explicit console messages
-    if (message.type === 'entity_sync' || message.type === 'sync') {
+    if (message.type === 'sync_initiated' ||
+        message.type === 'initial_sync_complete' ||
+        message.type === 'entity_sync' ||
+        message.type === 'sync') {
       return false;
+    }
+
+    if (message.type === 'update_batch') {
+        return false
     }
 
     // Display messages with 'console' field
@@ -244,7 +253,7 @@ const GameArea = () => {
               // Log clan updates specifically for debugging
               const clanUpdates = receivedEntities.filter(entity => entity.type === 'Clan');
               if (clanUpdates.length > 0) {
-                addMessage(`Received batch update with ${clanUpdates.length} clan updates`, 'console');
+                //addMessage(`Received batch update with ${clanUpdates.length} clan updates`, 'console');
                 clanUpdates.forEach(clan => {
                   const x = clan.state?.location?.x;
                   const y = clan.state?.location?.y;

@@ -1,12 +1,11 @@
 package com.chieftain.game.scenario
 
+import chieftain.game.models.data.AgentLocationMemory
+import chieftain.game.models.data.AgentLocationMemory.AgentLocationMemoryType
 import chieftain.game.models.entity.agent.Clan
 import com.chieftain.game.controller.GameChannelController
-import com.chieftain.game.models.data.AgentMemory
 import com.chieftain.game.models.data.Depot
 import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
-import com.chieftain.game.models.entity.MapZone
-import com.chieftain.game.models.entity.MapZone.Companion.TerrainType
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.minare.controller.EntityController
@@ -17,7 +16,6 @@ import io.vertx.core.Vertx
 import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
-import io.vertx.kotlin.core.json.json
 import io.vertx.kotlin.coroutines.await
 
 @Singleton
@@ -51,10 +49,10 @@ class AgentInitializer @Inject constructor(
                 50
             )
 
-            clan.memory = clan.memory.set(
-                AgentMemory.Companion.AgentMemoryTypeGroup.LOCATION,
-                AgentMemory.Companion.AgencyMemoryType.ZONE_FAMILIAR,
-                10
+            clan.locationMemory = clan.locationMemory.setMemory(
+                location = Vector2(10, 5),
+                type = AgentLocationMemoryType.HAS_FOOD,
+                reasons = mapOf("CORN" to 50, "FOWL" to 20)
             )
 
             entityController.create(clan) as Clan

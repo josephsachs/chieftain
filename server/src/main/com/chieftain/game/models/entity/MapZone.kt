@@ -1,5 +1,6 @@
 package com.chieftain.game.models.entity
 
+import chieftain.game.models.entity.MapZoneResources
 import com.chieftain.game.models.data.Depot
 import com.minare.core.entity.annotations.EntityType
 import com.minare.core.entity.annotations.Mutable
@@ -24,6 +25,9 @@ class MapZone: Entity(), Serializable {
     @Mutable
     var depot: Depot = Depot()
 
+    @State
+    var resources: MapZoneResources = MapZoneResources()
+
     companion object {
         enum class TerrainType(val value: String) {
             UNASSIGNED("unassigned"),
@@ -45,22 +49,6 @@ class MapZone: Entity(), Serializable {
             }
 
             override fun toString(): String = value
-        }
-
-        enum class RawResourceType {
-            SOIL,
-            CATTLE,
-            FOWL,
-            FISH,
-            REEDS,
-            BEES,
-            CEDAR,
-            GRANITE,
-            IRON,
-            TIN,
-            COPPER,
-            GOLD,
-            GEMS
         }
     }
 }

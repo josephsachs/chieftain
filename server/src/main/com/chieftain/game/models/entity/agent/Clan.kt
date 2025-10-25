@@ -5,6 +5,7 @@ import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
 import chieftain.game.action.cache.SharedGameState
 import chieftain.game.action.cache.services.MapDataCacheBuilder.Companion.MapCacheItem
 import chieftain.game.controller.ConsoleController
+import chieftain.game.models.data.AgentLocationMemory
 import com.chieftain.game.models.data.AgentMemory
 import com.chieftain.game.models.data.Depot
 import com.google.inject.Inject
@@ -57,7 +58,7 @@ class Clan: Entity(), Agent, Polity {
     var depot: Depot = Depot()
 
     @Property
-    var memory: AgentMemory = AgentMemory()
+    var locationMemory: AgentLocationMemory = AgentLocationMemory()
 
     @Task
     suspend fun chooseBehavior() {

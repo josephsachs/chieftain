@@ -34,12 +34,12 @@ export enum ClanBehavior {
  */
 export enum CultureGroup {
   UNASSIGNED = 'UNASSIGNED',
-  ALPINE = 'ALPINE',
-  DESERT = 'DESERT',
-  FOREST = 'FOREST',
-  MARITIME = 'MARITIME',
-  PLAINS = 'PLAINS',
-  RIVERINE = 'RIVERINE'
+  EGYPTIAN = 'EGYPTIAN',
+  CANAANITE = 'CANAANITE',
+  SHASU = 'SHASU',
+  HURRIAN = 'HURRIAN',
+  AMORITE = 'AMORITE',
+  HABIRU = 'HABIRU'
 }
 
 /**
@@ -80,12 +80,12 @@ export function getClanCoordinates(clan: Clan): [number, number] | null {
  */
 export function getClanColor(clan: Clan): string {
   const CULTURE_COLORS: Record<string, string> = {
-    [CultureGroup.ALPINE]: '#7986CB', // Indigo
-    [CultureGroup.DESERT]: '#FFB74D', // Orange
-    [CultureGroup.FOREST]: '#66BB6A', // Green
-    [CultureGroup.MARITIME]: '#4FC3F7', // Light Blue
-    [CultureGroup.PLAINS]: '#FFD54F', // Yellow
-    [CultureGroup.RIVERINE]: '#4DB6AC', // Teal
+    [CultureGroup.CANAANITE]: '#7986CB', // Indigo
+    [CultureGroup.EGYPTIAN]: '#FFD700', // Gold
+    [CultureGroup.SHASU]: '#FFB74D', // Orange
+    [CultureGroup.HURRIAN]: '#66BB6A', // Green
+    [CultureGroup.AMORITE]: '#4FC3F7', // Light Blue
+    [CultureGroup.HABIRU]: '#FFD54F', // Yellow
     [CultureGroup.UNASSIGNED]: '#E0E0E0' // Grey
   };
 
