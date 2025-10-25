@@ -1,6 +1,8 @@
 package com.chieftain.game.models.entity
 
+import com.chieftain.game.models.data.Depot
 import com.minare.core.entity.annotations.EntityType
+import com.minare.core.entity.annotations.Mutable
 import com.minare.core.entity.annotations.State
 import com.minare.core.entity.models.Entity
 import com.minare.core.entity.models.serializable.Vector2
@@ -17,6 +19,10 @@ class MapZone: Entity(), Serializable {
 
     @State
     var terrainType: TerrainType = TerrainType.UNASSIGNED
+
+    @State
+    @Mutable
+    var depot: Depot = Depot()
 
     companion object {
         enum class TerrainType(val value: String) {

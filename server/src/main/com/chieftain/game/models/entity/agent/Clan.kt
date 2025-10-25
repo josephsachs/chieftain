@@ -5,6 +5,8 @@ import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
 import chieftain.game.action.cache.SharedGameState
 import chieftain.game.action.cache.services.MapDataCacheBuilder.Companion.MapCacheItem
 import chieftain.game.controller.ConsoleController
+import com.chieftain.game.models.data.AgentMemory
+import com.chieftain.game.models.data.Depot
 import com.google.inject.Inject
 import com.minare.controller.EntityController
 import com.minare.controller.OperationController
@@ -50,6 +52,13 @@ class Clan: Entity(), Agent, Polity {
     @Property
     var behavior: ClanBehavior = ClanBehavior.WANDERING
 
+    @State
+    @Mutable
+    var depot: Depot = Depot()
+
+    @Property
+    var memory: AgentMemory = AgentMemory()
+
     @Task
     suspend fun chooseBehavior() {
         if (sharedGameState.isGamePaused()) return
@@ -83,8 +92,6 @@ class Clan: Entity(), Agent, Polity {
         }
 
         val destination = possibles.random() as MapCacheItem
-
-        consoleController.broadcast("Clan $name is wandering to ${destination.x}, ${destination.y}")
 
         val operation = Operation()
             .entity(this._id!!)

@@ -371,5 +371,191 @@
     "x": 11,
     "y": 5,
     "terrainType": "dryland"
+  },
+
+
+  {
+    "x": 0,
+    "y": 6,
+    "terrainType": "scrub"
+  },
+  {
+    "x": 1,
+    "y": 6,
+    "terrainType": "scrub"
+  },
+  {
+    "x": 2,
+    "y": 6,
+    "terrainType": "scrub"
+  },
+  {
+    "x": 3,
+    "y": 6,
+    "terrainType": "scrub"
+  },
+  {
+    "x": 4,
+    "y": 6,
+    "terrainType": "rockland"
+  },
+  {
+    "x": 5,
+    "y": 6,
+    "terrainType": "scrub"
+  },
+  {
+    "x": 6,
+    "y": 6,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 7,
+    "y": 6,
+    "terrainType": "meadow"
+  },
+  {
+    "x": 8,
+    "y": 6,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 9,
+    "y": 6,
+    "terrainType": "dryland"
+  },
+  {
+    "x": 10,
+    "y": 6,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 11,
+    "y": 6,
+    "terrainType": "dryland"
+  },
+
+
+  {
+    "x": 0,
+    "y": 7,
+    "terrainType": "rockland"
+  },
+  {
+    "x": 1,
+    "y": 7,
+    "terrainType": "scrub"
+  },
+  {
+    "x": 2,
+    "y": 7,
+    "terrainType": "scrub"
+  },
+  {
+    "x": 3,
+    "y": 7,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 4,
+    "y": 7,
+    "terrainType": "scrub"
+  },
+  {
+    "x": 5,
+    "y": 7,
+    "terrainType": "scrub"
+  },
+  {
+    "x": 6,
+    "y": 7,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 7,
+    "y": 7,
+    "terrainType": "meadow"
+  },
+  {
+    "x": 8,
+    "y": 7,
+    "terrainType": "marsh"
+  },
+  {
+    "x": 9,
+    "y": 7,
+    "terrainType": "woodland"
+  },
+  {
+    "x": 10,
+    "y": 7,
+    "terrainType": "dryland"
+  },
+  {
+    "x": 11,
+    "y": 7,
+    "terrainType": "dryland"
+  },
+
+
+  {
+    "x": 0,
+    "y": 8,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 1,
+    "y": 8,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 2,
+    "y": 8,
+    "terrainType": "dryland"
+  },
+  {
+    "x": 3,
+    "y": 8,
+    "terrainType": "dryland"
+  },
+  {
+    "x": 4,
+    "y": 8,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 5,
+    "y": 8,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 6,
+    "y": 8,
+    "terrainType": "meadow"
+  },
+  {
+    "x": 7,
+    "y": 8,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 8,
+    "y": 8,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 9,
+    "y": 8,
+    "terrainType": "grassland"
+  },
+  {
+    "x": 10,
+    "y": 8,
+    "terrainType": "woodland"
+  },
+  {
+    "x": 11,
+    "y": 8,
+    "terrainType": "dryland"
   }
 ]

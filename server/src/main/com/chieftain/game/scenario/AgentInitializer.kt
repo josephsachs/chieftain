@@ -2,6 +2,8 @@ package com.chieftain.game.scenario
 
 import chieftain.game.models.entity.agent.Clan
 import com.chieftain.game.controller.GameChannelController
+import com.chieftain.game.models.data.AgentMemory
+import com.chieftain.game.models.data.Depot
 import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
 import com.chieftain.game.models.entity.MapZone
 import com.chieftain.game.models.entity.MapZone.Companion.TerrainType
@@ -41,6 +43,19 @@ class AgentInitializer @Inject constructor(
             )
             clan.culture = CultureGroup.fromString(jsonObject.getString("culture"))
             clan.population = jsonObject.getInteger("population")
+
+            // Use assignment when initializing with EntityController
+            clan.depot = clan.depot.set(
+                Depot.Companion.ResourceTypeGroup.FOOD,
+                Depot.Companion.ResourceType.CORN,
+                50
+            )
+
+            clan.memory = clan.memory.set(
+                AgentMemory.Companion.AgentMemoryTypeGroup.LOCATION,
+                AgentMemory.Companion.AgencyMemoryType.ZONE_FAMILIAR,
+                10
+            )
 
             entityController.create(clan) as Clan
             entities.add(clan)
