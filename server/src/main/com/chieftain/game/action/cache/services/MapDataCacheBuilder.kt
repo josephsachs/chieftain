@@ -26,13 +26,11 @@ class MapDataCacheBuilder @Inject constructor(
      */
     suspend fun rebuild() {
         val allMapZones = entityController.findByIds(
-            stateStore.findKeysByType("MapZone")
+            stateStore.findAllKeysForType("MapZone")
         )
 
         for(item in allMapZones) {
             val mapZone = item.value as MapZone
-            val x = mapZone.location.x
-            val y = mapZone.location.y
 
             val movementCost = 0
             val isPassable =
@@ -42,18 +40,27 @@ class MapDataCacheBuilder @Inject constructor(
                     TerrainType.ROCKLAND
                 )
 
+            val item = MapCacheItem(
+                mapZone.location.x,
+                mapZone.location.y,
+                isPassable,
+                movementCost,
+                mapZone.resources
+            )
+
             sharedGameState.mapDataCache.put(
                 mapZone.location.x,
                 mapZone.location.y,
-                MapCacheItem(
-                    mapZone.location.x,
-                    mapZone.location.y,
-                    isPassable,
-                    movementCost,
-                    mapZone.resources
-                )
+                item
             )
+
+            // TEMPORARY DEBUG
+            log.info("WANDER: mapDataStuff ${item}")
         }
+
+        // TEMPORARY DEBUG
+        val mapDataStuff = sharedGameState.mapDataCache
+        log.info("WANDER: mapDataStuff ${mapDataStuff}")
 
         eventBusUtils.publishWithTracing(ADDRESS_MAP_CACHE_BUILT,
             JsonObject()

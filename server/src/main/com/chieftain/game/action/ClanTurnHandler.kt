@@ -19,8 +19,9 @@ class ClanTurnHandler @Inject constructor(
 
     suspend fun handleTurn(turnPhase: GameTurnHandler.Companion.TurnPhase): JsonObject {
         val clans = entityController.findByIds(
-            stateStore.findKeysByType("Clan")
+            stateStore.findAllKeysForType("Clan")
         )
+        log.info("TURN_LOOP: Got here 3 clans $clans")
 
         var dataResponse = JsonObject()
 
@@ -55,6 +56,8 @@ class ClanTurnHandler @Inject constructor(
                     .put("clanName", clan.name)
                     .put("clanBehavior", clan.behavior.toString())
                 )
+
+                log.info("TURN_LOOP: Got here 5 dataResponse $dataResponse")
             }
             else -> {
                 throw IllegalStateException("TURN_LOOP: ClanTurnHandler found clan ${clan._id} with undefined behavior ${clan.behavior}")

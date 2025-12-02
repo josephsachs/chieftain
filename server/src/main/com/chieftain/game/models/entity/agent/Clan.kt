@@ -6,7 +6,6 @@ import chieftain.game.action.cache.SharedGameState
 import chieftain.game.action.cache.services.MapDataCacheBuilder.Companion.MapCacheItem
 import chieftain.game.controller.ConsoleController
 import chieftain.game.models.data.AgentLocationMemory
-import com.chieftain.game.models.data.AgentMemory
 import com.chieftain.game.models.data.Depot
 import com.google.inject.Inject
 import com.minare.controller.EntityController
@@ -67,16 +66,15 @@ class Clan: Entity(), Agent, Polity {
         var deltas = JsonObject()
             .put("behavior", ClanBehavior.WANDERING)
 
-        entityController.saveProperties(this._id!!, deltas)
+        entityController.saveProperties(this._id, deltas)
     }
 
     suspend fun queueWanderAction() {
-        var x = location.x
-        var y = location.y
+        log.info("WANDER: Wander action began for ${this.name} ${this._id}")
         var possibles: MutableList<MapCacheItem> = mutableListOf()
 
-        for (n in (x - 1) until (x + 2)) {
-            for (m in (y - 1) until (y + 2)) {
+        for (n in (location.x - 1) until (location.x + 2)) {
+            for (m in (location.y - 1) until (location.y + 2)) {
                 if (n == 0 && m == 0) continue
 
                 val item: MapCacheItem =
@@ -87,6 +85,8 @@ class Clan: Entity(), Agent, Polity {
                 }
             }
         }
+        log.info("WANDER: Wander action found possible destinations ${possibles}")
+
 
         if (possibles.isEmpty()) {
             return
@@ -95,7 +95,7 @@ class Clan: Entity(), Agent, Polity {
         val destination = possibles.random() as MapCacheItem
 
         val operation = Operation()
-            .entity(this._id!!)
+            .entity(this._id)
             .version(this.version)
             .entityType(Clan::class)
             .action(OperationType.MUTATE)
@@ -104,7 +104,11 @@ class Clan: Entity(), Agent, Polity {
                     .put("location", Vector2(destination.x, destination.y))
             )
 
+        log.info("WANDER: Operation pre-built ${operation}")
+
         operation.build()
+
+        log.info("WANDER: Clan ${this.name} built operation ${operation}")
 
         operationController.queue(operation)
     }
