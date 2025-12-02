@@ -1,5 +1,6 @@
 package com.chieftain.game.scenario
 
+import chieftain.game.models.entity.MapZoneResources
 import chieftain.game.models.entity.mapfeature.Town
 import com.chieftain.game.models.entity.mapfeature.MapFeature
 import com.chieftain.game.controller.GameChannelController
@@ -12,6 +13,7 @@ import com.google.inject.Singleton
 import com.minare.controller.EntityController
 import com.minare.core.entity.factories.EntityFactory
 import com.minare.core.entity.models.Entity
+import com.minare.core.entity.models.serializable.Vector2
 import io.vertx.core.Vertx
 import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonArray
@@ -35,11 +37,22 @@ class MapInitializer @Inject constructor(
 
         readMapData().forEach { jsonObject ->
             val mapZone = entityFactory.createEntity(MapZone::class.java) as MapZone
-            mapZone.location = Pair(
+            mapZone.location = Vector2(
                 jsonObject.getInteger("x"),
                 jsonObject.getInteger("y")
             )
             mapZone.terrainType = TerrainType.fromString(jsonObject.getString("terrainType"))
+
+            when (mapZone.terrainType) {
+                TerrainType.MEADOW -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 3)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 2)
+                }
+                else -> {
+                    // Pass
+                }
+            }
+
             entityController.create(mapZone) as MapZone
             entities.add(mapZone)
         }

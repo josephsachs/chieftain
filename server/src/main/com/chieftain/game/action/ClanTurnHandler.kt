@@ -12,31 +12,16 @@ import io.vertx.core.json.JsonObject
 
 @Singleton
 class ClanTurnHandler @Inject constructor(
-    private val operationController: OperationController,
     private val entityController: EntityController,
     private val stateStore: StateStore,
 ) {
     private val log = LoggerFactory.getLogger(ClanTurnHandler::class.java)
 
-    suspend fun handleTask(clan: Clan) {
-        when (clan.behavior) {
-            Clan.Companion.ClanBehavior.NONE -> {
-                // Nothing
-            }
-            Clan.Companion.ClanBehavior.WANDERING -> {
-                // Pick a legal direction and move
-                log.info("TURN_LOOP: Clan ${clan.name} decides to wander")
-            }
-            else -> {
-                throw IllegalStateException("TURN_LOOP: ClanTurnHandler found clan ${clan._id} with undefined behavior ${clan.behavior}")
-            }
-        }
-    }
-
     suspend fun handleTurn(turnPhase: GameTurnHandler.Companion.TurnPhase): JsonObject {
         val clans = entityController.findByIds(
-            stateStore.findKeysByType("Clan")
+            stateStore.findAllKeysForType("Clan")
         )
+        log.info("TURN_LOOP: Got here 3 clans $clans")
 
         var dataResponse = JsonObject()
 
@@ -64,11 +49,15 @@ class ClanTurnHandler @Inject constructor(
                 // Nothing
             }
             Clan.Companion.ClanBehavior.WANDERING -> {
+                clan.queueWanderAction()
+
                 // Fetch a valid move and queue an operation
                 dataResponse.mergeIn(JsonObject()
                     .put("clanName", clan.name)
                     .put("clanBehavior", clan.behavior.toString())
                 )
+
+                log.info("TURN_LOOP: Got here 5 dataResponse $dataResponse")
             }
             else -> {
                 throw IllegalStateException("TURN_LOOP: ClanTurnHandler found clan ${clan._id} with undefined behavior ${clan.behavior}")

@@ -3,8 +3,6 @@ package com.chieftain.game.controller
 import com.google.inject.Provider
 import com.minare.application.interfaces.AppState
 import com.minare.controller.ChannelController
-import com.minare.core.storage.interfaces.ChannelStore
-import com.minare.core.storage.interfaces.ContextStore
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,10 +13,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class GameChannelController @Inject constructor(
-    channelStore: ChannelStore,
-    contextStore: ContextStore,
     private val appStateProvider: Provider<AppState>
-) : ChannelController(channelStore, contextStore) {
+) : ChannelController() {
     private val log = LoggerFactory.getLogger(GameChannelController::class.java)
 
     companion object {

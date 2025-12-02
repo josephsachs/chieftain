@@ -59,8 +59,6 @@ class GameOperationController @Inject constructor()
                 operation.value("entityType", entityObject.getString("type"))
 
                 log.debug("Created MUTATE operation for entity {} from connection {}", entityId, connectionId)
-
-                operation
             }
 
             // Add other command types here as needed
