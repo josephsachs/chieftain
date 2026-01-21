@@ -1,7 +1,7 @@
 package com.chieftain.game.scenario
 
-import chieftain.game.models.data.AgentLocationMemory
 import chieftain.game.models.data.AgentLocationMemory.AgentLocationMemoryType
+import chieftain.game.models.data.Vector2
 import chieftain.game.models.entity.agent.Clan
 import com.chieftain.game.controller.GameChannelController
 import com.chieftain.game.models.data.Depot
@@ -11,7 +11,6 @@ import com.google.inject.Singleton
 import com.minare.controller.EntityController
 import com.minare.core.entity.factories.EntityFactory
 import com.minare.core.entity.models.Entity
-import com.minare.core.entity.models.serializable.Vector2
 import io.vertx.core.Vertx
 import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonArray

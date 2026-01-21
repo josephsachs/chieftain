@@ -6,13 +6,13 @@ import chieftain.game.action.cache.SharedGameState
 import chieftain.game.action.cache.services.MapDataCacheBuilder.Companion.MapCacheItem
 import chieftain.game.controller.ConsoleController
 import chieftain.game.models.data.AgentLocationMemory
+import chieftain.game.models.data.Vector2
 import com.chieftain.game.models.data.Depot
 import com.google.inject.Inject
 import com.minare.controller.EntityController
 import com.minare.controller.OperationController
 import com.minare.core.entity.annotations.*
 import com.minare.core.entity.models.Entity
-import com.minare.core.entity.models.serializable.Vector2
 import com.minare.core.operation.models.Operation
 import com.minare.core.operation.models.OperationType
 import io.vertx.core.json.JsonObject

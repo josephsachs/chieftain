@@ -1,5 +1,6 @@
 package com.chieftain.game.scenario
 
+import chieftain.game.models.data.Vector2
 import chieftain.game.models.entity.MapZoneResources
 import chieftain.game.models.entity.mapfeature.Town
 import com.chieftain.game.models.entity.mapfeature.MapFeature
@@ -13,7 +14,6 @@ import com.google.inject.Singleton
 import com.minare.controller.EntityController
 import com.minare.core.entity.factories.EntityFactory
 import com.minare.core.entity.models.Entity
-import com.minare.core.entity.models.serializable.Vector2
 import io.vertx.core.Vertx
 import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonArray

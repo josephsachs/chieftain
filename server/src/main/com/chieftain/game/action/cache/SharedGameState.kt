@@ -1,10 +1,10 @@
 package chieftain.game.action.cache
 
 import chieftain.game.action.cache.services.MapDataCacheBuilder.Companion.MapCacheItem
+import chieftain.game.models.data.DistributedGridMap
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.hazelcast.core.HazelcastInstance
-import com.minare.core.utils.DistributedGridMap
 import com.minare.core.utils.PushVar
 import io.vertx.core.impl.logging.LoggerFactory
 
