@@ -1,12 +1,12 @@
 package com.chieftain.game.models.entity
 
+import chieftain.game.models.data.Vector2
 import chieftain.game.models.entity.MapZoneResources
 import com.chieftain.game.models.data.Depot
 import com.minare.core.entity.annotations.EntityType
 import com.minare.core.entity.annotations.Mutable
 import com.minare.core.entity.annotations.State
 import com.minare.core.entity.models.Entity
-import com.minare.core.entity.models.serializable.Vector2
 import java.io.Serializable
 
 @EntityType("MapZone")
