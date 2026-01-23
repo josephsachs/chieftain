@@ -17,6 +17,7 @@ sockets:
 
 
 entity:
+  factory: com.chieftain.game.GameEntityFactory
   update:
     batch_interval: 100
 

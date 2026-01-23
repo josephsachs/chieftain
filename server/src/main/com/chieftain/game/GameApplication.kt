@@ -27,6 +27,9 @@ class GameApplication : MinareApplication() {
     @Inject
     lateinit var channelController: GameChannelController
 
+    @Inject
+    lateinit var gameInitializer: GameInitializer
+
     /**
      * Application-specific initialization logic that runs after the server starts.
      */
@@ -37,8 +40,7 @@ class GameApplication : MinareApplication() {
 
             channelController.setDefaultChannel(defaultChannelId)
 
-            getGameState()
-            getGameInitializer().initialize()
+            gameInitializer.initialize()
 
             log.info("CHIEFTAIN: Game application started with default channel: $defaultChannelId")
         } catch (e: Exception) {
@@ -60,18 +62,7 @@ class GameApplication : MinareApplication() {
     }
 
     override suspend fun onWorkerStart() {
-        // Initialize the singletons
-        getGameState()
-        getGameInitializer()
-    }
-
-    private fun getGameInitializer(): GameInitializer {
-        // IMPORTANT: Gotta get these from tne injector, because GameState depends on the CP subsystem
-        return injector.getInstance(GameInitializer::class.java)
-    }
-
-    private fun getGameState(): SharedGameState {
-        return injector.getInstance(SharedGameState::class.java)
+        // Nothing here now
     }
 
     override suspend fun setupApplicationRoutes() {
