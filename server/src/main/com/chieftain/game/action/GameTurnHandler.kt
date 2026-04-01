@@ -5,8 +5,8 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.minare.controller.EntityController
 import com.minare.core.storage.interfaces.StateStore
-import com.minare.core.utils.EventStateFlow
-import com.minare.core.utils.StateFlowContext
+import com.minare.core.utils.types.esf.EventStateFlow
+import com.minare.core.utils.types.esf.StateFlowContext
 import com.minare.core.utils.vertx.EventBusUtils
 import io.vertx.core.Vertx
 import io.vertx.core.impl.logging.LoggerFactory

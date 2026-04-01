@@ -57,6 +57,7 @@ class GameOperationController @Inject constructor()
                 // Add connection context as metadata
                 operation.value("connectionId", connectionId)
                 operation.value("entityType", entityObject.getString("type"))
+                operation.build()
 
                 log.debug("Created MUTATE operation for entity {} from connection {}", entityId, connectionId)
             }

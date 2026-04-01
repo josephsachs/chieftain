@@ -6,7 +6,6 @@ import com.minare.controller.ChannelController
 import com.minare.controller.ConnectionController
 import com.minare.controller.MessageController
 import com.minare.controller.OperationController
-import com.minare.core.config.DatabaseNameProvider
 import com.minare.core.entity.factories.EntityFactory
 import com.chieftain.game.GameEntityFactory
 import com.chieftain.game.controller.GameChannelController
@@ -23,7 +22,7 @@ import org.slf4j.LoggerFactory
  * When combined with the framework through a child injector,
  * bindings defined here will override the framework's default bindings.
  */
-class GameModule : AbstractModule(), DatabaseNameProvider {
+class GameModule : AbstractModule() {
     private val log = LoggerFactory.getLogger(GameModule::class.java)
 
     override fun configure() {
@@ -49,6 +48,4 @@ class GameModule : AbstractModule(), DatabaseNameProvider {
 
         log.info("GameModule configured with custom EntityFactory and controllers")
     }
-
-    override fun getDatabaseName(): String = "chieftain_game"
 }

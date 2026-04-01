@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>com.minare</groupId>
-            <artifactId>minare-framework</artifactId>
+            <artifactId>minare</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

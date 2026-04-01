@@ -49,7 +49,7 @@ const GameArea = () => {
       return false;
     }
 
-    if (message.type === 'update_batch') {
+    if (message.type === 'update') {
         return false
     }
 
@@ -242,7 +242,7 @@ const GameArea = () => {
 
           if (message.type === 'down_socket_confirm') {
             addMessage('Down socket confirmed');
-          } else if (message.type === 'update_batch' && message.updates) {
+          } else if (message.type === 'update' && message.updates) {
             const updateCount = Object.keys(message.updates).length;
 
             // Only log if it contains updates
