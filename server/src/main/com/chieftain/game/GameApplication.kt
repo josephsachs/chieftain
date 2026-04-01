@@ -5,7 +5,6 @@ import com.minare.core.MinareApplication
 import com.chieftain.game.config.GameModule
 import com.chieftain.game.controller.GameChannelController
 import com.chieftain.game.scenario.GameInitializer
-import chieftain.game.action.cache.SharedGameState
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpHeaders

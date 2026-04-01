@@ -37,7 +37,7 @@ export function extractEntitiesFromMessage(message: any): GameEntity[] {
   }
 
   // Extract from update batch
-  if (message.type === 'update_batch' && message.updates) {
+  if (message.type === 'update' && message.updates) {
     // Convert object of updates to array and ensure they have the operation field
     return Object.values(message.updates)
       .filter(isGameEntity)

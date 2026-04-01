@@ -2,13 +2,12 @@ package chieftain.game.models.entity
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.minare.core.utils.JsonSerializable
 import io.vertx.core.json.JsonObject
 import java.io.Serializable
 
 data class MapZoneResources @JsonCreator constructor(
     @JsonProperty("resources") private val _resources: Map<String, Int>
-) : Serializable, JsonSerializable {
+) : Serializable {
 
     // Type-safe accessor
     val resources: Map<RawResourceType, Int>
@@ -42,7 +41,7 @@ data class MapZoneResources @JsonCreator constructor(
         return MapZoneResources(newResources)
     }
 
-    override fun toJson(): JsonObject {
+    fun toJson(): JsonObject {
         val json = JsonObject()
         json.put("resources", JsonObject(_resources))
         return json

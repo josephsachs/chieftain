@@ -23,34 +23,31 @@ class GameConnectionController @Inject constructor(
      * Called when a client becomes fully connected.
      * Subscribes the client to the default channel and initiates sync.
      */
-    override suspend fun onClientFullyConnected(connection: Connection) {
-        log.info("Game client {} is now fully connected", connection._id)
+    override suspend fun onConnected(connection: Connection) {
+        log.info("Game client {} is now fully connected", connection.id)
 
         val defaultChannelId = channelController.getDefaultChannel()
 
         if (defaultChannelId == null) {
-            log.warn("No default channel found for client {}, skipping auto-subscription", connection._id)
+            log.warn("No default channel found for client {}, skipping auto-subscription", connection.id)
             return
         }
 
-        if (channelController.addClient(connection._id, defaultChannelId)) {
-            syncCommandHandler.syncChannelToConnection(defaultChannelId, connection._id)
-            sendInitialSyncComplete(connection._id)
+        if (channelController.addClient(connection.id, defaultChannelId)) {
+            syncCommandHandler.syncChannelToConnection(defaultChannelId, connection.id)
+            sendInitialSyncComplete(connection.id)
         }
     }
 
     /**
      * Send a message to the client indicating that initial sync is complete
      */
-    private fun sendInitialSyncComplete(connectionId: String) {
-        val commandSocket = getUpSocket(connectionId)
-        if (commandSocket != null && !commandSocket.isClosed()) {
-            val message = JsonObject()
-                .put("type", "initial_sync_complete")
-                .put("timestamp", System.currentTimeMillis())
+    private suspend fun sendInitialSyncComplete(connectionId: String) {
+        val message = JsonObject()
+            .put("type", "initial_sync_complete")
+            .put("timestamp", System.currentTimeMillis())
 
-            commandSocket.writeTextMessage(message.encode())
-            log.debug("Sent initial sync complete notification to client {}", connectionId)
-        }
+        sendToUpSocket(connectionId, message)
+        log.debug("Sent initial sync complete notification to client {}", connectionId)
     }
 }
