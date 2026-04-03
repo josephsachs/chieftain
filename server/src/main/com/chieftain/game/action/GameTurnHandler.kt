@@ -12,11 +12,14 @@ import io.vertx.core.Vertx
 import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonObject
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.serialization.json.Json
 
 // TODO: Rename this class since it's no longer a handler really
 @Singleton
 class GameTurnHandler @Inject constructor(
     private val clanTurnHandler: ClanTurnHandler,
+    private val mapZoneTurnHandler: MapZoneTurnHandler,
+    private val fightTurnHandler: FightTurnHandler,
     private val entityController: EntityController,
     private val stateStore: StateStore,
     private val scope: CoroutineScope,
@@ -33,23 +36,36 @@ class GameTurnHandler @Inject constructor(
     )
 
     private val actAction: suspend (StateFlowContext) -> Unit = { _ ->
-        log.info("TURN_LOOP: ACT Phase Start")
         setGameProperties(TurnPhase.ACT, true)
-        clanTurnHandler.handleTurn(TurnPhase.ACT)
+
+        var data = JsonObject()
+            .put("map", mapZoneTurnHandler.handleTurn(TurnPhase.ACT))
+            .put("clans", clanTurnHandler.handleTurn(TurnPhase.ACT))
+            .put("fights", fightTurnHandler.handleTurn(TurnPhase.ACT))
+
+        eventBusUtils.publishWithTracing("ADDRESS_TURN_ACT_DATA", data)
     }
 
     private val executeAction: suspend (StateFlowContext) -> Unit = { _ ->
         log.info("TURN_LOOP: EXECUTE Phase Start")
         setGameProperties(TurnPhase.EXECUTE, true)
+        var data = JsonObject()
+            .put("map", mapZoneTurnHandler.handleTurn(TurnPhase.EXECUTE))
+            .put("clans", clanTurnHandler.handleTurn(TurnPhase.EXECUTE))
+            .put("fights", fightTurnHandler.handleTurn(TurnPhase.EXECUTE))
 
-        clanTurnHandler.handleTurn(TurnPhase.EXECUTE)
+        eventBusUtils.publishWithTracing("ADDRESS_TURN_EXECUTE_DATA", data)
     }
 
     private val resolveAction: suspend (StateFlowContext) -> Unit = { _ ->
         log.info("TURN_LOOP: RESOLVE Phase Start")
         setGameProperties(TurnPhase.RESOLVE, true)
+        var data = JsonObject()
+            .put("map", mapZoneTurnHandler.handleTurn(TurnPhase.RESOLVE))
+            .put("clans", clanTurnHandler.handleTurn(TurnPhase.RESOLVE))
+            .put("fights", fightTurnHandler.handleTurn(TurnPhase.RESOLVE))
 
-        clanTurnHandler.handleTurn(TurnPhase.RESOLVE)
+        eventBusUtils.publishWithTracing("ADDRESS_TURN_RESOLVE_DATA", data)
     }
 
     private val turnEndAction: suspend (StateFlowContext) -> Unit = { _ ->
@@ -65,7 +81,6 @@ class GameTurnHandler @Inject constructor(
     }
 
     init {
-
         turnStateMachine.registerState("ACT_PHASE", actAction)
         turnStateMachine.registerState("EXECUTE_PHASE", executeAction)
         turnStateMachine.registerState("RESOLVE_PHASE", resolveAction)

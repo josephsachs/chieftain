@@ -41,6 +41,15 @@ data class MapZoneResources @JsonCreator constructor(
         return MapZoneResources(newResources)
     }
 
+    fun hasFood(): Boolean {
+        return listOf(
+            get(RawResourceType.FOWL),
+            get(RawResourceType.SOIL),
+            get(RawResourceType.CATTLE),
+            get(RawResourceType.FISH)
+        ).sum() > 0
+    }
+
     fun toJson(): JsonObject {
         val json = JsonObject()
         json.put("resources", JsonObject(_resources))

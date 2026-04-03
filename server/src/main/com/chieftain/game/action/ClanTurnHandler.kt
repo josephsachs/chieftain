@@ -15,13 +15,10 @@ class ClanTurnHandler @Inject constructor(
     private val entityController: EntityController,
     private val stateStore: StateStore,
 ) {
-    private val log = LoggerFactory.getLogger(ClanTurnHandler::class.java)
-
     suspend fun handleTurn(turnPhase: GameTurnHandler.Companion.TurnPhase): JsonObject {
         val clans = entityController.findByIds(
             stateStore.findAllKeysForType("Clan")
         )
-        log.info("TURN_LOOP: Got here 3 clans $clans")
 
         var dataResponse = JsonObject()
 
@@ -44,20 +41,45 @@ class ClanTurnHandler @Inject constructor(
     suspend fun doAct(clan: Clan): JsonObject {
         var dataResponse = JsonObject()
 
+        dataResponse.mergeIn(JsonObject()
+            .put("clanName", clan.name)
+            .put("clanBehavior", clan.behavior.toString())
+        )
+
         when (clan.behavior) {
             Clan.Companion.ClanBehavior.NONE -> {
                 // Nothing
             }
             Clan.Companion.ClanBehavior.WANDERING -> {
                 clan.queueWanderAction()
-
-                // Fetch a valid move and queue an operation
-                dataResponse.mergeIn(JsonObject()
-                    .put("clanName", clan.name)
-                    .put("clanBehavior", clan.behavior.toString())
-                )
-
-                log.info("TURN_LOOP: Got here 5 dataResponse $dataResponse")
+            }
+            Clan.Companion.ClanBehavior.TRAVELING -> {
+                //find our way toward the nav target one hex at a time
+            }
+            Clan.Companion.ClanBehavior.LABORING -> {
+                //clan.queueLaborAction(clan.targetResource)
+            }
+            Clan.Companion.ClanBehavior.STATIONED -> {
+                // Do nothing for now
+            }
+            Clan.Companion.ClanBehavior.HOLIDAY -> {
+                //clan.holidayBehavior()
+            }
+            Clan.Companion.ClanBehavior.FIGHTING -> {
+                //var target = clan.tryGetTarget()
+                //if (gameMapController.isAdjacent(clan, target)) {
+                //    clan.queueAttack(target)
+                //} else {
+                //    clan.queueMoveToward(target.location)
+                //}
+            }
+            Clan.Companion.ClanBehavior.RECOVERING -> {
+                //var target = clan.tryGetTarget()
+                //if (gameMapController.isAdjacent(clan, target)) {
+                //    clan.queueMoveAway(target.location)
+                //} else {
+                // // do nothing for now...
+                //}
             }
             else -> {
                 throw IllegalStateException("TURN_LOOP: ClanTurnHandler found clan ${clan._id} with undefined behavior ${clan.behavior}")

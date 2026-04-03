@@ -1,14 +1,17 @@
 package com.chieftain.game
 
+import chieftain.game.models.entity.Deity
 import chieftain.game.models.entity.Game
+import chieftain.game.models.entity.Polity
 import chieftain.game.models.entity.agent.Clan
-import chieftain.game.models.entity.mapfeature.Town
+import chieftain.game.models.entity.agent.Fight
+import chieftain.game.models.entity.agent.Treaty
+import chieftain.game.models.entity.mapfeature.City
+import com.chieftain.game.models.entity.Culture
 import com.minare.core.entity.factories.EntityFactory
-import com.minare.core.entity.models.Entity
 import com.chieftain.game.models.entity.MapZone
 import com.chieftain.game.models.entity.mapfeature.MapFeature
 import com.google.inject.Inject
-import com.google.inject.Injector
 import javax.inject.Singleton
 
 /**
@@ -22,8 +25,11 @@ class GameEntityFactory @Inject constructor(): EntityFactory() {
         "Game" to Game::class.java,
         "MapZone" to MapZone::class.java,
         "MapFeature" to MapFeature::class.java,
-        "Town" to Town::class.java,
+        "City" to City::class.java,
         "Clan" to Clan::class.java,
-        "Entity" to Entity::class.java
+        "Culture" to Culture::class.java,
+        "Treaty" to Treaty::class.java,
+        "Fight" to Fight::class.java,
+        "Polity" to Polity::class.java
     )
 }

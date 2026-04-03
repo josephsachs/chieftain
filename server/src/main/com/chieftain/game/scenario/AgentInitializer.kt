@@ -38,6 +38,7 @@ class AgentInitializer @Inject constructor(
                 jsonObject.getInteger("x"),
                 jsonObject.getInteger("y")
             )
+
             clan.culture = CultureGroup.fromString(jsonObject.getString("culture"))
             clan.population = jsonObject.getInteger("population")
 

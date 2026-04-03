@@ -1,6 +1,8 @@
 package chieftain.game.controller
 
 import chieftain.game.action.cache.SharedGameState
+import chieftain.game.models.entity.MapZoneResources
+import com.chieftain.game.models.data.Depot
 import com.google.inject.Inject
 import com.google.inject.Singleton
 
@@ -25,6 +27,12 @@ class GameMapController @Inject constructor(
        }
 
         return false
+    }
+
+    fun getResources(from: Pair<Int, Int>): MapZoneResources {
+        val item = sharedGameState.mapDataCache.get(from.first, from.second)
+
+        return item!!.resources
     }
 
     fun findPath(from: Pair<Int, Int>, to: Pair<Int, Int>): List<Pair<Int, Int>> {
