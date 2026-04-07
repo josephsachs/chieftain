@@ -1,5 +1,6 @@
 package chieftain.game.action
 
+import chieftain.game.models.entity.agent.Character
 import chieftain.game.models.entity.agent.Clan
 import com.google.inject.Inject
 import com.google.inject.Singleton
@@ -17,10 +18,21 @@ class ClanTurnHandler @Inject constructor(
             stateStore.findAllKeysForType("Clan")
         )
 
+        // Hydrate chieftain references
+        val chieftainIds = clans.values
+            .filterIsInstance<Clan>()
+            .map { it.chieftainId }
+            .filter { it.isNotEmpty() }
+            .distinct()
+        val characters = if (chieftainIds.isNotEmpty()) {
+            entityController.findByIds(chieftainIds)
+        } else emptyMap()
+
         val dataResponse = JsonObject()
 
         for ((_, clan) in clans) {
             clan as Clan
+            clan.chieftain = characters[clan.chieftainId] as? Character
             when (turnPhase) {
                 GameTurnHandler.Companion.TurnPhase.ACT -> {
                     dataResponse.put(clan.name, doAct(clan))

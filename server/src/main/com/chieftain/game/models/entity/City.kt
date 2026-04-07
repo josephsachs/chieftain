@@ -1,8 +1,8 @@
-package chieftain.game.models.entity.mapfeature
+package chieftain.game.models.entity
 
-import chieftain.game.models.entity.Polity
+import chieftain.game.models.data.Vector2
 import com.chieftain.game.models.data.Depot
-import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
+import com.chieftain.game.models.entity.Culture
 import com.minare.core.entity.annotations.EntityType
 import com.minare.core.entity.annotations.Mutable
 import com.minare.core.entity.annotations.Parent
@@ -16,8 +16,10 @@ class City: Entity() {
     }
 
     @State
-    @Mutable
     var name: String = ""
+
+    @State
+    var location: Vector2 = Vector2(0, 0)
 
     @State
     @Mutable
@@ -25,12 +27,12 @@ class City: Entity() {
 
     @State
     @Mutable
-    var culture: CultureGroup = CultureGroup.UNASSIGNED
+    var culture: Culture.Companion.CultureGroup = Culture.Companion.CultureGroup.UNASSIGNED
 
     @State
     @Mutable
     @Parent
-    var alignedWith: Polity = Polity()
+    var alignedWith: Polity? = null
 
     @State
     @Mutable

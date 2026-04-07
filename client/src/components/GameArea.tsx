@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import GameMap from './GameMap';
+import ClanPanel from './ClanPanel';
+import CharacterPanel from './CharacterPanel';
 import { GameEntity, extractEntitiesFromMessage } from '../models/GameEntity';
 import { Clan, getClanCoordinates } from '../models/Clan';
+import { Character } from '../models/Character';
 
 interface LogMessage {
   timestamp: string;
@@ -16,6 +19,8 @@ const GameArea = () => {
   const [upSocket, setUpSocket] = useState<WebSocket | null>(null);
   const [downSocket, setDownSocket] = useState<WebSocket | null>(null);
   const [entities, setEntities] = useState<GameEntity[]>([]);
+  const [selectedClan, setSelectedClan] = useState<Clan | null>(null);
+  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -354,9 +359,32 @@ const GameArea = () => {
       {/* Game Map */}
       <div className="flex-1">
         {connectionStatus === 'fully-connected' && (
-          <GameMap entities={entities} />
+          <GameMap
+            entities={entities}
+            onSelectClan={(clan) => { setSelectedClan(clan); setSelectedCharacter(null); }}
+            onSelectCharacter={(character) => { setSelectedCharacter(character); setSelectedClan(null); }}
+          />
         )}
       </div>
+
+      {/* Entity Panels */}
+      {selectedClan && (
+        <ClanPanel
+          clan={selectedClan}
+          entities={entities}
+          onClose={() => setSelectedClan(null)}
+          onOpenCharacter={(character) => {
+            setSelectedCharacter(character);
+            setSelectedClan(null);
+          }}
+        />
+      )}
+      {selectedCharacter && (
+        <CharacterPanel
+          character={selectedCharacter}
+          onClose={() => setSelectedCharacter(null)}
+        />
+      )}
     </div>
   );
 };

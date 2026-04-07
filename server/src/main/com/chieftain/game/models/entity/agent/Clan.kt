@@ -72,7 +72,10 @@ class Clan: Entity(), Agent, Combatant {
 
     @State
     @Mutable
-    var chieftain: Character = Character()
+    var chieftainId: String = ""
+
+    @Transient
+    var chieftain: Character? = null
 
     @State
     @Mutable
@@ -116,6 +119,12 @@ class Clan: Entity(), Agent, Combatant {
 
     @Property
     var lastThought: Long = 0L // timestamp
+
+    private val chieftainName: String
+        get() = chieftain?.name ?: "the clan"
+
+    private val chieftainPersonality: Character.Companion.CharacterPersonality
+        get() = chieftain?.personality ?: Character.Companion.CharacterPersonality()
 
     private fun getAvailableRecipes(resources: MapZoneResources): List<ProductionRecipe> {
         return PRODUCTION_RECIPES.filter { recipe ->
@@ -176,24 +185,24 @@ class Clan: Entity(), Agent, Combatant {
         } else {
             dataOutput.mergeIn(
                 JsonObject()
-                    .put("decision", "${chieftain.name} of ${name} is strategizing")
+                    .put("decision", "${chieftainName} of ${name} is strategizing")
             )
 
             // Now the chieftain's personality matters a lot
-            val personality = chieftain.personality
+            val personality = chieftainPersonality
             val areaResources = getMapZoneResources()
 
             if (personality.sumptuousVsPrudent > 0.65 && countFoodQty() > population * 2) {
                 // Sumptuous leader with surplus — take a holiday
                 behavior = ClanBehavior.HOLIDAY
-                dataOutput.put("result", "${chieftain.name} declared a feast day")
+                dataOutput.put("result", "${chieftainName} declared a feast day")
             } else if (haveAnySkills(areaResources) && areaResources.resources.any { it.value > 0 }) {
                 // There's something to work here — an industrious choice
                 val chosenResource = tryChooseResource(areaResources)
                 if (chosenResource != null) {
                     targetResource = chosenResource
                     behavior = ClanBehavior.LABORING
-                    dataOutput.put("result", "${chieftain.name} put the clan to work on ${targetResource}")
+                    dataOutput.put("result", "${chieftainName} put the clan to work on ${targetResource}")
                 } else {
                     behavior = ClanBehavior.WANDERING
                     dataOutput.put("result", "${name} wander on")
@@ -201,7 +210,7 @@ class Clan: Entity(), Agent, Combatant {
             } else if (personality.riskyVsCautious > 0.60) {
                 // Restless leader — keep moving, explore
                 behavior = ClanBehavior.WANDERING
-                dataOutput.put("result", "${chieftain.name} wants to see what's over the next hill")
+                dataOutput.put("result", "${chieftainName} wants to see what's over the next hill")
             } else {
                 // Default: nothing pressing, wander
                 behavior = ClanBehavior.WANDERING
@@ -234,12 +243,12 @@ class Clan: Entity(), Agent, Combatant {
                 if (chosenResource != null) {
                     targetResource = chosenResource
                     behavior = ClanBehavior.LABORING
-                    dataOutput.put("decision", "${chieftain.name} ordered the clan to gather ${targetResource}")
+                    dataOutput.put("decision", "${chieftainName} ordered the clan to gather ${targetResource}")
                 } else {
                     behavior = ClanBehavior.WANDERING
                     dataOutput.put("decision", "${name} decided to keep moving")
                 }
-            } else if (chieftain.personality.riskyVsCautious > 0.50) {
+            } else if (chieftainPersonality.riskyVsCautious > 0.50) {
                 // Risky chieftain tries to gather the best food here even without skill
                 val bestFood = PRODUCTION_RECIPES
                     .filter { it.outputGroup == Depot.Companion.ResourceTypeGroup.FOOD && areaResources.get(it.rawResource) > 0 }
@@ -248,7 +257,7 @@ class Clan: Entity(), Agent, Combatant {
                 if (bestFood != null) {
                     targetResource = bestFood.output
                     behavior = ClanBehavior.LABORING
-                    dataOutput.put("decision", "${chieftain.name} told ${name} to try gathering ${targetResource} despite inexperience")
+                    dataOutput.put("decision", "${chieftainName} told ${name} to try gathering ${targetResource} despite inexperience")
                 } else {
                     goProduceFood(dataOutput)
                 }
@@ -305,7 +314,7 @@ class Clan: Entity(), Agent, Combatant {
         targetNavigation.clear()
         targetNavigation.add(Vector2(remembered.x, remembered.y))
         behavior = ClanBehavior.TRAVELING
-        dataOutput.put("decision", "${chieftain.name} decided ${name} clan should travel")
+        dataOutput.put("decision", "${chieftainName} decided ${name} clan should travel")
         dataOutput.put("result", "${remembered.x},${remembered.y}")
         return true
     }

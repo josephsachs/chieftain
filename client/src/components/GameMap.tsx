@@ -3,12 +3,16 @@ import MapRenderer from './MapRenderer';
 import { GameEntity } from '../models/GameEntity';
 import { MapZone, getMapZoneCoordinates } from '../models/MapZone';
 import { Clan, getClanCoordinates } from '../models/Clan';
+import { City, getCityCoordinates } from '../models/City';
+import { Character } from '../models/Character';
 
 interface GameMapProps {
   entities: GameEntity[];
+  onSelectClan: (clan: Clan) => void;
+  onSelectCharacter: (character: Character) => void;
 }
 
-const GameMap: React.FC<GameMapProps> = ({ entities }) => {
+const GameMap: React.FC<GameMapProps> = ({ entities, onSelectClan, onSelectCharacter }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<MapRenderer | null>(null);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -97,7 +101,6 @@ const GameMap: React.FC<GameMapProps> = ({ entities }) => {
   const getEntitiesAtPosition = (x: number, y: number): GameEntity[] => {
     const result: GameEntity[] = [];
 
-    // Check all entities with a location
     entities.forEach(entity => {
       if (entity.type === 'MapZone') {
         const coords = getMapZoneCoordinates(entity as MapZone);
@@ -106,6 +109,11 @@ const GameMap: React.FC<GameMapProps> = ({ entities }) => {
         }
       } else if (entity.type === 'Clan') {
         const coords = getClanCoordinates(entity as Clan);
+        if (coords && coords[0] === x && coords[1] === y) {
+          result.push(entity);
+        }
+      } else if (entity.type === 'City') {
+        const coords = getCityCoordinates(entity as City);
         if (coords && coords[0] === x && coords[1] === y) {
           result.push(entity);
         }
@@ -267,30 +275,43 @@ const GameMap: React.FC<GameMapProps> = ({ entities }) => {
             maxWidth: '250px'
           }}
         >
-          <div className="text-sm font-semibold mb-2">Hex Information</div>
+          <div className="text-sm font-semibold mb-2">
+            ({selectedEntity.x}, {selectedEntity.y})
+          </div>
           <div className="text-xs space-y-1">
-            <div>Coordinates: ({selectedEntity.x}, {selectedEntity.y})</div>
-
             {/* Map Zone Info */}
             {selectedEntity.entities.filter(e => e.type === 'MapZone').map((zone, idx) => (
-              <div key={`zone-${idx}`} className="mt-2">
-                <div className="font-semibold">Terrain</div>
-                <div>Type: {(zone as MapZone).state?.terrainType || 'Unknown'}</div>
-                <div>ID: {zone._id}</div>
+              <div key={`zone-${idx}`}>
+                <span className="text-gray-400">
+                  {(zone as MapZone).state?.terrainType || 'Unknown'}
+                </span>
               </div>
             ))}
 
-            {/* Clan Info */}
-            {selectedEntity.entities.filter(e => e.type === 'Clan').map((clan, idx) => (
-              <div key={`clan-${idx}`} className="mt-2 pt-2 border-t border-gray-600">
-                <div className="font-semibold">Clan: {(clan as Clan).state?.name}</div>
-                <div>Population: {(clan as Clan).state?.population || 0}</div>
-                <div>Culture: {(clan as Clan).state?.culture || 'Unknown'}</div>
-                <div>Behavior: {(clan as Clan).properties?.behavior || 'Unknown'}</div>
+            {/* City Info */}
+            {selectedEntity.entities.filter(e => e.type === 'City').map((city, idx) => (
+              <div key={`city-${idx}`} className="mt-2 pt-2 border-t border-gray-600">
+                <div className="font-semibold">{(city as City).state?.name || 'City'}</div>
+                <div>Pop. {(city as City).state?.population || 0}</div>
               </div>
             ))}
+
+            {/* Clan links */}
+            {selectedEntity.entities.filter(e => e.type === 'Clan').length > 0 && (
+              <div className="mt-2 pt-2 border-t border-gray-600">
+                <div className="text-gray-400 mb-1">Clans</div>
+                {selectedEntity.entities.filter(e => e.type === 'Clan').map((clan) => (
+                  <button
+                    key={clan._id}
+                    onClick={(e) => { e.stopPropagation(); onSelectClan(clan as Clan); }}
+                    className="block text-blue-400 hover:text-blue-300 underline cursor-pointer mb-0.5"
+                  >
+                    {(clan as Clan).state?.name || clan._id}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="text-xs text-gray-400 mt-2">Left-click to dismiss</div>
         </div>
       )}
 

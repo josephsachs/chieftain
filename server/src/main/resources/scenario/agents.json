@@ -1,49 +1,121 @@
 [
   {
+    "id": "clan-zemar",
     "name": "Zemar",
     "population": 35,
     "culture": "Canaanite",
-    "behavior": "None",
+    "chieftain": "char-abdi",
+    "skills": {
+      "gathering": 5,
+      "hunting": 3,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 2,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
     "x": 4,
     "y": 4
   },
   {
+    "id": "clan-baalel",
     "name": "Baalel",
     "population": 35,
     "culture": "Canaanite",
-    "behavior": "None",
+    "chieftain": "char-ishbaal",
+    "skills": {
+      "gathering": 3,
+      "hunting": 2,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 2,
+      "scribing": 0,
+      "minting": 0
+    },
     "x": 2,
     "y": 2
   },
   {
+    "id": "clan-yassar",
     "name": "Yassar",
     "population": 35,
     "culture": "Shasu",
-    "behavior": "None",
+    "chieftain": "char-yaqub",
+    "skills": {
+      "gathering": 2,
+      "hunting": 6,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
     "x": 3,
     "y": 8
   },
   {
+    "id": "clan-tesubi",
     "name": "Tesubi",
     "population": 35,
     "culture": "Hurrian",
-    "behavior": "None",
+    "chieftain": "char-shutarna",
+    "skills": {
+      "gathering": 3,
+      "hunting": 3,
+      "mining": 3,
+      "quarrying": 2,
+      "woodcutting": 2,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
     "x": 10,
     "y": 1
   },
   {
+    "id": "clan-medyat",
     "name": "Medyat",
     "population": 35,
     "culture": "Amorite",
-    "behavior": "None",
+    "chieftain": "char-ayyab",
+    "skills": {
+      "gathering": 4,
+      "hunting": 2,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 3,
+      "sculpture": 2,
+      "jewelry": 0,
+      "scribing": 2,
+      "minting": 0
+    },
     "x": 10,
     "y": 7
   },
   {
+    "id": "clan-astur",
     "name": "Astur",
     "population": 35,
     "culture": "Habiru",
-    "behavior": "None",
+    "chieftain": "char-aziru",
+    "skills": {
+      "gathering": 2,
+      "hunting": 4,
+      "mining": 2,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
     "x": 8,
     "y": 4
   }

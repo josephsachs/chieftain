@@ -39,7 +39,7 @@ class Character(): Entity(), Agent {
     @State
     @Mutable
     @Parent
-    var polity: Polity = Polity()
+    var polity: Polity? = null
 
     @State
     @Mutable

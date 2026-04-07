@@ -14,7 +14,7 @@ class Polity(): Entity() {
 
     @State
     @Mutable
-    var leader: Character = Character()
+    var leader: Character? = null
 
     @State
     @Mutable
