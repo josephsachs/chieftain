@@ -66,6 +66,7 @@ data class AgentLocationMemory @JsonCreator constructor(
         HAS_FOOD,
         HAS_GOODS,
         HAS_METALS,
+        MARGINAL,
         VISITED,
         DANGER,
         MARKET

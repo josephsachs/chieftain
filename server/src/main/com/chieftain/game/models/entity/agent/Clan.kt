@@ -180,7 +180,16 @@ class Clan: Entity(), Agent, Combatant {
         // No combat systems yet so we don't have targetCombatant or anything like that
         // to worry about.
 
-        if (health.satiety < 75) {
+        if (health.satiety <= 0) {
+            // PANIC!
+            behavior = ClanBehavior.WANDERING
+            locationMemory.setMemory(
+                Vector2(location.x, location.y),
+                AgentLocationMemory.AgentLocationMemoryType.MARGINAL,
+                mapOf("Starved trying to work here" to 15)
+            )
+            dataOutput.put("result", "${name} seek greener pastures")
+        } else if (health.satiety < 75) {
             dataOutput = handleBehaviorFoodSeeking(dataOutput)
 
         } else {
@@ -264,7 +273,7 @@ class Clan: Entity(), Agent, Combatant {
                 }
             } else {
                 val wealth = countWealth()
-                if (wealth > 100) {
+                if (wealth > 5) {
                     goTradeAtMarket(dataOutput)
                 } else {
                     goProduceFood(dataOutput)
@@ -374,6 +383,9 @@ class Clan: Entity(), Agent, Combatant {
 
         operation.build()
         operationController.queue(operation)
+
+        // Update local depot so dynamics() sees this turn's production
+        depot = updatedDepot
 
         log.info("${name} produced $yield ${recipe.output} (skill=$skill, pop=$population)")
     }
@@ -532,7 +544,6 @@ class Clan: Entity(), Agent, Combatant {
     }
 
     suspend fun dynamics() {
-        val foodValue = countFoodValue()
         val needed = population
 
         // Consume food, prioritizing cheapest first to preserve high-value food
