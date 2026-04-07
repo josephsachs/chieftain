@@ -17,6 +17,7 @@ import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
 import io.vertx.kotlin.coroutines.await
+import kotlin.random.Random
 
 @Singleton
 class MapInitializer @Inject constructor(
@@ -43,10 +44,82 @@ class MapInitializer @Inject constructor(
 
             when (mapZone.terrainType) {
                 TerrainType.MEADOW -> {
-                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 3)
-                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 2)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 5)
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.BEES, 1)
+                    }
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.CATTLE, 1)
+                    } else {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 1)
+                    }
+                }
+                TerrainType.MARSH -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 5)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.REEDS, 5)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FISH, 2)
+                }
+                TerrainType.DRYLAND -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.CATTLE, 2)
+                }
+                TerrainType.GRASSLAND -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 5)
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.CATTLE, 1)
+                    } else {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 1)
+                    }
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.BEES, 1)
+                    }
+                }
+                TerrainType.WOODLAND -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 2)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 1)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.CEDAR, 3)
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.BEES, 1)
+                    }
+                }
+                TerrainType.ROCKLAND -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.CEDAR, 1)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.GRANITE, 1)
+                }
+                TerrainType.SCRUB -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 2)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 1)
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.BEES, 1)
+                    }
+                }
+                TerrainType.DESERT -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 1)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 1)
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.BEES, 1)
+                    }
                 }
                 else -> {}
+            }
+
+            if (Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.COPPER, 1)
+            }
+
+            if (Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.GRANITE, 1)
+            }
+            if (Random.nextBoolean() && Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.TIN, 1)
+            }
+            if (Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.IRON, 2)
+            }
+            if (Random.nextBoolean() && Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.GOLD, 1)
+            }
+            if (Random.nextBoolean() && Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.GEMS, 1)
             }
 
             entityController.create(mapZone) as MapZone

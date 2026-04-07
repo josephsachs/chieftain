@@ -19,6 +19,7 @@ import com.minare.core.operation.models.OperationType
 import io.vertx.core.json.JsonObject
 import org.slf4j.LoggerFactory
 import java.io.Serializable
+import kotlin.math.roundToInt
 
 @EntityType("Clan")
 class Clan: Entity(), Agent, Combatant {
@@ -360,7 +361,7 @@ class Clan: Entity(), Agent, Combatant {
         }
 
         // Production: yield equals skill level, capped by available raw resource
-        val yield = minOf(maxOf(skill, 1), rawAvailable)
+        val yield = minOf(maxOf(skill, 1), rawAvailable) * (population.toDouble() * 0.60).roundToInt()
         val currentAmt = depot.get(recipe.outputGroup, recipe.output)
         val updatedDepot = depot.set(recipe.outputGroup, recipe.output, currentAmt + yield)
 
