@@ -359,8 +359,8 @@ class Clan: Entity(), Agent, Combatant {
             return
         }
 
-        // Production: base yield scales with skill and population; minimum 1 for unskilled labor
-        val yield = maxOf(1, (maxOf(skill, 1) * population) / 100)
+        // Production: yield equals skill level, capped by available raw resource
+        val yield = minOf(maxOf(skill, 1), rawAvailable)
         val currentAmt = depot.get(recipe.outputGroup, recipe.output)
         val updatedDepot = depot.set(recipe.outputGroup, recipe.output, currentAmt + yield)
 

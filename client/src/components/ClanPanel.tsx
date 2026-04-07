@@ -55,13 +55,16 @@ const ClanPanel: React.FC<ClanPanelProps> = ({ clan, entities, onClose, onOpenCh
   const health: ClanHealth = s?.health || {};
   const skills: ClanSkills = s?.skills || {};
 
-  // Find the chieftain Character entity
-  const chieftainRef = s?.chieftain;
-  const chieftainEntity = chieftainRef?._id
-    ? entities.find(e => e._id === chieftainRef._id && isCharacter(e)) as Character | undefined
+  // Find the chieftain Character entity by chieftainId
+  const chieftainId = s?.chieftainId as string | undefined;
+  const chieftainEntity = chieftainId
+    ? entities.find(e => e._id === chieftainId && isCharacter(e)) as Character | undefined
     : undefined;
 
-  const chieftainName = chieftainRef?.name || chieftainEntity?.state?.name || 'None';
+  const chieftainName = chieftainEntity?.state?.name || chieftainId || 'None';
+
+  // Depot is serialized as { contents: { FOOD: { CORN: 0, ... }, ... } }
+  const depotContents = s?.depot?.contents as Record<string, Record<string, number>> | undefined;
 
   // Count non-zero skills
   const hasSkills = Object.values(skills).some(v => typeof v === 'number' && v > 0);
@@ -146,11 +149,11 @@ const ClanPanel: React.FC<ClanPanelProps> = ({ clan, entities, onClose, onOpenCh
         )}
 
         {/* Depot summary */}
-        {s?.depot && Object.keys(s.depot).length > 0 && (
+        {depotContents && Object.keys(depotContents).length > 0 && (
           <div className="p-4">
             <h3 className="text-sm font-semibold text-gray-400 uppercase mb-2">Depot</h3>
             <div className="text-sm">
-              {Object.entries(s.depot).map(([group, items]) => {
+              {Object.entries(depotContents).map(([group, items]) => {
                 if (typeof items !== 'object' || items === null) return null;
                 const nonZero = Object.entries(items as Record<string, number>)
                   .filter(([, v]) => v > 0);
