@@ -18,13 +18,8 @@ import com.minare.core.entity.models.Entity
 import com.minare.core.operation.models.Operation
 import com.minare.core.operation.models.OperationType
 import io.vertx.core.json.JsonObject
-import jdk.jshell.spi.ExecutionControl.NotImplementedException
-import kotlinx.serialization.json.Json
-import org.apache.kafka.common.protocol.types.Field.Bool
 import org.slf4j.LoggerFactory
 import java.io.Serializable
-import java.util.*
-import kotlin.random.Random
 
 @EntityType("Clan")
 class Clan: Entity(), Agent, Combatant {
@@ -76,106 +71,97 @@ class Clan: Entity(), Agent, Combatant {
     @Mutable
     var depot: Depot = Depot()
 
+    @State
+    @Mutable
+    var chieftain: Character = Character()
+
     /**
      * AI
      */
+    // These are Properties so we use saveProperties to set them
+
     // We periodically execute or reconsider this
     @Property
     var behavior: ClanBehavior = ClanBehavior.WANDERING
 
     // If we're trying to pathfind
-    @State
-    @Mutable
-    var foodSecurity: Double = 0.00
-
-    // If we're trying to pathfind
     @Property
     var targetNavigation: MutableList<Vector2> = mutableListOf()
+    // This is where we would want to go if wishes were horses. We still have to
+    // figure out how to get there, but when we do we can add to the top of the list
+    // Every time we change our destination we clear this
 
     // If we're trying to work
     @Property
     var targetResource: Depot.Companion.ResourceType? = null
+    // This is what we've chosen to produce with labor
 
     // If we're trying to attack something
     @Property
     @Peer
-    var targetCombatant: Combatant? = null
-
-    // This person's eccentricities get final call
-    @State
-    @Mutable
-    var chieftain: Character = Character()
+    var targetCombatant: String? = null // Entity ID
+    // We have an interface, Combatant, to ensure that when something targets something else, that thing
+    // has the stat block required for combat. However, we need an entity reference for the actual behavior.
+    // For now we implicitly trust this reference.
+    // This points at a friction point the framework might be better positioned to address: how to represent
+    // interface types in storage and return them to code.
+    // Let's explore the pain point by doing it the quick and dirty way.
 
     // Remember our big scores
     @Property
     var locationMemory: AgentLocationMemory = AgentLocationMemory()
 
-    fun haveAnySkills(resources: MapZoneResources): Boolean {
+    @Property
+    var lastThought: Long = 0L // timestamp
+
+    private fun haveAnySkills(resources: MapZoneResources): Boolean {
+        // If we have any skills that apply to resources in this map zone, return true
         throw Exception("")
     }
 
-    fun tryChooseResource(resources: MapZoneResources): Depot.Companion.ResourceType? {
+    private fun tryChooseResource(resources: MapZoneResources): Depot.Companion.ResourceType? {
+        // Basic rules:
+        // If we have low health.satiety we choose food, always the best (skill * foodValue)
+        // If we have a good match of goods to production skills, and there's a marketplace nearby, we
+        // prob want to produce these as they will cash out to more food.
+
+        // Later, the chieftain's personality will decide:
+        // If high-value goods are present a greedy leader will want to produce them even without skill.
+        // If there's nothing too valuable here, a restless leader will want to move on.
+        // A deliberate leader will want to end turn and rethink it in the next.
+        // An industrious leader will want to produce something even marginal so that the turn isn't wasted.
+        // etc.
+
+        // If we got nothing, then we're null and the brain tree knows we aren't going to labor here.
         throw Exception("")
     }
 
-    @Task
+    private fun getMapZoneResources(): MapZoneResources {
+        return gameMapController.getResources(Pair(location.x, location.y))
+    }
+
     suspend fun chooseBehavior() {
         if (sharedGameState.isGamePaused()) return
-
-        // Let's not do this for only 1/3 of entities per tick
-        if (Random.nextInt(0, 100) < 97) return
 
         var dataOutput = JsonObject()
             .put("entityType", "Clan")
             .put("id", _id)
             .put("messageType", "chooseBehavior")
 
-        val hungry = health.satiety < (50 * foodSecurity)
+        // Where are we? Are we in a market town? Near combat?
 
-        dataOutput.mergeIn(
-            JsonObject()
-                .put("hungry", hungry)
-        )
+        // If we're in a town, then we have two questions:
+        // - Are we not yet done trading?
+        // - Are we hanginaround in particular? (Some chieftains want to)
+        // Shortcircuit if either applies: Behavior.NONE
 
-        //
-        // Figure out if we're near combat as we will want to know this often
-        //
+        // If we're near combat, then we are deciding whether to engage or avoid.
+        // No combat systems yet so we don't have targetCombatant or anything like that
+        // to worry about.
 
-        if (hungry) {
-            val areaResources = gameMapController
-                .getResources(Pair(location.x, location.y))
+        if (health.satiety < 75) {
+            dataOutput = handleBehaviorFoodSeeking(dataOutput)
 
-            if (areaResources.hasFood()) {
-                if (haveAnySkills(areaResources) || chieftain.personality.riskyVsCautious > 0.50) {
-                    val chosenResource = tryChooseResource(areaResources)
-
-                    if (chosenResource != null) {
-                        targetResource = chosenResource
-                        behavior = ClanBehavior.LABORING
-                        dataOutput.mergeIn(
-                            JsonObject()
-                                .put("decision", "${chieftain.name} ordered the tribe to gather up ${targetResource}")
-                        )
-                    } else {
-                        behavior = ClanBehavior.WANDERING
-                        dataOutput.mergeIn(
-                            JsonObject()
-                                .put("decision", "${name} decided to keep moving")
-                        )
-                    }
-                } else {
-                    val wealth = countWealth()
-
-                    // Pretty arbitrary so not this
-                    if (wealth > 100) {
-                        dataOutput = goTradeAtMarket(dataOutput)
-                    } else {
-                        dataOutput = goProduceFood(dataOutput)
-                    }
-                }
-            } else {
-                dataOutput = goProduceFood(dataOutput)
-            }
         } else {
             dataOutput.mergeIn(
                 JsonObject()
@@ -183,17 +169,80 @@ class Clan: Entity(), Agent, Combatant {
             )
 
             //       Now the chieftain's personality matters a lot
-            //       do we nav back toward someplace we liked on general principle?
-            //       are we flush and going to take it easy with a holiday?
-            //       park at the market eating our surplus?
-            //       is chieftain a narcissist und need to start fight fur die bigballs?
-            //       etc.
+            //       Do we nav back toward someplace we liked on general principle? A rooted leader wants to.
+            //       Are we flush and going to take it easy with a holiday?
+            //       Do we park at the market eating our surplus? A sumptuous leader wants to.
+            //       Does the chieftain start shit for no reason the first time he has a free afternoon?
         }
 
         entityController.saveProperties(this._id, JsonObject()
-            .put("behavior", behavior))
+            .put("behavior", behavior)
+            .put("lastThought", System.currentTimeMillis())
+        )
 
         log.info("${name} chose behavior: ${dataOutput.toString()}")
+    }
+
+    private fun handleBehaviorFoodSeeking(dataOutput: JsonObject): JsonObject {
+        dataOutput.mergeIn(
+            JsonObject()
+                .put("decision", "${name} are in search of food")
+        )
+
+        val areaResources = getMapZoneResources()
+
+        if (areaResources.hasFood()) {
+            if (haveAnySkills(areaResources) || chieftain.personality.riskyVsCautious > 0.50) {
+                val chosenResource = tryChooseResource(areaResources)
+
+                if (chosenResource != null) {
+                    targetResource = chosenResource
+                    behavior = ClanBehavior.LABORING
+                    dataOutput.mergeIn(
+                        JsonObject()
+                            .put("decision", "${chieftain.name} ordered the tribe to gather up ${targetResource}")
+                    )
+                } else {
+                    behavior = ClanBehavior.WANDERING
+                    dataOutput.mergeIn(
+                        JsonObject()
+                            .put("decision", "${name} decided to keep moving")
+                    )
+                }
+            } else {
+                val wealth = countWealth()
+
+                // Pretty arbitrary so not this
+                if (wealth > 100) {
+                    goTradeAtMarket(dataOutput)
+                    // This will lead to buying food
+                } else {
+                    goProduceFood(dataOutput)
+                }
+            }
+        } else {
+            goProduceFood(dataOutput)
+        }
+
+        return dataOutput
+    }
+
+    private fun countFoodQty(): Int {
+        return listOf(
+            depot.get(Depot.Companion.ResourceTypeGroup.FOOD, Depot.Companion.ResourceType.CORN),
+            depot.get(Depot.Companion.ResourceTypeGroup.FOOD, Depot.Companion.ResourceType.FOWL),
+            depot.get(Depot.Companion.ResourceTypeGroup.FOOD, Depot.Companion.ResourceType.FRUIT),
+            depot.get(Depot.Companion.ResourceTypeGroup.FOOD, Depot.Companion.ResourceType.MEAT)
+        ).sum()
+    }
+
+    private fun countFoodValue(): Int {
+        return listOf(
+            depot.get(Depot.Companion.ResourceTypeGroup.FOOD, Depot.Companion.ResourceType.CORN) * Depot.getFoodValue(Depot.Companion.ResourceType.CORN),
+            depot.get(Depot.Companion.ResourceTypeGroup.FOOD, Depot.Companion.ResourceType.FOWL) * Depot.getFoodValue(Depot.Companion.ResourceType.FOWL),
+            depot.get(Depot.Companion.ResourceTypeGroup.FOOD, Depot.Companion.ResourceType.FRUIT) * Depot.getFoodValue(Depot.Companion.ResourceType.FRUIT),
+            depot.get(Depot.Companion.ResourceTypeGroup.FOOD, Depot.Companion.ResourceType.MEAT) * Depot.getFoodValue(Depot.Companion.ResourceType.MEAT),
+        ).sum()
     }
 
     private fun countWealth(): Int {
@@ -207,8 +256,16 @@ class Clan: Entity(), Agent, Combatant {
     }
 
     private fun goTradeAtMarket(dataOutput: JsonObject): JsonObject {
-        locationMemory.memories.forEach { (key, value) ->
-            if (value.containsKey(AgentLocationMemory.AgentLocationMemoryType.MARKET)) {
+        // Here we want to find a market and start navigating there, but that depends on knowing about one.
+        // Right now, memories aren't saved.
+        dataOutput.mergeIn(
+            JsonObject()
+                .put("decision", "${name} will try to trade at market")
+        )
+
+        locationMemory.memories
+            .filter { it.value.containsKey(AgentLocationMemory.AgentLocationMemoryType.MARKET) }
+            .forEach { (key, value) ->
                 targetNavigation.clear()
                 targetNavigation.add(Vector2(key.x, key.y))
                 behavior = ClanBehavior.TRAVELING
@@ -218,19 +275,30 @@ class Clan: Entity(), Agent, Combatant {
                         .put("result", "${key.x},${key.y}")
                 )
 
-                return@forEach
+                return dataOutput
             }
-        }
+
+
+        dataOutput.mergeIn(
+            JsonObject()
+                .put("result", "${name} don't know about any markets")
+        )
 
         return dataOutput
     }
 
     private fun goProduceFood(dataOutput: JsonObject): JsonObject {
-        var foundOne: Boolean = false
+        // Therefore, we expect our Clan to behave identically after the current changes:
+        // because it has no memories, it should wander randomly.
+        // Only now it calls this "exploring" and it's the end result of having eliminated all better options.
+        dataOutput.mergeIn(
+            JsonObject()
+                .put("decision", "${name} will try to produce food")
+        )
 
-        locationMemory.memories.forEach { (key, value) ->
-            if (value.containsKey(AgentLocationMemory.AgentLocationMemoryType.HAS_FOOD)) {
-                foundOne = true
+        locationMemory.memories
+            .filter { it.value.containsKey(AgentLocationMemory.AgentLocationMemoryType.HAS_FOOD) }
+            .forEach { (key, value) ->
                 targetNavigation.clear()
                 targetNavigation.add(Vector2(key.x, key.y))
                 behavior = ClanBehavior.TRAVELING
@@ -240,13 +308,14 @@ class Clan: Entity(), Agent, Combatant {
                         .put("result", "${key.x},${key.y}")
                 )
 
-                return@forEach
+                return dataOutput
             }
-        }
 
-        if (!foundOne) {
-            doExplore(dataOutput)
-        }
+        dataOutput.mergeIn(
+            JsonObject()
+                .put("decision", "${name} doesn't know about any places to find food")
+        )
+        doExplore(dataOutput)
 
         return dataOutput
     }
@@ -255,14 +324,14 @@ class Clan: Entity(), Agent, Combatant {
         behavior = ClanBehavior.WANDERING
         dataOutput.mergeIn(
             JsonObject()
-                .put("decision", "${chieftain.name} sees that ground is unfamiliar: ${name} clan should explore")
+                .put("decision", "${name} are exploring")
         )
 
         return dataOutput
     }
 
     suspend fun queueWanderAction() {
-        var possibles: MutableList<MapCacheItem> = mutableListOf()
+        val possibles: MutableList<MapCacheItem> = mutableListOf()
 
         for (n in (location.x - 1) until (location.x + 2)) {
             for (m in (location.y - 1) until (location.y + 2)) {
@@ -297,10 +366,27 @@ class Clan: Entity(), Agent, Combatant {
         operationController.queue(operation)
     }
 
+    fun dynamics() {
+        val foodAmt = countFoodValue()
+        val hasEnough = foodAmt - population > 0
+        val targetAmt = if (hasEnough) { population } else { foodAmt }
+
+        // We cash out food resources in our Depot to try to reach targetAmt
+        // Collected deducted resources for a mutate operation
+        // if we have bad satiety (< 0), roll to avoid losing pops to starvation
+        // If we have no pops, deactivate with a death message
+
+        // We should use operationController for state changes, so queue deltas, don't saveState
+    }
+
+    fun deactivate() {
+        // This hides us from clients without deleting us yet
+    }
+
     companion object {
         data class ClanHealth (
             var satiety: Int = 100,
-            var stress: Int = 100,
+            var stamina: Int = 100,
             var heart: Int = 100
         ): Serializable
 
@@ -308,7 +394,6 @@ class Clan: Entity(), Agent, Combatant {
             NONE ("None"),
             WANDERING ("Wandering"),
             TRAVELING ("Traveling"),
-            STATIONED ("Stationed"),
             LABORING ("Laboring"),
             FIGHTING ("Fighting"),
             RECOVERING ("Recovering"),
