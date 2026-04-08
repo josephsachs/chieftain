@@ -1,6 +1,7 @@
 import { GameEntity } from '../models/GameEntity';
 import { MapZone, getMapZoneCoordinates, getTerrainColor } from '../models/MapZone';
 import { Clan, getClanCoordinates, getClanColor } from '../models/Clan';
+import { City, getCityCoordinates } from '../models/City';
 
 interface RenderOptions {
   showSelection?: boolean;
@@ -35,9 +36,13 @@ class MapRenderer {
     // Process map data
     const { maxX, maxY, zoneMap } = this.processMapData(entities);
     const clanMap = this.processClans(entities);
+    const cityMap = this.processCities(entities);
 
     // Render terrain layer
     this.renderTerrainLayer(maxX, maxY, zoneMap, options);
+
+    // Render cities on terrain
+    this.renderCities(cityMap);
 
     // Render clans on top of terrain
     this.renderClans(clanMap);
@@ -99,6 +104,51 @@ class MapRenderer {
     });
 
     return clanMap;
+  }
+
+  private processCities(entities: GameEntity[]) {
+    const cities = entities.filter(e => e.type === 'City') as City[];
+    const cityMap = new Map<string, City>();
+
+    cities.forEach(city => {
+      const coords = getCityCoordinates(city);
+      if (coords) {
+        const key = `${coords[0]},${coords[1]}`;
+        cityMap.set(key, city);
+      }
+    });
+
+    return cityMap;
+  }
+
+  private renderCities(cityMap: Map<string, City>) {
+    cityMap.forEach((city, key) => {
+      const [x, y] = key.split(',').map(Number);
+      const [pixelX, pixelY] = this.gridToPixel(x, y);
+      this.drawCity(pixelX, pixelY, city);
+    });
+  }
+
+  private drawCity(centerX: number, centerY: number, city: City) {
+    const size = this.HEX_RADIUS * 0.35;
+
+    // Draw a square to distinguish from clan circles
+    this.ctx.fillStyle = '#D4A574';
+    this.ctx.fillRect(centerX - size, centerY - size, size * 2, size * 2);
+
+    // Border
+    this.ctx.strokeStyle = '#8B6914';
+    this.ctx.lineWidth = 2;
+    this.ctx.strokeRect(centerX - size, centerY - size, size * 2, size * 2);
+
+    // City name
+    if (city.state?.name) {
+      this.ctx.font = 'bold 11px Arial';
+      this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'middle';
+      this.ctx.fillStyle = '#3E2723';
+      this.ctx.fillText(city.state.name, centerX, centerY);
+    }
   }
 
   private renderTerrainLayer(maxX: number, maxY: number, zoneMap: Map<string, MapZone>, options: RenderOptions) {

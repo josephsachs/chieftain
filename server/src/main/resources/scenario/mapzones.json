@@ -1,561 +1,451 @@
 [
-  {
-    "x": 0,
-    "y": 0,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 1,
-    "y": 0,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 2,
-    "y": 0,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 3,
-    "y": 0,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 4,
-    "y": 0,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 5,
-    "y": 0,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 6,
-    "y": 0,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 7,
-    "y": 0,
-    "terrainType": "rockland"
-  },
-  {
-    "x": 8,
-    "y": 0,
-    "terrainType": "woodland"
-  },
-  {
-    "x": 9,
-    "y": 0,
-    "terrainType": "woodland"
-  },
-  {
-    "x": 10,
-    "y": 0,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 11,
-    "y": 0,
-    "terrainType": "grassland"
-  },
+  {"x":0,"y":0,"terrainType":"marsh"},
+  {"x":1,"y":0,"terrainType":"scrub"},
+  {"x":2,"y":0,"terrainType":"rockland"},
+  {"x":3,"y":0,"terrainType":"woodland"},
+  {"x":4,"y":0,"terrainType":"rockland"},
+  {"x":5,"y":0,"terrainType":"scrub"},
+  {"x":6,"y":0,"terrainType":"woodland"},
+  {"x":7,"y":0,"terrainType":"woodland"},
+  {"x":8,"y":0,"terrainType":"woodland"},
+  {"x":9,"y":0,"terrainType":"woodland"},
+  {"x":10,"y":0,"terrainType":"woodland"},
+  {"x":11,"y":0,"terrainType":"woodland"},
+  {"x":12,"y":0,"terrainType":"woodland"},
+  {"x":13,"y":0,"terrainType":"scrub"},
+  {"x":14,"y":0,"terrainType":"grassland"},
+  {"x":15,"y":0,"terrainType":"woodland"},
+  {"x":16,"y":0,"terrainType":"rockland"},
+  {"x":17,"y":0,"terrainType":"grassland"},
+  {"x":18,"y":0,"terrainType":"woodland"},
+  {"x":19,"y":0,"terrainType":"grassland"},
+  {"x":20,"y":0,"terrainType":"woodland"},
+  {"x":21,"y":0,"terrainType":"scrub"},
+  {"x":22,"y":0,"terrainType":"grassland"},
+  {"x":23,"y":0,"terrainType":"grassland"},
 
+  {"x":0,"y":1,"terrainType":"scrub"},
+  {"x":1,"y":1,"terrainType":"marsh"},
+  {"x":2,"y":1,"terrainType":"woodland"},
+  {"x":3,"y":1,"terrainType":"rockland"},
+  {"x":4,"y":1,"terrainType":"rockland"},
+  {"x":5,"y":1,"terrainType":"grassland"},
+  {"x":6,"y":1,"terrainType":"grassland"},
+  {"x":7,"y":1,"terrainType":"grassland"},
+  {"x":8,"y":1,"terrainType":"rockland"},
+  {"x":9,"y":1,"terrainType":"grassland"},
+  {"x":10,"y":1,"terrainType":"grassland"},
+  {"x":11,"y":1,"terrainType":"grassland"},
+  {"x":12,"y":1,"terrainType":"grassland"},
+  {"x":13,"y":1,"terrainType":"rockland"},
+  {"x":14,"y":1,"terrainType":"woodland"},
+  {"x":15,"y":1,"terrainType":"grassland"},
+  {"x":16,"y":1,"terrainType":"scrub"},
+  {"x":17,"y":1,"terrainType":"grassland"},
+  {"x":18,"y":1,"terrainType":"rockland"},
+  {"x":19,"y":1,"terrainType":"woodland"},
+  {"x":20,"y":1,"terrainType":"grassland"},
+  {"x":21,"y":1,"terrainType":"grassland"},
+  {"x":22,"y":1,"terrainType":"scrub"},
+  {"x":23,"y":1,"terrainType":"woodland"},
 
+  {"x":0,"y":2,"terrainType":"marsh"},
+  {"x":1,"y":2,"terrainType":"scrub"},
+  {"x":2,"y":2,"terrainType":"rockland"},
+  {"x":3,"y":2,"terrainType":"scrub"},
+  {"x":4,"y":2,"terrainType":"rockland"},
+  {"x":5,"y":2,"terrainType":"scrub"},
+  {"x":6,"y":2,"terrainType":"woodland"},
+  {"x":7,"y":2,"terrainType":"grassland"},
+  {"x":8,"y":2,"terrainType":"meadow"},
+  {"x":9,"y":2,"terrainType":"grassland"},
+  {"x":10,"y":2,"terrainType":"woodland"},
+  {"x":11,"y":2,"terrainType":"meadow"},
+  {"x":12,"y":2,"terrainType":"grassland"},
+  {"x":13,"y":2,"terrainType":"woodland"},
+  {"x":14,"y":2,"terrainType":"rockland"},
+  {"x":15,"y":2,"terrainType":"scrub"},
+  {"x":16,"y":2,"terrainType":"woodland"},
+  {"x":17,"y":2,"terrainType":"woodland"},
+  {"x":18,"y":2,"terrainType":"grassland"},
+  {"x":19,"y":2,"terrainType":"grassland"},
+  {"x":20,"y":2,"terrainType":"scrub"},
+  {"x":21,"y":2,"terrainType":"grassland"},
+  {"x":22,"y":2,"terrainType":"woodland"},
+  {"x":23,"y":2,"terrainType":"scrub"},
 
-  {
-    "x": 0,
-    "y": 1,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 1,
-    "y": 1,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 2,
-    "y": 1,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 3,
-    "y": 1,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 4,
-    "y": 1,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 5,
-    "y": 1,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 6,
-    "y": 1,
-    "terrainType": "rockland"
-  },
-  {
-    "x": 7,
-    "y": 1,
-    "terrainType": "rockland"
-  },
-  {
-    "x": 8,
-    "y": 1,
-    "terrainType": "rockland"
-  },
-  {
-    "x": 9,
-    "y": 1,
-    "terrainType": "woodland"
-  },
-  {
-    "x": 10,
-    "y": 1,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 11,
-    "y": 1,
-    "terrainType": "grassland"
-  },
+  {"x":0,"y":3,"terrainType":"scrub"},
+  {"x":1,"y":3,"terrainType":"dryland"},
+  {"x":2,"y":3,"terrainType":"rockland"},
+  {"x":3,"y":3,"terrainType":"rockland"},
+  {"x":4,"y":3,"terrainType":"rockland"},
+  {"x":5,"y":3,"terrainType":"scrub"},
+  {"x":6,"y":3,"terrainType":"meadow"},
+  {"x":7,"y":3,"terrainType":"meadow"},
+  {"x":8,"y":3,"terrainType":"grassland"},
+  {"x":9,"y":3,"terrainType":"meadow"},
+  {"x":10,"y":3,"terrainType":"grassland"},
+  {"x":11,"y":3,"terrainType":"meadow"},
+  {"x":12,"y":3,"terrainType":"meadow"},
+  {"x":13,"y":3,"terrainType":"grassland"},
+  {"x":14,"y":3,"terrainType":"scrub"},
+  {"x":15,"y":3,"terrainType":"woodland"},
+  {"x":16,"y":3,"terrainType":"scrub"},
+  {"x":17,"y":3,"terrainType":"grassland"},
+  {"x":18,"y":3,"terrainType":"woodland"},
+  {"x":19,"y":3,"terrainType":"rockland"},
+  {"x":20,"y":3,"terrainType":"grassland"},
+  {"x":21,"y":3,"terrainType":"woodland"},
+  {"x":22,"y":3,"terrainType":"grassland"},
+  {"x":23,"y":3,"terrainType":"grassland"},
 
+  {"x":0,"y":4,"terrainType":"marsh"},
+  {"x":1,"y":4,"terrainType":"dryland"},
+  {"x":2,"y":4,"terrainType":"scrub"},
+  {"x":3,"y":4,"terrainType":"rockland"},
+  {"x":4,"y":4,"terrainType":"rockland"},
+  {"x":5,"y":4,"terrainType":"grassland"},
+  {"x":6,"y":4,"terrainType":"meadow"},
+  {"x":7,"y":4,"terrainType":"grassland"},
+  {"x":8,"y":4,"terrainType":"meadow"},
+  {"x":9,"y":4,"terrainType":"grassland"},
+  {"x":10,"y":4,"terrainType":"meadow"},
+  {"x":11,"y":4,"terrainType":"grassland"},
+  {"x":12,"y":4,"terrainType":"meadow"},
+  {"x":13,"y":4,"terrainType":"grassland"},
+  {"x":14,"y":4,"terrainType":"grassland"},
+  {"x":15,"y":4,"terrainType":"meadow"},
+  {"x":16,"y":4,"terrainType":"dryland"},
+  {"x":17,"y":4,"terrainType":"grassland"},
+  {"x":18,"y":4,"terrainType":"dryland"},
+  {"x":19,"y":4,"terrainType":"scrub"},
+  {"x":20,"y":4,"terrainType":"rockland"},
+  {"x":21,"y":4,"terrainType":"scrub"},
+  {"x":22,"y":4,"terrainType":"grassland"},
+  {"x":23,"y":4,"terrainType":"scrub"},
 
+  {"x":0,"y":5,"terrainType":"dryland"},
+  {"x":1,"y":5,"terrainType":"scrub"},
+  {"x":2,"y":5,"terrainType":"scrub"},
+  {"x":3,"y":5,"terrainType":"rockland"},
+  {"x":4,"y":5,"terrainType":"scrub"},
+  {"x":5,"y":5,"terrainType":"scrub"},
+  {"x":6,"y":5,"terrainType":"meadow"},
+  {"x":7,"y":5,"terrainType":"meadow"},
+  {"x":8,"y":5,"terrainType":"grassland"},
+  {"x":9,"y":5,"terrainType":"meadow"},
+  {"x":10,"y":5,"terrainType":"grassland"},
+  {"x":11,"y":5,"terrainType":"meadow"},
+  {"x":12,"y":5,"terrainType":"meadow"},
+  {"x":13,"y":5,"terrainType":"scrub"},
+  {"x":14,"y":5,"terrainType":"scrub"},
+  {"x":15,"y":5,"terrainType":"scrub"},
+  {"x":16,"y":5,"terrainType":"scrub"},
+  {"x":17,"y":5,"terrainType":"scrub"},
+  {"x":18,"y":5,"terrainType":"dryland"},
+  {"x":19,"y":5,"terrainType":"rockland"},
+  {"x":20,"y":5,"terrainType":"rockland"},
+  {"x":21,"y":5,"terrainType":"scrub"},
+  {"x":22,"y":5,"terrainType":"scrub"},
+  {"x":23,"y":5,"terrainType":"grassland"},
 
-  {
-    "x": 0,
-    "y": 2,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 1,
-    "y": 2,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 2,
-    "y": 2,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 3,
-    "y": 2,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 4,
-    "y": 2,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 5,
-    "y": 2,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 6,
-    "y": 2,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 7,
-    "y": 2,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 8,
-    "y": 2,
-    "terrainType": "rockland"
-  },
-  {
-    "x": 9,
-    "y": 2,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 10,
-    "y": 2,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 11,
-    "y": 2,
-    "terrainType": "grassland"
-  },
+  {"x":0,"y":6,"terrainType":"scrub"},
+  {"x":1,"y":6,"terrainType":"dryland"},
+  {"x":2,"y":6,"terrainType":"rockland"},
+  {"x":3,"y":6,"terrainType":"scrub"},
+  {"x":4,"y":6,"terrainType":"rockland"},
+  {"x":5,"y":6,"terrainType":"meadow"},
+  {"x":6,"y":6,"terrainType":"grassland"},
+  {"x":7,"y":6,"terrainType":"grassland"},
+  {"x":8,"y":6,"terrainType":"meadow"},
+  {"x":9,"y":6,"terrainType":"meadow"},
+  {"x":10,"y":6,"terrainType":"meadow"},
+  {"x":11,"y":6,"terrainType":"grassland"},
+  {"x":12,"y":6,"terrainType":"meadow"},
+  {"x":13,"y":6,"terrainType":"grassland"},
+  {"x":14,"y":6,"terrainType":"grassland"},
+  {"x":15,"y":6,"terrainType":"meadow"},
+  {"x":16,"y":6,"terrainType":"grassland"},
+  {"x":17,"y":6,"terrainType":"dryland"},
+  {"x":18,"y":6,"terrainType":"rockland"},
+  {"x":19,"y":6,"terrainType":"dryland"},
+  {"x":20,"y":6,"terrainType":"rockland"},
+  {"x":21,"y":6,"terrainType":"grassland"},
+  {"x":22,"y":6,"terrainType":"scrub"},
+  {"x":23,"y":6,"terrainType":"scrub"},
 
+  {"x":0,"y":7,"terrainType":"dryland"},
+  {"x":1,"y":7,"terrainType":"marsh"},
+  {"x":2,"y":7,"terrainType":"rockland"},
+  {"x":3,"y":7,"terrainType":"rockland"},
+  {"x":4,"y":7,"terrainType":"rockland"},
+  {"x":5,"y":7,"terrainType":"meadow"},
+  {"x":6,"y":7,"terrainType":"meadow"},
+  {"x":7,"y":7,"terrainType":"grassland"},
+  {"x":8,"y":7,"terrainType":"grassland"},
+  {"x":9,"y":7,"terrainType":"meadow"},
+  {"x":10,"y":7,"terrainType":"grassland"},
+  {"x":11,"y":7,"terrainType":"meadow"},
+  {"x":12,"y":7,"terrainType":"grassland"},
+  {"x":13,"y":7,"terrainType":"grassland"},
+  {"x":14,"y":7,"terrainType":"grassland"},
+  {"x":15,"y":7,"terrainType":"meadow"},
+  {"x":16,"y":7,"terrainType":"grassland"},
+  {"x":17,"y":7,"terrainType":"rockland"},
+  {"x":18,"y":7,"terrainType":"dryland"},
+  {"x":19,"y":7,"terrainType":"scrub"},
+  {"x":20,"y":7,"terrainType":"rockland"},
+  {"x":21,"y":7,"terrainType":"scrub"},
+  {"x":22,"y":7,"terrainType":"grassland"},
+  {"x":23,"y":7,"terrainType":"scrub"},
 
-  {
-    "x": 0,
-    "y": 3,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 1,
-    "y": 3,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 2,
-    "y": 3,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 3,
-    "y": 3,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 4,
-    "y": 3,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 5,
-    "y": 3,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 6,
-    "y": 3,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 7,
-    "y": 3,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 8,
-    "y": 3,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 9,
-    "y": 3,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 10,
-    "y": 3,
-    "terrainType": "dryland"
-  },
-  {
-    "x": 11,
-    "y": 3,
-    "terrainType": "dryland"
-  },
+  {"x":0,"y":8,"terrainType":"marsh"},
+  {"x":1,"y":8,"terrainType":"dryland"},
+  {"x":2,"y":8,"terrainType":"dryland"},
+  {"x":3,"y":8,"terrainType":"scrub"},
+  {"x":4,"y":8,"terrainType":"rockland"},
+  {"x":5,"y":8,"terrainType":"grassland"},
+  {"x":6,"y":8,"terrainType":"meadow"},
+  {"x":7,"y":8,"terrainType":"meadow"},
+  {"x":8,"y":8,"terrainType":"scrub"},
+  {"x":9,"y":8,"terrainType":"meadow"},
+  {"x":10,"y":8,"terrainType":"meadow"},
+  {"x":11,"y":8,"terrainType":"grassland"},
+  {"x":12,"y":8,"terrainType":"scrub"},
+  {"x":13,"y":8,"terrainType":"scrub"},
+  {"x":14,"y":8,"terrainType":"scrub"},
+  {"x":15,"y":8,"terrainType":"scrub"},
+  {"x":16,"y":8,"terrainType":"rockland"},
+  {"x":17,"y":8,"terrainType":"scrub"},
+  {"x":18,"y":8,"terrainType":"dryland"},
+  {"x":19,"y":8,"terrainType":"grassland"},
+  {"x":20,"y":8,"terrainType":"scrub"},
+  {"x":21,"y":8,"terrainType":"dryland"},
+  {"x":22,"y":8,"terrainType":"dryland"},
+  {"x":23,"y":8,"terrainType":"dryland"},
 
+  {"x":0,"y":9,"terrainType":"scrub"},
+  {"x":1,"y":9,"terrainType":"dryland"},
+  {"x":2,"y":9,"terrainType":"rockland"},
+  {"x":3,"y":9,"terrainType":"rockland"},
+  {"x":4,"y":9,"terrainType":"rockland"},
+  {"x":5,"y":9,"terrainType":"scrub"},
+  {"x":6,"y":9,"terrainType":"grassland"},
+  {"x":7,"y":9,"terrainType":"meadow"},
+  {"x":8,"y":9,"terrainType":"meadow"},
+  {"x":9,"y":9,"terrainType":"scrub"},
+  {"x":10,"y":9,"terrainType":"meadow"},
+  {"x":11,"y":9,"terrainType":"meadow"},
+  {"x":12,"y":9,"terrainType":"grassland"},
+  {"x":13,"y":9,"terrainType":"dryland"},
+  {"x":14,"y":9,"terrainType":"dryland"},
+  {"x":15,"y":9,"terrainType":"dryland"},
+  {"x":16,"y":9,"terrainType":"dryland"},
+  {"x":17,"y":9,"terrainType":"rockland"},
+  {"x":18,"y":9,"terrainType":"scrub"},
+  {"x":19,"y":9,"terrainType":"dryland"},
+  {"x":20,"y":9,"terrainType":"dryland"},
+  {"x":21,"y":9,"terrainType":"dryland"},
+  {"x":22,"y":9,"terrainType":"dryland"},
+  {"x":23,"y":9,"terrainType":"scrub"},
 
-  {
-    "x": 0,
-    "y": 4,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 1,
-    "y": 4,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 2,
-    "y": 4,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 3,
-    "y": 4,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 4,
-    "y": 4,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 5,
-    "y": 4,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 6,
-    "y": 4,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 7,
-    "y": 4,
-    "terrainType": "rockland"
-  },
-  {
-    "x": 8,
-    "y": 4,
-    "terrainType": "dryland"
-  },
-  {
-    "x": 9,
-    "y": 4,
-    "terrainType": "rockland"
-  },
-  {
-    "x": 10,
-    "y": 4,
-    "terrainType": "dryland"
-  },
-  {
-    "x": 11,
-    "y": 4,
-    "terrainType": "dryland"
-  },
+  {"x":0,"y":10,"terrainType":"dryland"},
+  {"x":1,"y":10,"terrainType":"dryland"},
+  {"x":2,"y":10,"terrainType":"rockland"},
+  {"x":3,"y":10,"terrainType":"scrub"},
+  {"x":4,"y":10,"terrainType":"rockland"},
+  {"x":5,"y":10,"terrainType":"scrub"},
+  {"x":6,"y":10,"terrainType":"scrub"},
+  {"x":7,"y":10,"terrainType":"scrub"},
+  {"x":8,"y":10,"terrainType":"grassland"},
+  {"x":9,"y":10,"terrainType":"meadow"},
+  {"x":10,"y":10,"terrainType":"scrub"},
+  {"x":11,"y":10,"terrainType":"scrub"},
+  {"x":12,"y":10,"terrainType":"scrub"},
+  {"x":13,"y":10,"terrainType":"scrub"},
+  {"x":14,"y":10,"terrainType":"rockland"},
+  {"x":15,"y":10,"terrainType":"scrub"},
+  {"x":16,"y":10,"terrainType":"scrub"},
+  {"x":17,"y":10,"terrainType":"dryland"},
+  {"x":18,"y":10,"terrainType":"dryland"},
+  {"x":19,"y":10,"terrainType":"scrub"},
+  {"x":20,"y":10,"terrainType":"dryland"},
+  {"x":21,"y":10,"terrainType":"dryland"},
+  {"x":22,"y":10,"terrainType":"scrub"},
+  {"x":23,"y":10,"terrainType":"dryland"},
 
+  {"x":0,"y":11,"terrainType":"dryland"},
+  {"x":1,"y":11,"terrainType":"scrub"},
+  {"x":2,"y":11,"terrainType":"rockland"},
+  {"x":3,"y":11,"terrainType":"rockland"},
+  {"x":4,"y":11,"terrainType":"rockland"},
+  {"x":5,"y":11,"terrainType":"grassland"},
+  {"x":6,"y":11,"terrainType":"grassland"},
+  {"x":7,"y":11,"terrainType":"scrub"},
+  {"x":8,"y":11,"terrainType":"grassland"},
+  {"x":9,"y":11,"terrainType":"meadow"},
+  {"x":10,"y":11,"terrainType":"grassland"},
+  {"x":11,"y":11,"terrainType":"grassland"},
+  {"x":12,"y":11,"terrainType":"scrub"},
+  {"x":13,"y":11,"terrainType":"rockland"},
+  {"x":14,"y":11,"terrainType":"scrub"},
+  {"x":15,"y":11,"terrainType":"scrub"},
+  {"x":16,"y":11,"terrainType":"scrub"},
+  {"x":17,"y":11,"terrainType":"scrub"},
+  {"x":18,"y":11,"terrainType":"rockland"},
+  {"x":19,"y":11,"terrainType":"dryland"},
+  {"x":20,"y":11,"terrainType":"dryland"},
+  {"x":21,"y":11,"terrainType":"scrub"},
+  {"x":22,"y":11,"terrainType":"dryland"},
+  {"x":23,"y":11,"terrainType":"dryland"},
 
+  {"x":0,"y":12,"terrainType":"scrub"},
+  {"x":1,"y":12,"terrainType":"dryland"},
+  {"x":2,"y":12,"terrainType":"dryland"},
+  {"x":3,"y":12,"terrainType":"scrub"},
+  {"x":4,"y":12,"terrainType":"rockland"},
+  {"x":5,"y":12,"terrainType":"dryland"},
+  {"x":6,"y":12,"terrainType":"scrub"},
+  {"x":7,"y":12,"terrainType":"grassland"},
+  {"x":8,"y":12,"terrainType":"scrub"},
+  {"x":9,"y":12,"terrainType":"meadow"},
+  {"x":10,"y":12,"terrainType":"marsh"},
+  {"x":11,"y":12,"terrainType":"scrub"},
+  {"x":12,"y":12,"terrainType":"scrub"},
+  {"x":13,"y":12,"terrainType":"dryland"},
+  {"x":14,"y":12,"terrainType":"scrub"},
+  {"x":15,"y":12,"terrainType":"dryland"},
+  {"x":16,"y":12,"terrainType":"dryland"},
+  {"x":17,"y":12,"terrainType":"dryland"},
+  {"x":18,"y":12,"terrainType":"scrub"},
+  {"x":19,"y":12,"terrainType":"dryland"},
+  {"x":20,"y":12,"terrainType":"desert"},
+  {"x":21,"y":12,"terrainType":"dryland"},
+  {"x":22,"y":12,"terrainType":"desert"},
+  {"x":23,"y":12,"terrainType":"desert"},
 
-  {
-    "x": 0,
-    "y": 5,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 1,
-    "y": 5,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 2,
-    "y": 5,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 3,
-    "y": 5,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 4,
-    "y": 5,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 5,
-    "y": 5,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 6,
-    "y": 5,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 7,
-    "y": 5,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 8,
-    "y": 5,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 9,
-    "y": 5,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 10,
-    "y": 5,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 11,
-    "y": 5,
-    "terrainType": "dryland"
-  },
+  {"x":0,"y":13,"terrainType":"dryland"},
+  {"x":1,"y":13,"terrainType":"desert"},
+  {"x":2,"y":13,"terrainType":"scrub"},
+  {"x":3,"y":13,"terrainType":"rockland"},
+  {"x":4,"y":13,"terrainType":"rockland"},
+  {"x":5,"y":13,"terrainType":"scrub"},
+  {"x":6,"y":13,"terrainType":"scrub"},
+  {"x":7,"y":13,"terrainType":"scrub"},
+  {"x":8,"y":13,"terrainType":"scrub"},
+  {"x":9,"y":13,"terrainType":"grassland"},
+  {"x":10,"y":13,"terrainType":"meadow"},
+  {"x":11,"y":13,"terrainType":"scrub"},
+  {"x":12,"y":13,"terrainType":"scrub"},
+  {"x":13,"y":13,"terrainType":"scrub"},
+  {"x":14,"y":13,"terrainType":"dryland"},
+  {"x":15,"y":13,"terrainType":"dryland"},
+  {"x":16,"y":13,"terrainType":"scrub"},
+  {"x":17,"y":13,"terrainType":"dryland"},
+  {"x":18,"y":13,"terrainType":"desert"},
+  {"x":19,"y":13,"terrainType":"dryland"},
+  {"x":20,"y":13,"terrainType":"desert"},
+  {"x":21,"y":13,"terrainType":"desert"},
+  {"x":22,"y":13,"terrainType":"dryland"},
+  {"x":23,"y":13,"terrainType":"desert"},
 
+  {"x":0,"y":14,"terrainType":"desert"},
+  {"x":1,"y":14,"terrainType":"desert"},
+  {"x":2,"y":14,"terrainType":"rockland"},
+  {"x":3,"y":14,"terrainType":"dryland"},
+  {"x":4,"y":14,"terrainType":"rockland"},
+  {"x":5,"y":14,"terrainType":"dryland"},
+  {"x":6,"y":14,"terrainType":"scrub"},
+  {"x":7,"y":14,"terrainType":"scrub"},
+  {"x":8,"y":14,"terrainType":"scrub"},
+  {"x":9,"y":14,"terrainType":"marsh"},
+  {"x":10,"y":14,"terrainType":"grassland"},
+  {"x":11,"y":14,"terrainType":"scrub"},
+  {"x":12,"y":14,"terrainType":"scrub"},
+  {"x":13,"y":14,"terrainType":"dryland"},
+  {"x":14,"y":14,"terrainType":"dryland"},
+  {"x":15,"y":14,"terrainType":"scrub"},
+  {"x":16,"y":14,"terrainType":"dryland"},
+  {"x":17,"y":14,"terrainType":"desert"},
+  {"x":18,"y":14,"terrainType":"dryland"},
+  {"x":19,"y":14,"terrainType":"desert"},
+  {"x":20,"y":14,"terrainType":"dryland"},
+  {"x":21,"y":14,"terrainType":"desert"},
+  {"x":22,"y":14,"terrainType":"desert"},
+  {"x":23,"y":14,"terrainType":"dryland"},
 
-  {
-    "x": 0,
-    "y": 6,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 1,
-    "y": 6,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 2,
-    "y": 6,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 3,
-    "y": 6,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 4,
-    "y": 6,
-    "terrainType": "rockland"
-  },
-  {
-    "x": 5,
-    "y": 6,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 6,
-    "y": 6,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 7,
-    "y": 6,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 8,
-    "y": 6,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 9,
-    "y": 6,
-    "terrainType": "dryland"
-  },
-  {
-    "x": 10,
-    "y": 6,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 11,
-    "y": 6,
-    "terrainType": "dryland"
-  },
+  {"x":0,"y":15,"terrainType":"desert"},
+  {"x":1,"y":15,"terrainType":"dryland"},
+  {"x":2,"y":15,"terrainType":"dryland"},
+  {"x":3,"y":15,"terrainType":"scrub"},
+  {"x":4,"y":15,"terrainType":"dryland"},
+  {"x":5,"y":15,"terrainType":"dryland"},
+  {"x":6,"y":15,"terrainType":"dryland"},
+  {"x":7,"y":15,"terrainType":"dryland"},
+  {"x":8,"y":15,"terrainType":"dryland"},
+  {"x":9,"y":15,"terrainType":"grassland"},
+  {"x":10,"y":15,"terrainType":"meadow"},
+  {"x":11,"y":15,"terrainType":"dryland"},
+  {"x":12,"y":15,"terrainType":"dryland"},
+  {"x":13,"y":15,"terrainType":"dryland"},
+  {"x":14,"y":15,"terrainType":"desert"},
+  {"x":15,"y":15,"terrainType":"dryland"},
+  {"x":16,"y":15,"terrainType":"desert"},
+  {"x":17,"y":15,"terrainType":"dryland"},
+  {"x":18,"y":15,"terrainType":"desert"},
+  {"x":19,"y":15,"terrainType":"dryland"},
+  {"x":20,"y":15,"terrainType":"desert"},
+  {"x":21,"y":15,"terrainType":"dryland"},
+  {"x":22,"y":15,"terrainType":"desert"},
+  {"x":23,"y":15,"terrainType":"desert"},
 
+  {"x":0,"y":16,"terrainType":"dryland"},
+  {"x":1,"y":16,"terrainType":"desert"},
+  {"x":2,"y":16,"terrainType":"desert"},
+  {"x":3,"y":16,"terrainType":"desert"},
+  {"x":4,"y":16,"terrainType":"dryland"},
+  {"x":5,"y":16,"terrainType":"desert"},
+  {"x":6,"y":16,"terrainType":"dryland"},
+  {"x":7,"y":16,"terrainType":"desert"},
+  {"x":8,"y":16,"terrainType":"desert"},
+  {"x":9,"y":16,"terrainType":"dryland"},
+  {"x":10,"y":16,"terrainType":"meadow"},
+  {"x":11,"y":16,"terrainType":"grassland"},
+  {"x":12,"y":16,"terrainType":"dryland"},
+  {"x":13,"y":16,"terrainType":"desert"},
+  {"x":14,"y":16,"terrainType":"dryland"},
+  {"x":15,"y":16,"terrainType":"desert"},
+  {"x":16,"y":16,"terrainType":"dryland"},
+  {"x":17,"y":16,"terrainType":"desert"},
+  {"x":18,"y":16,"terrainType":"dryland"},
+  {"x":19,"y":16,"terrainType":"desert"},
+  {"x":20,"y":16,"terrainType":"desert"},
+  {"x":21,"y":16,"terrainType":"desert"},
+  {"x":22,"y":16,"terrainType":"dryland"},
+  {"x":23,"y":16,"terrainType":"desert"},
 
-  {
-    "x": 0,
-    "y": 7,
-    "terrainType": "rockland"
-  },
-  {
-    "x": 1,
-    "y": 7,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 2,
-    "y": 7,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 3,
-    "y": 7,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 4,
-    "y": 7,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 5,
-    "y": 7,
-    "terrainType": "scrub"
-  },
-  {
-    "x": 6,
-    "y": 7,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 7,
-    "y": 7,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 8,
-    "y": 7,
-    "terrainType": "marsh"
-  },
-  {
-    "x": 9,
-    "y": 7,
-    "terrainType": "woodland"
-  },
-  {
-    "x": 10,
-    "y": 7,
-    "terrainType": "dryland"
-  },
-  {
-    "x": 11,
-    "y": 7,
-    "terrainType": "dryland"
-  },
-
-
-  {
-    "x": 0,
-    "y": 8,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 1,
-    "y": 8,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 2,
-    "y": 8,
-    "terrainType": "dryland"
-  },
-  {
-    "x": 3,
-    "y": 8,
-    "terrainType": "dryland"
-  },
-  {
-    "x": 4,
-    "y": 8,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 5,
-    "y": 8,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 6,
-    "y": 8,
-    "terrainType": "meadow"
-  },
-  {
-    "x": 7,
-    "y": 8,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 8,
-    "y": 8,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 9,
-    "y": 8,
-    "terrainType": "grassland"
-  },
-  {
-    "x": 10,
-    "y": 8,
-    "terrainType": "woodland"
-  },
-  {
-    "x": 11,
-    "y": 8,
-    "terrainType": "dryland"
-  }
+  {"x":0,"y":17,"terrainType":"desert"},
+  {"x":1,"y":17,"terrainType":"desert"},
+  {"x":2,"y":17,"terrainType":"desert"},
+  {"x":3,"y":17,"terrainType":"desert"},
+  {"x":4,"y":17,"terrainType":"dryland"},
+  {"x":5,"y":17,"terrainType":"desert"},
+  {"x":6,"y":17,"terrainType":"desert"},
+  {"x":7,"y":17,"terrainType":"desert"},
+  {"x":8,"y":17,"terrainType":"dryland"},
+  {"x":9,"y":17,"terrainType":"desert"},
+  {"x":10,"y":17,"terrainType":"grassland"},
+  {"x":11,"y":17,"terrainType":"marsh"},
+  {"x":12,"y":17,"terrainType":"desert"},
+  {"x":13,"y":17,"terrainType":"dryland"},
+  {"x":14,"y":17,"terrainType":"desert"},
+  {"x":15,"y":17,"terrainType":"dryland"},
+  {"x":16,"y":17,"terrainType":"desert"},
+  {"x":17,"y":17,"terrainType":"dryland"},
+  {"x":18,"y":17,"terrainType":"desert"},
+  {"x":19,"y":17,"terrainType":"dryland"},
+  {"x":20,"y":17,"terrainType":"dryland"},
+  {"x":21,"y":17,"terrainType":"desert"},
+  {"x":22,"y":17,"terrainType":"desert"},
+  {"x":23,"y":17,"terrainType":"dryland"}
 ]

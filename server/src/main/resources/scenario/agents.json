@@ -1,50 +1,327 @@
 [
   {
+    "id": "clan-zemar",
     "name": "Zemar",
     "population": 35,
     "culture": "Canaanite",
-    "behavior": "None",
-    "x": 4,
-    "y": 4
+    "chieftain": "char-abdi",
+    "skills": {
+      "gathering": 5,
+      "hunting": 3,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 2,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 8,
+    "y": 4,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   },
   {
+    "id": "clan-baalel",
     "name": "Baalel",
     "population": 35,
     "culture": "Canaanite",
-    "behavior": "None",
-    "x": 2,
-    "y": 2
+    "chieftain": "char-ishbaal",
+    "skills": {
+      "gathering": 3,
+      "hunting": 2,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 2,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 7,
+    "y": 3,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   },
   {
+    "id": "clan-yassar",
     "name": "Yassar",
     "population": 35,
     "culture": "Shasu",
-    "behavior": "None",
-    "x": 3,
-    "y": 8
+    "chieftain": "char-yaqub",
+    "skills": {
+      "gathering": 2,
+      "hunting": 6,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 8,
+    "y": 12,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   },
   {
+    "id": "clan-tesubi",
     "name": "Tesubi",
     "population": 35,
     "culture": "Hurrian",
-    "behavior": "None",
-    "x": 10,
-    "y": 1
+    "chieftain": "char-shutarna",
+    "skills": {
+      "gathering": 3,
+      "hunting": 3,
+      "mining": 3,
+      "quarrying": 2,
+      "woodcutting": 2,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 12,
+    "y": 2,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   },
   {
+    "id": "clan-medyat",
     "name": "Medyat",
     "population": 35,
     "culture": "Amorite",
-    "behavior": "None",
-    "x": 10,
-    "y": 7
+    "chieftain": "char-ayyab",
+    "skills": {
+      "gathering": 4,
+      "hunting": 2,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 3,
+      "sculpture": 2,
+      "jewelry": 0,
+      "scribing": 2,
+      "minting": 0
+    },
+    "x": 5,
+    "y": 8,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   },
   {
+    "id": "clan-astur",
     "name": "Astur",
     "population": 35,
     "culture": "Habiru",
-    "behavior": "None",
-    "x": 8,
-    "y": 4
+    "chieftain": "char-aziru",
+    "skills": {
+      "gathering": 2,
+      "hunting": 4,
+      "mining": 2,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 18,
+    "y": 5,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-dagan",
+    "name": "Dagan",
+    "population": 40,
+    "culture": "Canaanite",
+    "chieftain": "char-milkilu",
+    "skills": {
+      "gathering": 6,
+      "hunting": 2,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 1,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 10,
+    "y": 5,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-reshef",
+    "name": "Reshef",
+    "population": 30,
+    "culture": "Canaanite",
+    "chieftain": "char-abimilki",
+    "skills": {
+      "gathering": 3,
+      "hunting": 4,
+      "mining": 0,
+      "quarrying": 1,
+      "woodcutting": 2,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 9,
+    "y": 2,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-seiri",
+    "name": "Seiri",
+    "population": 25,
+    "culture": "Shasu",
+    "chieftain": "char-raddanu",
+    "skills": {
+      "gathering": 3,
+      "hunting": 7,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 7,
+    "y": 14,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-labaya",
+    "name": "Labaya",
+    "population": 30,
+    "culture": "Habiru",
+    "chieftain": "char-mutbaal",
+    "skills": {
+      "gathering": 2,
+      "hunting": 5,
+      "mining": 1,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 1,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 20,
+    "y": 5,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-biridiya",
+    "name": "Biridiya",
+    "population": 30,
+    "culture": "Hurrian",
+    "chieftain": "char-artamanya",
+    "skills": {
+      "gathering": 3,
+      "hunting": 2,
+      "mining": 2,
+      "quarrying": 2,
+      "woodcutting": 1,
+      "sculpture": 1,
+      "jewelry": 0,
+      "scribing": 1,
+      "minting": 0
+    },
+    "x": 14,
+    "y": 2,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-zimreddi",
+    "name": "Zimreddi",
+    "population": 30,
+    "culture": "Amorite",
+    "chieftain": "char-yapahu",
+    "skills": {
+      "gathering": 4,
+      "hunting": 2,
+      "mining": 0,
+      "quarrying": 1,
+      "woodcutting": 4,
+      "sculpture": 1,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 6,
+    "y": 8,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-sutatna",
+    "name": "Sutatna",
+    "population": 25,
+    "culture": "Habiru",
+    "chieftain": "char-dashru",
+    "skills": {
+      "gathering": 1,
+      "hunting": 5,
+      "mining": 2,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 21,
+    "y": 3,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   }
 ]

@@ -1,8 +1,23 @@
 import { GameEntity, filterEntitiesByType } from './GameEntity';
 
-/**
- * Represents a clan entity in the game
- */
+export interface ClanHealth {
+  satiety?: number;
+  stamina?: number;
+  heart?: number;
+}
+
+export interface ClanSkills {
+  gathering?: number;
+  hunting?: number;
+  mining?: number;
+  quarrying?: number;
+  woodcutting?: number;
+  sculpture?: number;
+  jewelry?: number;
+  scribing?: number;
+  minting?: number;
+}
+
 export interface Clan extends GameEntity {
   type: 'Clan';
   state?: {
@@ -13,6 +28,14 @@ export interface Clan extends GameEntity {
       x?: number;
       y?: number;
     };
+    health?: ClanHealth;
+    skills?: ClanSkills;
+    chieftain?: {
+      _id?: string;
+      name?: string;
+      [key: string]: any;
+    };
+    depot?: Record<string, any>;
     [key: string]: any;
   };
   properties?: {
@@ -21,12 +44,15 @@ export interface Clan extends GameEntity {
   };
 }
 
-/**
- * Enum for clan behaviors (matches server-side enum)
- */
 export enum ClanBehavior {
   NONE = 'NONE',
-  WANDERING = 'WANDERING'
+  WANDERING = 'WANDERING',
+  TRAVELING = 'TRAVELING',
+  LABORING = 'LABORING',
+  TRADING = 'TRADING',
+  FIGHTING = 'FIGHTING',
+  RECOVERING = 'RECOVERING',
+  HOLIDAY = 'HOLIDAY'
 }
 
 /**

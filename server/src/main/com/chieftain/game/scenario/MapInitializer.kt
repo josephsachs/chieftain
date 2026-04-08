@@ -2,13 +2,11 @@ package com.chieftain.game.scenario
 
 import chieftain.game.models.data.Vector2
 import chieftain.game.models.entity.MapZoneResources
-import chieftain.game.models.entity.mapfeature.Town
-import com.chieftain.game.models.entity.mapfeature.MapFeature
+import chieftain.game.models.entity.City
 import com.chieftain.game.controller.GameChannelController
 import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
 import com.chieftain.game.models.entity.MapZone
 import com.chieftain.game.models.entity.MapZone.Companion.TerrainType
-import com.chieftain.game.models.entity.mapfeature.MapFeature.Companion.MapFeatureType
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import com.minare.controller.EntityController
@@ -19,6 +17,7 @@ import io.vertx.core.impl.logging.LoggerFactory
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
 import io.vertx.kotlin.coroutines.await
+import kotlin.random.Random
 
 @Singleton
 class MapInitializer @Inject constructor(
@@ -35,7 +34,7 @@ class MapInitializer @Inject constructor(
 
         log.info("Set default channel: $defaultChannelId")
 
-        readMapData().forEach { jsonObject ->
+        readJsonFile("scenario/mapzones.json").forEach { jsonObject ->
             val mapZone = entityFactory.createEntity(MapZone::class.java) as MapZone
             mapZone.location = Vector2(
                 jsonObject.getInteger("x"),
@@ -45,78 +44,125 @@ class MapInitializer @Inject constructor(
 
             when (mapZone.terrainType) {
                 TerrainType.MEADOW -> {
-                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 3)
-                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 2)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 5)
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.BEES, 1)
+                    }
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.CATTLE, 1)
+                    } else {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 1)
+                    }
                 }
-                else -> {
-                    // Pass
+                TerrainType.MARSH -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 5)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.REEDS, 5)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FISH, 2)
                 }
+                TerrainType.DRYLAND -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.CATTLE, 2)
+                }
+                TerrainType.GRASSLAND -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 5)
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.CATTLE, 1)
+                    } else {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 1)
+                    }
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.BEES, 1)
+                    }
+                }
+                TerrainType.WOODLAND -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 2)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 1)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.CEDAR, 3)
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.BEES, 1)
+                    }
+                }
+                TerrainType.ROCKLAND -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.CEDAR, 1)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.GRANITE, 1)
+                }
+                TerrainType.SCRUB -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 2)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 1)
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.BEES, 1)
+                    }
+                }
+                TerrainType.DESERT -> {
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.SOIL, 1)
+                    mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.FOWL, 1)
+                    if (Random.nextBoolean()) {
+                        mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.BEES, 1)
+                    }
+                }
+                else -> {}
+            }
+
+            if (Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.COPPER, 1)
+            }
+
+            if (Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.GRANITE, 1)
+            }
+            if (Random.nextBoolean() && Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.TIN, 1)
+            }
+            if (Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.IRON, 2)
+            }
+            if (Random.nextBoolean() && Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.GOLD, 1)
+            }
+            if (Random.nextBoolean() && Random.nextBoolean()) {
+                mapZone.resources = mapZone.resources.set(MapZoneResources.RawResourceType.GEMS, 1)
             }
 
             entityController.create(mapZone) as MapZone
             entities.add(mapZone)
         }
 
-        readFeatureData().forEach { jsonObject ->
-            val mapFeature = entityFactory.createEntity(MapFeature::class.java) as MapFeature
-            mapFeature.location = Pair(
+        readJsonFile("scenario/cities.json").forEach { jsonObject ->
+            val city = entityFactory.createEntity(City::class.java) as City
+            val id = jsonObject.getString("id")
+            city._id = "${id}-unsaved"
+
+            city.name = jsonObject.getString("name")
+            city.population = jsonObject.getInteger("population")
+            city.culture = CultureGroup.fromString(jsonObject.getString("culture"))
+            city.location = Vector2(
                 jsonObject.getInteger("x"),
                 jsonObject.getInteger("y")
             )
 
-            val featureType = MapFeatureType.fromString(jsonObject.getString("featureType"))
-
-            mapFeature.featureType = featureType
-            mapFeature.name = jsonObject.getString("name")
-
-            val mapFeatureId = entityController.create(mapFeature)._id
-
-            when (featureType) {
-                MapFeatureType.TOWN -> {
-                    val town = entityFactory.createEntity(Town::class.java) as Town
-                    town.culture = CultureGroup.fromString(jsonObject.getString("culture"))
-                    town.mapFeatureRef = mapFeatureId!!
-
-                    mapFeature.childRef = entityController.create(town)._id!!
-
-                    entityController.saveState(
-                        mapFeature._id!!,
-                        JsonObject().put("childRef", mapFeature.childRef)
-                    )
-
-                    entities.add(town)
-                }
-                else -> {
-                    log.warn("Not yet implemented")
-                }
+            val ratesJson = jsonObject.getJsonObject("exchangeRates")
+            if (ratesJson != null) {
+                val buyRates = ratesJson.getJsonObject("buyRates")
+                    ?.map { it.key to (it.value as Number).toInt() }?.toMap() ?: emptyMap()
+                val sellRates = ratesJson.getJsonObject("sellRates")
+                    ?.map { it.key to (it.value as Number).toInt() }?.toMap() ?: emptyMap()
+                city.exchangeRates = City.Companion.ExchangeRates(buyRates, sellRates)
             }
 
-            entities.add(mapFeature)
+            entityController.create(city)
+            entities.add(city)
+
+            log.info("Created city: ${city.name} (${id})")
         }
 
         gameChannelController.addEntitiesToChannel(entities.toList(), defaultChannelId!!)
     }
 
-    private suspend fun readMapData(): List<JsonObject> {
+    private suspend fun readJsonFile(path: String): List<JsonObject> {
         return try {
-            val buffer = vertx.fileSystem().readFile("scenario/mapzones.json").await()
-
-            val mapZonesArray = JsonArray(buffer.toString())
-            mapZonesArray.map { it as JsonObject }
+            val buffer = vertx.fileSystem().readFile(path).await()
+            JsonArray(buffer.toString()).map { it as JsonObject }
         } catch (e: Exception) {
-            log.error("Failed to read mapzones.json: $e")
-            emptyList()
-        }
-    }
-
-    private suspend fun readFeatureData(): List<JsonObject> {
-        return try {
-            val buffer = vertx.fileSystem().readFile("scenario/features.json").await()
-
-            val featuresArray = JsonArray(buffer.toString())
-            featuresArray.map { it as JsonObject }
-        } catch (e: Exception) {
-            log.error("Failed to read features.json: $e")
+            log.error("Failed to read $path: $e")
             emptyList()
         }
     }

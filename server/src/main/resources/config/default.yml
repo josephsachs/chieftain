@@ -32,8 +32,8 @@ entity:
 
 frames:
   threads: 6
-  frame_duration: 10000
-  lookahead: 100
+  frame_duration: 6000
+  lookahead: 25
   session:
     auto_session: frames_per_session
     frames_per_session: 500

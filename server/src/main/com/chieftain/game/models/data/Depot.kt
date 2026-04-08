@@ -8,7 +8,6 @@ import io.vertx.core.json.JsonObject
 data class Depot @JsonCreator constructor(
     @JsonProperty("contents") private val _contents: Map<String, Map<String, Int>>
 ) : JsonSerializable {
-
     val contents: Map<ResourceTypeGroup, Map<ResourceType, Int>>
         get() = _contents.mapKeys { (key, _) ->
             ResourceTypeGroup.valueOf(key)
@@ -100,6 +99,17 @@ data class Depot @JsonCreator constructor(
             JEWELS,
             STATUES,
             COINS
+        }
+
+        fun getFoodValue(type: ResourceType): Int {
+            return when (type) {
+                ResourceType.CORN -> 1
+                ResourceType.FRUIT -> 2
+                ResourceType.FOWL -> 2
+                ResourceType.HONEY -> 2
+                ResourceType.MEAT -> 3
+                else -> 0
+            }
         }
     }
 }

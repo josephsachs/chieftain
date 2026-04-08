@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import GameMap from './GameMap';
+import ClanPanel from './ClanPanel';
+import CityPanel from './CityPanel';
+import CharacterPanel from './CharacterPanel';
 import { GameEntity, extractEntitiesFromMessage } from '../models/GameEntity';
 import { Clan, getClanCoordinates } from '../models/Clan';
+import { City } from '../models/City';
+import { Character } from '../models/Character';
 
 interface LogMessage {
   timestamp: string;
@@ -16,6 +21,10 @@ const GameArea = () => {
   const [upSocket, setUpSocket] = useState<WebSocket | null>(null);
   const [downSocket, setDownSocket] = useState<WebSocket | null>(null);
   const [entities, setEntities] = useState<GameEntity[]>([]);
+  const [selectedClan, setSelectedClan] = useState<Clan | null>(null);
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
+  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
+  const [consoleOpen, setConsoleOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -326,37 +335,91 @@ const GameArea = () => {
   });
 
   return (
-    <div className="h-screen w-screen bg-gray-900 flex flex-col">
-      {/* Debug Messages - fixed height */}
-      <div className="p-2 h-24 flex-shrink-0 overflow-hidden">
-        <div className="text-green-400 font-mono text-xs mb-1">
-          Status: {connectionStatus}
-        </div>
-        <div className="h-16 overflow-hidden">
-          {filteredMessages.slice(-5).map((msg, index) => (
-            <div
-              key={index}
-              className={`font-mono text-xs leading-tight ${
-                msg.type === 'console'
-                  ? 'text-yellow-400'
-                  : msg.type === 'error'
-                    ? 'text-red-400'
-                    : 'text-green-400 opacity-60'
-              }`}
-            >
-              <span className="text-gray-500">{msg.timestamp}</span> {msg.message}
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-      </div>
-
+    <div className="h-screen w-screen bg-gray-900 flex flex-col overflow-hidden">
       {/* Game Map */}
-      <div className="flex-1">
+      <div className="flex-1 relative">
         {connectionStatus === 'fully-connected' && (
-          <GameMap entities={entities} />
+          <GameMap
+            entities={entities}
+            onSelectClan={(clan) => { setSelectedClan(clan); setSelectedCity(null); setSelectedCharacter(null); }}
+            onSelectCity={(city) => { setSelectedCity(city); setSelectedClan(null); setSelectedCharacter(null); }}
+            onSelectCharacter={(character) => { setSelectedCharacter(character); setSelectedClan(null); setSelectedCity(null); }}
+          />
         )}
       </div>
+
+      {/* Console - collapsible bottom panel */}
+      <div
+        className={`flex-shrink-0 bg-gray-950 border-t border-gray-700 transition-all duration-200 ${
+          consoleOpen ? 'h-40' : 'h-7'
+        }`}
+      >
+        <button
+          onClick={() => setConsoleOpen(!consoleOpen)}
+          className="w-full h-7 flex items-center px-3 text-xs font-mono hover:bg-gray-800 cursor-pointer"
+        >
+          <span className={`mr-2 text-gray-500 transition-transform ${consoleOpen ? 'rotate-180' : ''}`}>&#x25B2;</span>
+          <span className={`${
+            connectionStatus === 'fully-connected' ? 'text-green-400' : 'text-yellow-400'
+          }`}>
+            {connectionStatus}
+          </span>
+          {!consoleOpen && filteredMessages.length > 0 && (
+            <span className="ml-3 text-gray-500 truncate">
+              {filteredMessages[filteredMessages.length - 1]?.message}
+            </span>
+          )}
+        </button>
+        {consoleOpen && (
+          <div className="h-[calc(100%-1.75rem)] overflow-y-auto px-3 pb-2">
+            {filteredMessages.slice(-20).map((msg, index) => (
+              <div
+                key={index}
+                className={`font-mono text-xs leading-tight ${
+                  msg.type === 'console'
+                    ? 'text-yellow-400'
+                    : msg.type === 'error'
+                      ? 'text-red-400'
+                      : 'text-green-400 opacity-60'
+                }`}
+              >
+                <span className="text-gray-500">{msg.timestamp}</span> {msg.message}
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+        )}
+      </div>
+
+      {/* Entity Panels */}
+      {selectedClan && (
+        <ClanPanel
+          clan={selectedClan}
+          entities={entities}
+          onClose={() => setSelectedClan(null)}
+          onOpenCharacter={(character) => {
+            setSelectedCharacter(character);
+            setSelectedClan(null);
+          }}
+        />
+      )}
+      {selectedCity && (
+        <CityPanel
+          city={selectedCity}
+          entities={entities}
+          onClose={() => setSelectedCity(null)}
+          onOpenCharacter={(character) => {
+            setSelectedCharacter(character);
+            setSelectedCity(null);
+          }}
+        />
+      )}
+      {selectedCharacter && (
+        <CharacterPanel
+          character={selectedCharacter}
+          onClose={() => setSelectedCharacter(null)}
+        />
+      )}
     </div>
   );
 };

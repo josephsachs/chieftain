@@ -1,8 +1,14 @@
 package com.chieftain.game.scenario
 
-import chieftain.game.models.data.AgentLocationMemory.AgentLocationMemoryType
 import chieftain.game.models.data.Vector2
+import chieftain.game.models.entity.agent.Character
+import chieftain.game.models.entity.agent.Character.Companion.CharacterPersonality
+import chieftain.game.models.entity.agent.Character.Companion.CharacterStats
+import chieftain.game.models.entity.agent.Character.Companion.CharacterTitle
+import chieftain.game.models.entity.agent.Character.Companion.CharacterTraits
 import chieftain.game.models.entity.agent.Clan
+import chieftain.game.models.entity.agent.Clan.Companion.ClanSkills
+import chieftain.game.models.data.AgentLocationMemory
 import com.chieftain.game.controller.GameChannelController
 import com.chieftain.game.models.data.Depot
 import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
@@ -30,44 +36,125 @@ class AgentInitializer @Inject constructor(
         val entities = mutableListOf<Entity>()
         val defaultChannelId = gameChannelController.getDefaultChannel()
 
-        readClanData().forEach { jsonObject ->
-            val clan = entityFactory.createEntity(Clan::class.java) as Clan
-            clan.name = jsonObject.getString("name")
+        // Characters must be created first so clans can reference them
+        val characterMap = mutableMapOf<String, Character>()
 
-            clan.location = Vector2(
-                jsonObject.getInteger("x"),
-                jsonObject.getInteger("y")
+        readJsonFile("scenario/characters.json").forEach { json ->
+            val character = entityFactory.createEntity(Character::class.java) as Character
+            val id = json.getString("id")
+            character._id = "${id}-unsaved"
+
+            character.name = json.getString("name")
+            character.culture = CultureGroup.fromString(json.getString("culture"))
+            character.title = CharacterTitle.valueOf(json.getString("title"))
+
+            val statsJson = json.getJsonObject("stats")
+            character.stats = CharacterStats(
+                speech = statsJson.getInteger("speech"),
+                peacekeeping = statsJson.getInteger("peacekeeping"),
+                fighting = statsJson.getInteger("fighting"),
+                pathfinding = statsJson.getInteger("pathfinding"),
+                trading = statsJson.getInteger("trading"),
+                overseeing = statsJson.getInteger("overseeing"),
+                scouting = statsJson.getInteger("scouting"),
+                intrigue = statsJson.getInteger("intrigue"),
+                mysticism = statsJson.getInteger("mysticism"),
+                erudition = statsJson.getInteger("erudition")
             )
-            clan.culture = CultureGroup.fromString(jsonObject.getString("culture"))
-            clan.population = jsonObject.getInteger("population")
 
-            // Use assignment when initializing with EntityController
+            val persJson = json.getJsonObject("personality")
+            character.personality = CharacterPersonality(
+                cooperatorVsDefector = persJson.getDouble("cooperatorVsDefector"),
+                lawfulVsChaotic = persJson.getDouble("lawfulVsChaotic"),
+                grandioseVsInsecure = persJson.getDouble("grandioseVsInsecure"),
+                riskyVsCautious = persJson.getDouble("riskyVsCautious"),
+                ethicalVsAmoral = persJson.getDouble("ethicalVsAmoral"),
+                sumptuousVsPrudent = persJson.getDouble("sumptuousVsPrudent")
+            )
+
+            val traitsArray = json.getJsonArray("traits")
+            character.traits = traitsArray
+                .map { CharacterTraits.valueOf(it as String) }
+                .toMutableSet()
+
+            entityController.create(character)
+            characterMap[id] = character
+            entities.add(character)
+
+            log.info("Created character: ${character.name} (${id})")
+        }
+
+        // Clans reference their chieftain
+        readJsonFile("scenario/agents.json").forEach { json ->
+            val clan = entityFactory.createEntity(Clan::class.java) as Clan
+            val id = json.getString("id")
+            clan._id = "${id}-unsaved"
+
+            clan.name = json.getString("name")
+            clan.population = json.getInteger("population")
+            clan.culture = CultureGroup.fromString(json.getString("culture"))
+            clan.location = Vector2(json.getInteger("x"), json.getInteger("y"))
+
+            val chieftainKey = json.getString("chieftain")
+            val chieftain = characterMap[chieftainKey]
+            if (chieftain != null) {
+                clan.chieftainId = chieftain._id
+                clan.chieftain = chieftain
+            } else {
+                log.warn("Chieftain '${chieftainKey}' not found for clan ${clan.name}")
+            }
+
+            val skillsJson = json.getJsonObject("skills")
+            clan.skills = ClanSkills(
+                gathering = skillsJson.getInteger("gathering"),
+                hunting = skillsJson.getInteger("hunting"),
+                mining = skillsJson.getInteger("mining"),
+                quarrying = skillsJson.getInteger("quarrying"),
+                woodcutting = skillsJson.getInteger("woodcutting"),
+                sculpture = skillsJson.getInteger("sculpture"),
+                jewelry = skillsJson.getInteger("jewelry"),
+                scribing = skillsJson.getInteger("scribing"),
+                minting = skillsJson.getInteger("minting")
+            )
+
+            // Starting food supply
             clan.depot = clan.depot.set(
                 Depot.Companion.ResourceTypeGroup.FOOD,
                 Depot.Companion.ResourceType.CORN,
                 50
             )
 
-            clan.locationMemory = clan.locationMemory.setMemory(
-                location = Vector2(10, 5),
-                type = AgentLocationMemoryType.HAS_FOOD,
-                reasons = mapOf("CORN" to 50, "FOWL" to 20)
-            )
+            // Seed location memory from scenario data
+            val memoryArray = json.getJsonArray("locationMemory")
+            if (memoryArray != null) {
+                var memory = AgentLocationMemory()
+                memoryArray.forEach { entry ->
+                    val memJson = entry as JsonObject
+                    val loc = Vector2(memJson.getInteger("x"), memJson.getInteger("y"))
+                    val type = AgentLocationMemory.AgentLocationMemoryType.valueOf(memJson.getString("type"))
+                    val data = memJson.getJsonObject("data")
+                        ?.map { it.key to (it.value as Number).toInt() }?.toMap()
+                        ?: emptyMap()
+                    memory = memory.setMemory(loc, type, data)
+                }
+                clan.locationMemory = memory
+            }
 
-            entityController.create(clan) as Clan
+            entityController.create(clan)
             entities.add(clan)
+
+            log.info("Created clan: ${clan.name} (${id}), chieftain: ${clan.chieftain?.name}")
         }
 
         gameChannelController.addEntitiesToChannel(entities.toList(), defaultChannelId!!)
     }
 
-    suspend fun readClanData(): List<JsonObject> {
+    private suspend fun readJsonFile(path: String): List<JsonObject> {
         return try {
-            val buffer = vertx.fileSystem().readFile("scenario/agents.json").await()
-
+            val buffer = vertx.fileSystem().readFile(path).await()
             JsonArray(buffer.toString()).map { it as JsonObject }
         } catch (e: Exception) {
-            log.error("Failed to read agents.json: $e")
+            log.error("Failed to read $path: $e")
             emptyList()
         }
     }
