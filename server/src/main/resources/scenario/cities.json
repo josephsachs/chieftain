@@ -4,6 +4,7 @@
     "name": "Megiddo",
     "population": 5000,
     "culture": "Egyptian",
+    "prince": "char-yaanhamu",
     "x": 7,
     "y": 13,
     "exchangeRates": {
@@ -33,6 +34,7 @@
     "name": "Hazor",
     "population": 25000,
     "culture": "Canaanite",
+    "prince": "char-biryawaza",
     "x": 10,
     "y": 1,
     "exchangeRates": {
@@ -61,6 +63,7 @@
     "name": "Beth Shean",
     "population": 1000,
     "culture": "Egyptian",
+    "prince": "char-addaya",
     "x": 18,
     "y": 3,
     "exchangeRates": {

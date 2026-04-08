@@ -1,6 +1,7 @@
 package chieftain.game.models.entity
 
 import chieftain.game.models.data.Vector2
+import chieftain.game.models.entity.agent.Character
 import com.chieftain.game.models.data.Depot
 import com.chieftain.game.models.entity.Culture
 import com.minare.core.entity.annotations.EntityType
@@ -29,6 +30,13 @@ class City: Entity() {
     @State
     @Mutable
     var culture: Culture.Companion.CultureGroup = Culture.Companion.CultureGroup.UNASSIGNED
+
+    @State
+    @Mutable
+    var princeId: String = ""
+
+    @Transient
+    var prince: Character? = null
 
     @State
     @Mutable

@@ -424,6 +424,10 @@ class Clan: Entity(), Agent, Combatant {
         val currentAmt = depot.get(recipe.outputGroup, recipe.output)
         val updatedDepot = depot.set(recipe.outputGroup, recipe.output, currentAmt + yield)
 
+        log.info("$name LABOR depot BEFORE: ${depot.toJson()}")
+        log.info("$name LABOR producing $yield ${recipe.output} (current=$currentAmt, skill=$skill, pop=$population)")
+        log.info("$name LABOR depot AFTER: ${updatedDepot.toJson()}")
+
         val operation = Operation()
             .entity(this._id)
             .version(this.version)
@@ -433,8 +437,6 @@ class Clan: Entity(), Agent, Combatant {
 
         operation.build()
         operationController.queue(operation)
-
-        log.info("$name produced $yield ${recipe.output} (skill=$skill, pop=$population)")
     }
 
     /**
@@ -672,6 +674,8 @@ class Clan: Entity(), Agent, Combatant {
     suspend fun dynamics() {
         val needed = population
 
+        log.info("$name DYNAMICS depot IN: ${depot.toJson()}")
+
         // Consume food, prioritizing cheapest first to preserve high-value food
         var remaining = needed
         var updatedDepot = depot
@@ -685,7 +689,10 @@ class Clan: Entity(), Agent, Combatant {
             val unitsToConsume = minOf(available, (remaining + valuePerUnit - 1) / valuePerUnit)
             remaining -= unitsToConsume * valuePerUnit
             updatedDepot = updatedDepot.set(Depot.Companion.ResourceTypeGroup.FOOD, foodType, available - unitsToConsume)
+            log.info("$name DYNAMICS consumed $unitsToConsume $foodType (value=$valuePerUnit, had=$available, remaining=$remaining)")
         }
+
+        log.info("$name DYNAMICS depot OUT: ${updatedDepot.toJson()}, fed%=${if (needed > 0) ((needed - maxOf(remaining, 0)) * 100) / needed else 100}")
 
         // Update satiety based on how well-fed we are
         val fed = if (needed > 0) ((needed - maxOf(remaining, 0)) * 100) / needed else 100

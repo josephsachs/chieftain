@@ -349,5 +349,86 @@
       "sumptuousVsPrudent": 0.55
     },
     "traits": ["RESTLESS", "ARBITRARY"]
+  },
+  {
+    "id": "char-yaanhamu",
+    "name": "Yaanhamu",
+    "culture": "Egyptian",
+    "title": "PRINCE",
+    "stats": {
+      "speech": 6,
+      "peacekeeping": 5,
+      "fighting": 3,
+      "pathfinding": 1,
+      "trading": 6,
+      "overseeing": 7,
+      "scouting": 0,
+      "intrigue": 5,
+      "mysticism": 2,
+      "erudition": 4
+    },
+    "personality": {
+      "cooperatorVsDefector": 0.55,
+      "lawfulVsChaotic": 0.70,
+      "grandioseVsInsecure": 0.65,
+      "riskyVsCautious": 0.35,
+      "ethicalVsAmoral": 0.45,
+      "sumptuousVsPrudent": 0.70
+    },
+    "traits": ["LITERATE"]
+  },
+  {
+    "id": "char-biryawaza",
+    "name": "Biryawaza",
+    "culture": "Egyptian",
+    "title": "PRINCE",
+    "stats": {
+      "speech": 5,
+      "peacekeeping": 6,
+      "fighting": 4,
+      "pathfinding": 2,
+      "trading": 5,
+      "overseeing": 5,
+      "scouting": 1,
+      "intrigue": 4,
+      "mysticism": 3,
+      "erudition": 5
+    },
+    "personality": {
+      "cooperatorVsDefector": 0.65,
+      "lawfulVsChaotic": 0.75,
+      "grandioseVsInsecure": 0.50,
+      "riskyVsCautious": 0.30,
+      "ethicalVsAmoral": 0.60,
+      "sumptuousVsPrudent": 0.55
+    },
+    "traits": ["LAWGIVER", "LITERATE"]
+  },
+  {
+    "id": "char-addaya",
+    "name": "Addaya",
+    "culture": "Egyptian",
+    "title": "PRINCE",
+    "stats": {
+      "speech": 4,
+      "peacekeeping": 3,
+      "fighting": 5,
+      "pathfinding": 2,
+      "trading": 4,
+      "overseeing": 4,
+      "scouting": 2,
+      "intrigue": 6,
+      "mysticism": 1,
+      "erudition": 3
+    },
+    "personality": {
+      "cooperatorVsDefector": 0.40,
+      "lawfulVsChaotic": 0.60,
+      "grandioseVsInsecure": 0.70,
+      "riskyVsCautious": 0.50,
+      "ethicalVsAmoral": 0.35,
+      "sumptuousVsPrudent": 0.65
+    },
+    "traits": ["GREEDY"]
   }
 ]

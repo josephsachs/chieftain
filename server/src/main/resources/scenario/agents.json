@@ -31,8 +31,8 @@
     "culture": "Canaanite",
     "chieftain": "char-ishbaal",
     "skills": {
-      "gathering": 3,
-      "hunting": 2,
+      "gathering": 5,
+      "hunting": 3,
       "mining": 0,
       "quarrying": 0,
       "woodcutting": 0,
@@ -56,8 +56,8 @@
     "culture": "Shasu",
     "chieftain": "char-yaqub",
     "skills": {
-      "gathering": 2,
-      "hunting": 6,
+      "gathering": 3,
+      "hunting": 5,
       "mining": 0,
       "quarrying": 0,
       "woodcutting": 0,
@@ -82,7 +82,7 @@
     "chieftain": "char-shutarna",
     "skills": {
       "gathering": 3,
-      "hunting": 3,
+      "hunting": 5,
       "mining": 3,
       "quarrying": 2,
       "woodcutting": 2,
@@ -107,7 +107,7 @@
     "chieftain": "char-ayyab",
     "skills": {
       "gathering": 4,
-      "hunting": 2,
+      "hunting": 4,
       "mining": 0,
       "quarrying": 0,
       "woodcutting": 3,
@@ -131,8 +131,8 @@
     "culture": "Habiru",
     "chieftain": "char-aziru",
     "skills": {
-      "gathering": 2,
-      "hunting": 4,
+      "gathering": 3,
+      "hunting": 5,
       "mining": 2,
       "quarrying": 0,
       "woodcutting": 0,
@@ -156,8 +156,8 @@
     "culture": "Canaanite",
     "chieftain": "char-milkilu",
     "skills": {
-      "gathering": 6,
-      "hunting": 2,
+      "gathering": 5,
+      "hunting": 3,
       "mining": 0,
       "quarrying": 0,
       "woodcutting": 1,
@@ -181,8 +181,8 @@
     "culture": "Canaanite",
     "chieftain": "char-abimilki",
     "skills": {
-      "gathering": 3,
-      "hunting": 4,
+      "gathering": 5,
+      "hunting": 3,
       "mining": 0,
       "quarrying": 1,
       "woodcutting": 2,
@@ -207,7 +207,7 @@
     "chieftain": "char-raddanu",
     "skills": {
       "gathering": 3,
-      "hunting": 7,
+      "hunting": 5,
       "mining": 0,
       "quarrying": 0,
       "woodcutting": 0,
@@ -231,7 +231,7 @@
     "culture": "Habiru",
     "chieftain": "char-mutbaal",
     "skills": {
-      "gathering": 2,
+      "gathering": 3,
       "hunting": 5,
       "mining": 1,
       "quarrying": 0,
@@ -256,7 +256,7 @@
     "culture": "Hurrian",
     "chieftain": "char-artamanya",
     "skills": {
-      "gathering": 3,
+      "gathering": 5,
       "hunting": 2,
       "mining": 2,
       "quarrying": 2,
@@ -281,7 +281,7 @@
     "culture": "Amorite",
     "chieftain": "char-yapahu",
     "skills": {
-      "gathering": 4,
+      "gathering": 5,
       "hunting": 2,
       "mining": 0,
       "quarrying": 1,

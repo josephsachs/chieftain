@@ -3,6 +3,11 @@ package com.chieftain.game.scenario
 import chieftain.game.models.data.Vector2
 import chieftain.game.models.entity.MapZoneResources
 import chieftain.game.models.entity.City
+import chieftain.game.models.entity.agent.Character
+import chieftain.game.models.entity.agent.Character.Companion.CharacterPersonality
+import chieftain.game.models.entity.agent.Character.Companion.CharacterStats
+import chieftain.game.models.entity.agent.Character.Companion.CharacterTitle
+import chieftain.game.models.entity.agent.Character.Companion.CharacterTraits
 import com.chieftain.game.controller.GameChannelController
 import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
 import com.chieftain.game.models.entity.MapZone
@@ -126,6 +131,55 @@ class MapInitializer @Inject constructor(
             entities.add(mapZone)
         }
 
+        // Create prince characters for cities
+        val princeMap = mutableMapOf<String, Character>()
+        readJsonFile("scenario/characters.json")
+            .filter { it.getString("title") == "PRINCE" }
+            .forEach { json ->
+                val character = entityFactory.createEntity(Character::class.java) as Character
+                val id = json.getString("id")
+                character._id = "${id}-unsaved"
+
+                character.name = json.getString("name")
+                character.culture = CultureGroup.fromString(json.getString("culture"))
+                character.title = CharacterTitle.valueOf(json.getString("title"))
+
+                val statsJson = json.getJsonObject("stats")
+                character.stats = CharacterStats(
+                    speech = statsJson.getInteger("speech"),
+                    peacekeeping = statsJson.getInteger("peacekeeping"),
+                    fighting = statsJson.getInteger("fighting"),
+                    pathfinding = statsJson.getInteger("pathfinding"),
+                    trading = statsJson.getInteger("trading"),
+                    overseeing = statsJson.getInteger("overseeing"),
+                    scouting = statsJson.getInteger("scouting"),
+                    intrigue = statsJson.getInteger("intrigue"),
+                    mysticism = statsJson.getInteger("mysticism"),
+                    erudition = statsJson.getInteger("erudition")
+                )
+
+                val persJson = json.getJsonObject("personality")
+                character.personality = CharacterPersonality(
+                    cooperatorVsDefector = persJson.getDouble("cooperatorVsDefector"),
+                    lawfulVsChaotic = persJson.getDouble("lawfulVsChaotic"),
+                    grandioseVsInsecure = persJson.getDouble("grandioseVsInsecure"),
+                    riskyVsCautious = persJson.getDouble("riskyVsCautious"),
+                    ethicalVsAmoral = persJson.getDouble("ethicalVsAmoral"),
+                    sumptuousVsPrudent = persJson.getDouble("sumptuousVsPrudent")
+                )
+
+                val traitsArray = json.getJsonArray("traits")
+                character.traits = traitsArray
+                    .map { CharacterTraits.valueOf(it as String) }
+                    .toMutableSet()
+
+                entityController.create(character)
+                princeMap[id] = character
+                entities.add(character)
+
+                log.info("Created prince: ${character.name} (${id})")
+            }
+
         readJsonFile("scenario/cities.json").forEach { jsonObject ->
             val city = entityFactory.createEntity(City::class.java) as City
             val id = jsonObject.getString("id")
@@ -139,6 +193,17 @@ class MapInitializer @Inject constructor(
                 jsonObject.getInteger("y")
             )
 
+            val princeKey = jsonObject.getString("prince")
+            if (princeKey != null) {
+                val prince = princeMap[princeKey]
+                if (prince != null) {
+                    city.princeId = prince._id
+                    city.prince = prince
+                } else {
+                    log.warn("Prince '${princeKey}' not found for city ${city.name}")
+                }
+            }
+
             val ratesJson = jsonObject.getJsonObject("exchangeRates")
             if (ratesJson != null) {
                 val buyRates = ratesJson.getJsonObject("buyRates")
@@ -151,7 +216,7 @@ class MapInitializer @Inject constructor(
             entityController.create(city)
             entities.add(city)
 
-            log.info("Created city: ${city.name} (${id})")
+            log.info("Created city: ${city.name} (${id}), prince: ${city.prince?.name}")
         }
 
         gameChannelController.addEntitiesToChannel(entities.toList(), defaultChannelId!!)
