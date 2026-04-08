@@ -8,6 +8,7 @@ import chieftain.game.models.entity.agent.Character.Companion.CharacterTitle
 import chieftain.game.models.entity.agent.Character.Companion.CharacterTraits
 import chieftain.game.models.entity.agent.Clan
 import chieftain.game.models.entity.agent.Clan.Companion.ClanSkills
+import chieftain.game.models.data.AgentLocationMemory
 import com.chieftain.game.controller.GameChannelController
 import com.chieftain.game.models.data.Depot
 import com.chieftain.game.models.entity.Culture.Companion.CultureGroup
@@ -122,6 +123,22 @@ class AgentInitializer @Inject constructor(
                 Depot.Companion.ResourceType.CORN,
                 50
             )
+
+            // Seed location memory from scenario data
+            val memoryArray = json.getJsonArray("locationMemory")
+            if (memoryArray != null) {
+                var memory = AgentLocationMemory()
+                memoryArray.forEach { entry ->
+                    val memJson = entry as JsonObject
+                    val loc = Vector2(memJson.getInteger("x"), memJson.getInteger("y"))
+                    val type = AgentLocationMemory.AgentLocationMemoryType.valueOf(memJson.getString("type"))
+                    val data = memJson.getJsonObject("data")
+                        ?.map { it.key to (it.value as Number).toInt() }?.toMap()
+                        ?: emptyMap()
+                    memory = memory.setMemory(loc, type, data)
+                }
+                clan.locationMemory = memory
+            }
 
             entityController.create(clan)
             entities.add(clan)

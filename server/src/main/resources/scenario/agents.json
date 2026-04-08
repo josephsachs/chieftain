@@ -16,8 +16,13 @@
       "scribing": 0,
       "minting": 0
     },
-    "x": 4,
-    "y": 4
+    "x": 8,
+    "y": 4,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   },
   {
     "id": "clan-baalel",
@@ -36,8 +41,13 @@
       "scribing": 0,
       "minting": 0
     },
-    "x": 2,
-    "y": 2
+    "x": 7,
+    "y": 3,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   },
   {
     "id": "clan-yassar",
@@ -56,8 +66,13 @@
       "scribing": 0,
       "minting": 0
     },
-    "x": 3,
-    "y": 8
+    "x": 8,
+    "y": 12,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   },
   {
     "id": "clan-tesubi",
@@ -76,8 +91,13 @@
       "scribing": 0,
       "minting": 0
     },
-    "x": 10,
-    "y": 1
+    "x": 12,
+    "y": 2,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   },
   {
     "id": "clan-medyat",
@@ -96,8 +116,13 @@
       "scribing": 2,
       "minting": 0
     },
-    "x": 10,
-    "y": 7
+    "x": 5,
+    "y": 8,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   },
   {
     "id": "clan-astur",
@@ -116,7 +141,187 @@
       "scribing": 0,
       "minting": 0
     },
-    "x": 8,
-    "y": 4
+    "x": 18,
+    "y": 5,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-dagan",
+    "name": "Dagan",
+    "population": 40,
+    "culture": "Canaanite",
+    "chieftain": "char-milkilu",
+    "skills": {
+      "gathering": 6,
+      "hunting": 2,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 1,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 10,
+    "y": 5,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-reshef",
+    "name": "Reshef",
+    "population": 30,
+    "culture": "Canaanite",
+    "chieftain": "char-abimilki",
+    "skills": {
+      "gathering": 3,
+      "hunting": 4,
+      "mining": 0,
+      "quarrying": 1,
+      "woodcutting": 2,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 9,
+    "y": 2,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-seiri",
+    "name": "Seiri",
+    "population": 25,
+    "culture": "Shasu",
+    "chieftain": "char-raddanu",
+    "skills": {
+      "gathering": 3,
+      "hunting": 7,
+      "mining": 0,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 7,
+    "y": 14,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-labaya",
+    "name": "Labaya",
+    "population": 30,
+    "culture": "Habiru",
+    "chieftain": "char-mutbaal",
+    "skills": {
+      "gathering": 2,
+      "hunting": 5,
+      "mining": 1,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 1,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 20,
+    "y": 5,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-biridiya",
+    "name": "Biridiya",
+    "population": 30,
+    "culture": "Hurrian",
+    "chieftain": "char-artamanya",
+    "skills": {
+      "gathering": 3,
+      "hunting": 2,
+      "mining": 2,
+      "quarrying": 2,
+      "woodcutting": 1,
+      "sculpture": 1,
+      "jewelry": 0,
+      "scribing": 1,
+      "minting": 0
+    },
+    "x": 14,
+    "y": 2,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-zimreddi",
+    "name": "Zimreddi",
+    "population": 30,
+    "culture": "Amorite",
+    "chieftain": "char-yapahu",
+    "skills": {
+      "gathering": 4,
+      "hunting": 2,
+      "mining": 0,
+      "quarrying": 1,
+      "woodcutting": 4,
+      "sculpture": 1,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 6,
+    "y": 8,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
+  },
+  {
+    "id": "clan-sutatna",
+    "name": "Sutatna",
+    "population": 25,
+    "culture": "Habiru",
+    "chieftain": "char-dashru",
+    "skills": {
+      "gathering": 1,
+      "hunting": 5,
+      "mining": 2,
+      "quarrying": 0,
+      "woodcutting": 0,
+      "sculpture": 0,
+      "jewelry": 0,
+      "scribing": 0,
+      "minting": 0
+    },
+    "x": 21,
+    "y": 3,
+    "locationMemory": [
+      {"x": 7, "y": 13, "type": "MARKET", "data": {"city": 1}},
+      {"x": 10, "y": 1, "type": "MARKET", "data": {"city": 1}},
+      {"x": 18, "y": 3, "type": "MARKET", "data": {"city": 1}}
+    ]
   }
 ]

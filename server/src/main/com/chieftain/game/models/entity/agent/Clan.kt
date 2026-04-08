@@ -703,27 +703,31 @@ class Clan: Entity(), Agent, Combatant {
         }
         val newStamina = (health.stamina + staminaDelta).coerceIn(0, 100)
 
-        // Heart dynamics: laboring while starving is demoralizing
+        // Heart dynamics: laboring while starving is demoralizing, holidays lift spirits
         var newHeart = health.heart
         if (behavior == ClanBehavior.LABORING && newSatiety <= 0) {
             newHeart = (newHeart - 15).coerceIn(0, 100)
             log.info("${name} losing heart from laboring while starving (heart: $newHeart)")
+        } else if (behavior == ClanBehavior.HOLIDAY) {
+            newHeart = (newHeart + 20).coerceIn(0, 100)
         } else if (newHeart < 100) {
             // Slow natural recovery
             newHeart = (newHeart + 8).coerceIn(0, 100)
         }
 
-        // Starvation: if satiety hits 0, lose population
+        // Starvation: if satiety hits 0, slim chance of losing someone each turn
         var popLoss = 0
         if (newSatiety <= 0 && population > 0) {
-            popLoss = maxOf(1, population / 10) // lose at least 1, up to 10%
+            if (Random.nextDouble(100.0) < 8.0) {
+                popLoss = 1
+            }
         }
 
-        // Population growth: well-fed clans may grow, but very rarely
+        // Population growth: well-fed clans may grow; holidays boost the odds
         var popGain = 0
         if (newSatiety >= 80 && population > 0) {
-            // ~2% chance per turn, gain 1 person
-            if (Random.nextDouble(100.0) < 2.0) {
+            val growthChance = if (behavior == ClanBehavior.HOLIDAY) 8.0 else 2.0
+            if (Random.nextDouble(100.0) < growthChance) {
                 popGain = 1
                 log.info("${name} gained a member (pop: ${population + 1})")
             }

@@ -160,5 +160,194 @@
       "sumptuousVsPrudent": 0.60
     },
     "traits": ["GREEDY", "RESTLESS"]
+  },
+  {
+    "id": "char-milkilu",
+    "name": "Milkilu",
+    "culture": "Canaanite",
+    "title": "CHIEFTAIN",
+    "stats": {
+      "speech": 5,
+      "peacekeeping": 4,
+      "fighting": 2,
+      "pathfinding": 3,
+      "trading": 5,
+      "overseeing": 6,
+      "scouting": 1,
+      "intrigue": 2,
+      "mysticism": 3,
+      "erudition": 2
+    },
+    "personality": {
+      "cooperatorVsDefector": 0.70,
+      "lawfulVsChaotic": 0.65,
+      "grandioseVsInsecure": 0.40,
+      "riskyVsCautious": 0.30,
+      "ethicalVsAmoral": 0.60,
+      "sumptuousVsPrudent": 0.35
+    },
+    "traits": ["COMPASSIONATE"]
+  },
+  {
+    "id": "char-abimilki",
+    "name": "Abimilki",
+    "culture": "Canaanite",
+    "title": "CHIEFTAIN",
+    "stats": {
+      "speech": 3,
+      "peacekeeping": 5,
+      "fighting": 5,
+      "pathfinding": 3,
+      "trading": 3,
+      "overseeing": 4,
+      "scouting": 2,
+      "intrigue": 3,
+      "mysticism": 2,
+      "erudition": 1
+    },
+    "personality": {
+      "cooperatorVsDefector": 0.55,
+      "lawfulVsChaotic": 0.60,
+      "grandioseVsInsecure": 0.50,
+      "riskyVsCautious": 0.45,
+      "ethicalVsAmoral": 0.55,
+      "sumptuousVsPrudent": 0.40
+    },
+    "traits": ["STRONG"]
+  },
+  {
+    "id": "char-raddanu",
+    "name": "Raddanu",
+    "culture": "Shasu",
+    "title": "CHIEFTAIN",
+    "stats": {
+      "speech": 2,
+      "peacekeeping": 2,
+      "fighting": 5,
+      "pathfinding": 5,
+      "trading": 1,
+      "overseeing": 1,
+      "scouting": 7,
+      "intrigue": 2,
+      "mysticism": 4,
+      "erudition": 0
+    },
+    "personality": {
+      "cooperatorVsDefector": 0.30,
+      "lawfulVsChaotic": 0.25,
+      "grandioseVsInsecure": 0.55,
+      "riskyVsCautious": 0.75,
+      "ethicalVsAmoral": 0.45,
+      "sumptuousVsPrudent": 0.10
+    },
+    "traits": ["RESTLESS"]
+  },
+  {
+    "id": "char-mutbaal",
+    "name": "Mutbaal",
+    "culture": "Habiru",
+    "title": "CHIEFTAIN",
+    "stats": {
+      "speech": 3,
+      "peacekeeping": 1,
+      "fighting": 6,
+      "pathfinding": 3,
+      "trading": 4,
+      "overseeing": 2,
+      "scouting": 4,
+      "intrigue": 7,
+      "mysticism": 0,
+      "erudition": 1
+    },
+    "personality": {
+      "cooperatorVsDefector": 0.20,
+      "lawfulVsChaotic": 0.15,
+      "grandioseVsInsecure": 0.80,
+      "riskyVsCautious": 0.75,
+      "ethicalVsAmoral": 0.15,
+      "sumptuousVsPrudent": 0.65
+    },
+    "traits": ["GREEDY", "CALLOUS"]
+  },
+  {
+    "id": "char-artamanya",
+    "name": "Artamanya",
+    "culture": "Hurrian",
+    "title": "CHIEFTAIN",
+    "stats": {
+      "speech": 4,
+      "peacekeeping": 6,
+      "fighting": 3,
+      "pathfinding": 2,
+      "trading": 3,
+      "overseeing": 4,
+      "scouting": 2,
+      "intrigue": 3,
+      "mysticism": 6,
+      "erudition": 4
+    },
+    "personality": {
+      "cooperatorVsDefector": 0.75,
+      "lawfulVsChaotic": 0.70,
+      "grandioseVsInsecure": 0.35,
+      "riskyVsCautious": 0.25,
+      "ethicalVsAmoral": 0.75,
+      "sumptuousVsPrudent": 0.20
+    },
+    "traits": ["LAWGIVER", "LITERATE"]
+  },
+  {
+    "id": "char-yapahu",
+    "name": "Yapahu",
+    "culture": "Amorite",
+    "title": "CHIEFTAIN",
+    "stats": {
+      "speech": 3,
+      "peacekeeping": 3,
+      "fighting": 4,
+      "pathfinding": 4,
+      "trading": 2,
+      "overseeing": 5,
+      "scouting": 3,
+      "intrigue": 2,
+      "mysticism": 3,
+      "erudition": 2
+    },
+    "personality": {
+      "cooperatorVsDefector": 0.50,
+      "lawfulVsChaotic": 0.55,
+      "grandioseVsInsecure": 0.45,
+      "riskyVsCautious": 0.40,
+      "ethicalVsAmoral": 0.55,
+      "sumptuousVsPrudent": 0.45
+    },
+    "traits": ["STRONG"]
+  },
+  {
+    "id": "char-dashru",
+    "name": "Dashru",
+    "culture": "Habiru",
+    "title": "CHIEFTAIN",
+    "stats": {
+      "speech": 2,
+      "peacekeeping": 0,
+      "fighting": 6,
+      "pathfinding": 5,
+      "trading": 3,
+      "overseeing": 1,
+      "scouting": 6,
+      "intrigue": 5,
+      "mysticism": 1,
+      "erudition": 0
+    },
+    "personality": {
+      "cooperatorVsDefector": 0.15,
+      "lawfulVsChaotic": 0.10,
+      "grandioseVsInsecure": 0.70,
+      "riskyVsCautious": 0.85,
+      "ethicalVsAmoral": 0.25,
+      "sumptuousVsPrudent": 0.55
+    },
+    "traits": ["RESTLESS", "ARBITRARY"]
   }
 ]
