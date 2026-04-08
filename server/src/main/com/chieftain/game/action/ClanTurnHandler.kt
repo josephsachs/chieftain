@@ -1,5 +1,6 @@
 package chieftain.game.action
 
+import chieftain.game.models.entity.City
 import chieftain.game.models.entity.agent.Character
 import chieftain.game.models.entity.agent.Clan
 import com.google.inject.Inject
@@ -28,11 +29,20 @@ class ClanTurnHandler @Inject constructor(
             entityController.findByIds(chieftainIds)
         } else emptyMap()
 
+        // Load all cities for location matching
+        val cityKeys = stateStore.findAllKeysForType("City")
+        val cities = if (cityKeys.isNotEmpty()) {
+            entityController.findByIds(cityKeys).values.filterIsInstance<City>()
+        } else emptyList()
+
         val dataResponse = JsonObject()
 
         for ((_, clan) in clans) {
             clan as Clan
             clan.chieftain = characters[clan.chieftainId] as? Character
+            clan.cityAtLocation = cities.find {
+                it.location.x == clan.location.x && it.location.y == clan.location.y
+            }
             when (turnPhase) {
                 GameTurnHandler.Companion.TurnPhase.ACT -> {
                     dataResponse.put(clan.name, doAct(clan))
@@ -80,6 +90,9 @@ class ClanTurnHandler @Inject constructor(
             }
             Clan.Companion.ClanBehavior.LABORING -> {
                 clan.queueLaborAction()
+            }
+            Clan.Companion.ClanBehavior.TRADING -> {
+                clan.queueTradeAction()
             }
             Clan.Companion.ClanBehavior.HOLIDAY -> {
                 // Rest: stamina recovery happens in dynamics

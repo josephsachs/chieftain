@@ -139,6 +139,15 @@ class MapInitializer @Inject constructor(
                 jsonObject.getInteger("y")
             )
 
+            val ratesJson = jsonObject.getJsonObject("exchangeRates")
+            if (ratesJson != null) {
+                val buyRates = ratesJson.getJsonObject("buyRates")
+                    ?.map { it.key to (it.value as Number).toInt() }?.toMap() ?: emptyMap()
+                val sellRates = ratesJson.getJsonObject("sellRates")
+                    ?.map { it.key to (it.value as Number).toInt() }?.toMap() ?: emptyMap()
+                city.exchangeRates = City.Companion.ExchangeRates(buyRates, sellRates)
+            }
+
             entityController.create(city)
             entities.add(city)
 

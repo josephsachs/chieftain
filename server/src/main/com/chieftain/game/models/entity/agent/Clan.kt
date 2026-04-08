@@ -6,6 +6,7 @@ import chieftain.game.action.cache.services.MapDataCacheBuilder.Companion.MapCac
 import chieftain.game.controller.GameMapController
 import chieftain.game.models.data.AgentLocationMemory
 import chieftain.game.models.data.Vector2
+import chieftain.game.models.entity.City
 import chieftain.game.models.entity.Combatant
 import chieftain.game.models.entity.MapZoneResources
 import com.chieftain.game.models.data.Depot
@@ -20,6 +21,7 @@ import io.vertx.core.json.JsonObject
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import kotlin.math.roundToInt
+import kotlin.random.Random
 
 @EntityType("Clan")
 class Clan: Entity(), Agent, Combatant {
@@ -77,6 +79,9 @@ class Clan: Entity(), Agent, Combatant {
 
     @Transient
     var chieftain: Character? = null
+
+    @Transient
+    var cityAtLocation: City? = null
 
     @State
     @Mutable
@@ -169,27 +174,47 @@ class Clan: Entity(), Agent, Combatant {
             .put("id", _id)
             .put("messageType", "chooseBehavior")
 
-        // Where are we? Are we in a market town? Near combat?
+        // Are we at a city with a market?
+        val city = cityAtLocation
+        if (city != null) {
+            // Record this market in memory
+            locationMemory = locationMemory.setMemory(
+                location,
+                AgentLocationMemory.AgentLocationMemoryType.MARKET,
+                mapOf("city" to 1)
+            )
 
-        // If we're in a town, then we have two questions:
-        // - Are we not yet done trading?
-        // - Are we hanginaround in particular? (Some chieftains want to)
-        // Shortcircuit if either applies: Behavior.NONE
+            // If we have goods/metals/treasure to sell, or we need food and have wealth, trade
+            val tradableWealth = countTradableValue(city)
+            val needFood = health.satiety < 90
 
-        // If we're near combat, then we are deciding whether to engage or avoid.
-        // No combat systems yet so we don't have targetCombatant or anything like that
-        // to worry about.
+            if (tradableWealth > 0 || (needFood && countWealth() > 0)) {
+                behavior = ClanBehavior.TRADING
+                dataOutput.put("decision", "$chieftainName brings $name to market at ${city.name}")
 
-        if (health.satiety <= 0) {
+                entityController.saveProperties(this._id, JsonObject()
+                    .put("behavior", behavior)
+                    .put("targetResource", targetResource?.name)
+                    .put("targetNavigation", targetNavigation)
+                    .put("lastThought", System.currentTimeMillis())
+                    .put("locationMemory", locationMemory.toJson())
+                )
+
+                log.info("$name chose behavior: $dataOutput")
+                return
+            }
+        }
+
+
+        if (health.satiety <= 0 &&
+                Random.nextDouble(100.00) > 33.00) {
             // PANIC!
             behavior = ClanBehavior.WANDERING
-            locationMemory.setMemory(
-                Vector2(location.x, location.y),
-                AgentLocationMemory.AgentLocationMemoryType.MARGINAL,
-                mapOf("Starved trying to work here" to 15)
-            )
-            dataOutput.put("result", "${name} seek greener pastures")
-        } else if (health.satiety < 75) {
+            dataOutput.put("result", "${name} scramble for greener pastures")
+            return
+        }
+
+        if (health.satiety < 75) {
             dataOutput = handleBehaviorFoodSeeking(dataOutput)
 
         } else {
@@ -384,10 +409,82 @@ class Clan: Entity(), Agent, Combatant {
         operation.build()
         operationController.queue(operation)
 
-        // Update local depot so dynamics() sees this turn's production
-        depot = updatedDepot
+        log.info("$name produced $yield ${recipe.output} (skill=$skill, pop=$population)")
+    }
 
-        log.info("${name} produced $yield ${recipe.output} (skill=$skill, pop=$population)")
+    /**
+     * How much wealth could we get by selling our tradable goods at this city?
+     */
+    private fun countTradableValue(city: City): Int {
+        val rates = city.exchangeRates
+        var total = 0
+
+        // Goods
+        for ((resourceName, rate) in rates.buyRates) {
+            val resourceType = try { Depot.Companion.ResourceType.valueOf(resourceName) } catch (_: Exception) { continue }
+            val group = getResourceGroup(resourceType) ?: continue
+            val qty = depot.get(group, resourceType)
+            total += qty * rate
+        }
+
+        return total
+    }
+
+    private fun getResourceGroup(type: Depot.Companion.ResourceType): Depot.Companion.ResourceTypeGroup? {
+        return when (type) {
+            Depot.Companion.ResourceType.WOOD, Depot.Companion.ResourceType.PAPYRUS, Depot.Companion.ResourceType.STONE -> Depot.Companion.ResourceTypeGroup.GOODS
+            Depot.Companion.ResourceType.IRON, Depot.Companion.ResourceType.COPPER, Depot.Companion.ResourceType.TIN, Depot.Companion.ResourceType.GOLD -> Depot.Companion.ResourceTypeGroup.METALS
+            Depot.Companion.ResourceType.JEWELS, Depot.Companion.ResourceType.STATUES, Depot.Companion.ResourceType.COINS, Depot.Companion.ResourceType.BOOKS -> Depot.Companion.ResourceTypeGroup.TREASURE
+            else -> null
+        }
+    }
+
+    /**
+     * Sell goods for wealth, then buy food with wealth. Stop when out of goods or
+     * wealth drops below a modest reserve.
+     */
+    suspend fun queueTradeAction() {
+        val city = cityAtLocation ?: return
+        val rates = city.exchangeRates
+        var updatedDepot = depot
+        var wealth = 0
+
+        // Phase 1: Sell goods/metals/treasure to the city
+        for ((resourceName, rate) in rates.buyRates.entries.sortedByDescending { it.value }) {
+            val resourceType = try { Depot.Companion.ResourceType.valueOf(resourceName) } catch (_: Exception) { continue }
+            val group = getResourceGroup(resourceType) ?: continue
+            val qty = updatedDepot.get(group, resourceType)
+            if (qty <= 0) continue
+
+            wealth += qty * rate
+            updatedDepot = updatedDepot.set(group, resourceType, 0)
+            log.info("$name sold $qty $resourceName at ${city.name} for ${qty * rate} wealth")
+        }
+
+        // Phase 2: Buy food with accumulated wealth, prioritizing best value
+        val foodToBuy = rates.sellRates.entries.sortedBy { it.value } // cheapest first
+        for ((foodName, cost) in foodToBuy) {
+            if (wealth < cost) continue
+            val foodType = try { Depot.Companion.ResourceType.valueOf(foodName) } catch (_: Exception) { continue }
+
+            val unitsToBuy = wealth / cost
+            wealth -= unitsToBuy * cost
+            val current = updatedDepot.get(Depot.Companion.ResourceTypeGroup.FOOD, foodType)
+            updatedDepot = updatedDepot.set(Depot.Companion.ResourceTypeGroup.FOOD, foodType, current + unitsToBuy)
+            log.info("$name bought $unitsToBuy $foodName at ${city.name} for ${unitsToBuy * cost} wealth")
+        }
+
+        if (updatedDepot != depot) {
+            val operation = Operation()
+                .entity(this._id)
+                .version(this.version)
+                .entityType(Clan::class)
+                .action(OperationType.MUTATE)
+                .delta(JsonObject().put("depot", updatedDepot.toJson()))
+
+            operation.build()
+            operationController.queue(operation)
+        }
     }
 
     suspend fun queueTravelAction() {
@@ -497,6 +594,13 @@ class Clan: Entity(), Agent, Combatant {
             )
         }
 
+        // Record market if there's a city here
+        if (cityAtLocation != null) {
+            locationMemory = locationMemory.setMemory(
+                location, AgentLocationMemory.AgentLocationMemoryType.MARKET, mapOf("city" to 1)
+            )
+        }
+
         // Always mark visited
         locationMemory = locationMemory.setMemory(
             location, AgentLocationMemory.AgentLocationMemoryType.VISITED, mapOf("turn" to 0)
@@ -534,10 +638,7 @@ class Clan: Entity(), Agent, Combatant {
             .version(this.version)
             .entityType(Clan::class)
             .action(OperationType.MUTATE)
-            .delta(
-                JsonObject()
-                    .put("location", Vector2(destination.x, destination.y))
-            )
+            .delta(JsonObject().put("location", Vector2(destination.x, destination.y)))
 
         operation.build()
         operationController.queue(operation)
@@ -671,6 +772,7 @@ class Clan: Entity(), Agent, Combatant {
             WANDERING ("Wandering"),
             TRAVELING ("Traveling"),
             LABORING ("Laboring"),
+            TRADING ("Trading"),
             FIGHTING ("Fighting"),
             RECOVERING ("Recovering"),
             HOLIDAY ("Holiday")

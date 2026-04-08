@@ -14,6 +14,7 @@ const BEHAVIOR_LABELS: Record<string, string> = {
   [ClanBehavior.WANDERING]: 'Wandering',
   [ClanBehavior.TRAVELING]: 'Traveling',
   [ClanBehavior.LABORING]: 'Laboring',
+  [ClanBehavior.TRADING]: 'Trading',
   [ClanBehavior.FIGHTING]: 'Fighting',
   [ClanBehavior.RECOVERING]: 'Recovering',
   [ClanBehavior.HOLIDAY]: 'Holiday',
