@@ -174,6 +174,31 @@ class Clan: Entity(), Agent, Combatant {
             .put("id", _id)
             .put("messageType", "chooseBehavior")
 
+        // Low heart: compulsive wandering until morale recovers
+        if (health.heart < 25) {
+            behavior = ClanBehavior.WANDERING
+            dataOutput.put("decision", "${name} are demoralized and wandering aimlessly")
+            entityController.saveProperties(this._id, JsonObject()
+                .put("behavior", behavior)
+                .put("targetNavigation", targetNavigation)
+                .put("lastThought", System.currentTimeMillis())
+            )
+            log.info("${name} forced to wander (heart=${health.heart})")
+            return
+        }
+
+        // Low stamina: force reconsideration next turn
+        if (health.stamina < 20) {
+            behavior = ClanBehavior.NONE
+            dataOutput.put("decision", "${name} are exhausted and must rest")
+            entityController.saveProperties(this._id, JsonObject()
+                .put("behavior", behavior)
+                .put("lastThought", System.currentTimeMillis())
+            )
+            log.info("${name} forced to reconsider (stamina=${health.stamina})")
+            return
+        }
+
         // Are we at a city with a market?
         val city = cityAtLocation
         if (city != null) {
@@ -668,14 +693,44 @@ class Clan: Entity(), Agent, Combatant {
 
         val newSatiety = (health.satiety + satietyDelta).coerceIn(0, 100)
 
+        // Stamina dynamics: laboring is tiring, holidays restore
+        val staminaDelta = when (behavior) {
+            ClanBehavior.LABORING -> -8
+            ClanBehavior.HOLIDAY -> 15
+            ClanBehavior.WANDERING, ClanBehavior.TRAVELING -> -3
+            ClanBehavior.FIGHTING -> -10
+            else -> 5
+        }
+        val newStamina = (health.stamina + staminaDelta).coerceIn(0, 100)
+
+        // Heart dynamics: laboring while starving is demoralizing
+        var newHeart = health.heart
+        if (behavior == ClanBehavior.LABORING && newSatiety <= 0) {
+            newHeart = (newHeart - 15).coerceIn(0, 100)
+            log.info("${name} losing heart from laboring while starving (heart: $newHeart)")
+        } else if (newHeart < 100) {
+            // Slow natural recovery
+            newHeart = (newHeart + 8).coerceIn(0, 100)
+        }
+
         // Starvation: if satiety hits 0, lose population
         var popLoss = 0
         if (newSatiety <= 0 && population > 0) {
             popLoss = maxOf(1, population / 10) // lose at least 1, up to 10%
         }
 
-        val newPop = population - popLoss
-        val newHealth = ClanHealth(newSatiety, health.stamina, health.heart)
+        // Population growth: well-fed clans may grow, but very rarely
+        var popGain = 0
+        if (newSatiety >= 80 && population > 0) {
+            // ~2% chance per turn, gain 1 person
+            if (Random.nextDouble(100.0) < 2.0) {
+                popGain = 1
+                log.info("${name} gained a member (pop: ${population + 1})")
+            }
+        }
+
+        val newPop = population - popLoss + popGain
+        val newHealth = ClanHealth(newSatiety, newStamina, newHeart)
 
         val delta = JsonObject()
             .put("depot", updatedDepot.toJson())
