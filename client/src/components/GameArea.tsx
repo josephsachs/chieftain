@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import GameMap from './GameMap';
 import ClanPanel from './ClanPanel';
+import CityPanel from './CityPanel';
 import CharacterPanel from './CharacterPanel';
 import { GameEntity, extractEntitiesFromMessage } from '../models/GameEntity';
 import { Clan, getClanCoordinates } from '../models/Clan';
+import { City } from '../models/City';
 import { Character } from '../models/Character';
 
 interface LogMessage {
@@ -20,6 +22,7 @@ const GameArea = () => {
   const [downSocket, setDownSocket] = useState<WebSocket | null>(null);
   const [entities, setEntities] = useState<GameEntity[]>([]);
   const [selectedClan, setSelectedClan] = useState<Clan | null>(null);
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -361,8 +364,9 @@ const GameArea = () => {
         {connectionStatus === 'fully-connected' && (
           <GameMap
             entities={entities}
-            onSelectClan={(clan) => { setSelectedClan(clan); setSelectedCharacter(null); }}
-            onSelectCharacter={(character) => { setSelectedCharacter(character); setSelectedClan(null); }}
+            onSelectClan={(clan) => { setSelectedClan(clan); setSelectedCity(null); setSelectedCharacter(null); }}
+            onSelectCity={(city) => { setSelectedCity(city); setSelectedClan(null); setSelectedCharacter(null); }}
+            onSelectCharacter={(character) => { setSelectedCharacter(character); setSelectedClan(null); setSelectedCity(null); }}
           />
         )}
       </div>
@@ -376,6 +380,17 @@ const GameArea = () => {
           onOpenCharacter={(character) => {
             setSelectedCharacter(character);
             setSelectedClan(null);
+          }}
+        />
+      )}
+      {selectedCity && (
+        <CityPanel
+          city={selectedCity}
+          entities={entities}
+          onClose={() => setSelectedCity(null)}
+          onOpenCharacter={(character) => {
+            setSelectedCharacter(character);
+            setSelectedCity(null);
           }}
         />
       )}

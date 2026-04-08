@@ -9,10 +9,11 @@ import { Character } from '../models/Character';
 interface GameMapProps {
   entities: GameEntity[];
   onSelectClan: (clan: Clan) => void;
+  onSelectCity: (city: City) => void;
   onSelectCharacter: (character: Character) => void;
 }
 
-const GameMap: React.FC<GameMapProps> = ({ entities, onSelectClan, onSelectCharacter }) => {
+const GameMap: React.FC<GameMapProps> = ({ entities, onSelectClan, onSelectCity, onSelectCharacter }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<MapRenderer | null>(null);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -291,7 +292,12 @@ const GameMap: React.FC<GameMapProps> = ({ entities, onSelectClan, onSelectChara
             {/* City Info */}
             {selectedEntity.entities.filter(e => e.type === 'City').map((city, idx) => (
               <div key={`city-${idx}`} className="mt-2 pt-2 border-t border-gray-600">
-                <div className="font-semibold">{(city as City).state?.name || 'City'}</div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onSelectCity(city as City); }}
+                  className="block text-blue-400 hover:text-blue-300 underline cursor-pointer font-semibold"
+                >
+                  {(city as City).state?.name || 'City'}
+                </button>
                 <div>Pop. {(city as City).state?.population || 0}</div>
               </div>
             ))}
