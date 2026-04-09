@@ -227,6 +227,10 @@ class Clan: Entity(), Agent, Combatant {
 
             // If we have goods/metals/treasure to sell, or we need food and have wealth, trade
             val tradableWealth = countTradableValue(city)
+
+            // TEMPORARY DEBUG
+            log.info("DEBUG_WEALTH: $tradableWealth")
+
             val needFood = health.satiety < 90
 
             if (tradableWealth > 0 || (needFood && countTradeStock() > 0)) {
@@ -253,7 +257,7 @@ class Clan: Entity(), Agent, Combatant {
             dataOutput = handleBehaviorSurplus(dataOutput)
         }
 
-        leaderDecision = dataOutput.getString("decision", "")
+        leaderDecision = dataOutput.getString("result", dataOutput.getString("decision", ""))
 
         entityController.saveProperties(this._id, JsonObject()
             .put("behavior", behavior)
@@ -300,18 +304,17 @@ class Clan: Entity(), Agent, Combatant {
 
         val areaResources = getMapZoneResources()
 
-        // 0. Crisis: starving and morale slipping — current strategy isn't working
-        if (health.satiety <= 0 && health.heart < 100) {
-            val crisis = handleFoodCrisis(dataOutput, areaResources)
-            if (crisis != null) return crisis
-        }
-
         // 1. Have trade stock and know a market — go sell for food
-        log.info("$name food-seeking: tradeStock=${countTradeStock()}, memories=${locationMemory.toJson()}")
         if (countTradeStock() > 0 &&
             tryNavigateToMemory(AgentLocationMemory.AgentLocationMemoryType.MARKET, dataOutput)) {
             dataOutput.put("decision", "$chieftainName leads $name to market with goods to trade for food")
             return dataOutput
+        }
+
+        // 2. Crisis: starving and morale slipping — current strategy isn't working
+        if (health.satiety <= 0 && health.heart < 100) {
+            val crisis = handleFoodCrisis(dataOutput, areaResources)
+            if (crisis != null) return crisis
         }
 
         // 2. Can produce something here — tryChooseResource picks food-first when hungry

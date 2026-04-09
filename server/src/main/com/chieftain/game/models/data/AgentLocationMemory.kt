@@ -12,20 +12,32 @@ data class AgentLocationMemory @JsonCreator constructor(
     // Type-safe accessor
     val memories: Map<Vector2, Map<AgentLocationMemoryType, Map<String, Int>>>
         get() = _memories.mapKeys { (key, _) ->
-            // Parse "x,y" back to Vector2
-            val parts = key.split(",")
-            Vector2(parts[0].toInt(), parts[1].toInt())
+            parseLocationKey(key)
         }.mapValues { (_, typeMap) ->
             typeMap.mapKeys { (typeKey, _) ->
                 AgentLocationMemoryType.valueOf(typeKey)
             }
         }
 
+    companion object {
+        private val VECTOR2_PATTERN = Regex("""Vector2\(x=(-?\d+),\s*y=(-?\d+)\)""")
+
+        fun parseLocationKey(key: String): Vector2 {
+            VECTOR2_PATTERN.matchEntire(key)?.let {
+                return Vector2(it.groupValues[1].toInt(), it.groupValues[2].toInt())
+            }
+            val parts = key.split(",")
+            return Vector2(parts[0].trim().toInt(), parts[1].trim().toInt())
+        }
+    }
+
     constructor() : this(emptyMap())
 
     // Helper to get memory for a location
     fun getMemory(location: Vector2, type: AgentLocationMemoryType): Map<String, Int>? {
-        return _memories["${location.x},${location.y}"]?.get(type.name)
+        val canonical = "${location.x},${location.y}"
+        return _memories.entries.firstOrNull { parseLocationKey(it.key) == location }
+            ?.value?.get(type.name)
     }
 
     // Helper to set memory (returns new instance)

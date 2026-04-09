@@ -39,7 +39,7 @@ class GameTurnHandler @Inject constructor(
         setGameProperties(TurnPhase.ACT, true)
 
         var data = JsonObject()
-            .put("map", mapZoneTurnHandler.handleTurn(TurnPhase.ACT))
+            //.put("map", mapZoneTurnHandler.handleTurn(TurnPhase.ACT))
             .put("clans", clanTurnHandler.handleTurn(TurnPhase.ACT))
             .put("fights", fightTurnHandler.handleTurn(TurnPhase.ACT))
 
@@ -50,7 +50,7 @@ class GameTurnHandler @Inject constructor(
         log.info("TURN_LOOP: EXECUTE Phase Start")
         setGameProperties(TurnPhase.EXECUTE, true)
         var data = JsonObject()
-            .put("map", mapZoneTurnHandler.handleTurn(TurnPhase.EXECUTE))
+            //.put("map", mapZoneTurnHandler.handleTurn(TurnPhase.EXECUTE))
             .put("clans", clanTurnHandler.handleTurn(TurnPhase.EXECUTE))
             .put("fights", fightTurnHandler.handleTurn(TurnPhase.EXECUTE))
 
@@ -61,7 +61,7 @@ class GameTurnHandler @Inject constructor(
         log.info("TURN_LOOP: RESOLVE Phase Start")
         setGameProperties(TurnPhase.RESOLVE, true)
         var data = JsonObject()
-            .put("map", mapZoneTurnHandler.handleTurn(TurnPhase.RESOLVE))
+           // .put("map", mapZoneTurnHandler.handleTurn(TurnPhase.RESOLVE))
             .put("clans", clanTurnHandler.handleTurn(TurnPhase.RESOLVE))
             .put("fights", fightTurnHandler.handleTurn(TurnPhase.RESOLVE))
 
@@ -137,7 +137,7 @@ class GameTurnHandler @Inject constructor(
 
     companion object {
         const val ADDRESS_TURN_COMPLETE = "turn.handler.turn.complete"
-        const val MIN_FRAMES_PER_PHASE = 2
+        const val MIN_FRAMES_PER_PHASE = 5
 
         enum class TurnPhase { ACT, EXECUTE, RESOLVE }
     }
