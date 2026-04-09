@@ -9,6 +9,7 @@ import chieftain.game.models.data.Vector2
 import chieftain.game.models.entity.City
 import chieftain.game.models.entity.Combatant
 import chieftain.game.models.entity.MapZoneResources
+import chieftain.game.models.entity.Polity
 import com.chieftain.game.models.data.Depot
 import com.google.inject.Inject
 import com.minare.controller.EntityController
@@ -87,6 +88,10 @@ class Clan: Entity(), Agent, Combatant {
     @Mutable
     var skills: ClanSkills = ClanSkills()
 
+    @State
+    @Mutable
+    var alignedWith: Polity? = null
+
     /**
      * AI
      */
@@ -125,6 +130,9 @@ class Clan: Entity(), Agent, Combatant {
 
     @Property
     var lastThought: Long = 0L // timestamp
+
+    @Property
+    var leaderDecision: String = ""
 
     private val chieftainName: String
         get() = chieftain?.name ?: "the clan"
@@ -177,25 +185,33 @@ class Clan: Entity(), Agent, Combatant {
         // Low heart: compulsive wandering until morale recovers
         if (health.heart < 25) {
             behavior = ClanBehavior.WANDERING
-            dataOutput.put("decision", "${name} are demoralized and wandering aimlessly")
+            leaderDecision = "$name are demoralized and wandering aimlessly"
             entityController.saveProperties(this._id, JsonObject()
                 .put("behavior", behavior)
                 .put("targetNavigation", targetNavigation)
                 .put("lastThought", System.currentTimeMillis())
+                .put("leaderDecision", leaderDecision)
             )
-            log.info("${name} forced to wander (heart=${health.heart})")
+            log.info("$name forced to wander (heart=${health.heart})")
             return
         }
 
         // Low stamina: force reconsideration next turn
         if (health.stamina < 20) {
             behavior = ClanBehavior.NONE
-            dataOutput.put("decision", "${name} are exhausted and must rest")
+            leaderDecision = "$name are exhausted and must rest"
             entityController.saveProperties(this._id, JsonObject()
                 .put("behavior", behavior)
                 .put("lastThought", System.currentTimeMillis())
+                .put("leaderDecision", leaderDecision)
             )
-            log.info("${name} forced to reconsider (stamina=${health.stamina})")
+            log.info("$name forced to reconsider (stamina=${health.stamina})")
+            return
+        }
+
+        // Committed to traveling — don't reconsider until we arrive
+        if (behavior == ClanBehavior.TRAVELING && targetNavigation.isNotEmpty()) {
+            log.info("$name continuing journey (${targetNavigation.size} waypoints remaining)")
             return
         }
 
@@ -213,9 +229,9 @@ class Clan: Entity(), Agent, Combatant {
             val tradableWealth = countTradableValue(city)
             val needFood = health.satiety < 90
 
-            if (tradableWealth > 0 || (needFood && countWealth() > 0)) {
+            if (tradableWealth > 0 || (needFood && countTradeStock() > 0)) {
                 behavior = ClanBehavior.TRADING
-                dataOutput.put("decision", "$chieftainName brings $name to market at ${city.name}")
+                leaderDecision = "$chieftainName brings $name to market at ${city.name}"
 
                 entityController.saveProperties(this._id, JsonObject()
                     .put("behavior", behavior)
@@ -223,6 +239,7 @@ class Clan: Entity(), Agent, Combatant {
                     .put("targetNavigation", targetNavigation)
                     .put("lastThought", System.currentTimeMillis())
                     .put("locationMemory", locationMemory.toJson())
+                    .put("leaderDecision", leaderDecision)
                 )
 
                 log.info("$name chose behavior: $dataOutput")
@@ -230,109 +247,143 @@ class Clan: Entity(), Agent, Combatant {
             }
         }
 
-
-        if (health.satiety <= 0 &&
-                Random.nextDouble(100.00) > 33.00) {
-            // PANIC!
-            behavior = ClanBehavior.WANDERING
-            dataOutput.put("result", "${name} scramble for greener pastures")
-            return
-        }
-
         if (health.satiety < 75) {
             dataOutput = handleBehaviorFoodSeeking(dataOutput)
-
         } else {
-            dataOutput.mergeIn(
-                JsonObject()
-                    .put("decision", "${chieftainName} of ${name} is strategizing")
-            )
-
-            // Now the chieftain's personality matters a lot
-            val personality = chieftainPersonality
-            val areaResources = getMapZoneResources()
-
-            if (personality.sumptuousVsPrudent > 0.65 && countFoodQty() > population * 2) {
-                // Sumptuous leader with surplus — take a holiday
-                behavior = ClanBehavior.HOLIDAY
-                dataOutput.put("result", "${chieftainName} declared a feast day")
-            } else if (haveAnySkills(areaResources) && areaResources.resources.any { it.value > 0 }) {
-                // There's something to work here — an industrious choice
-                val chosenResource = tryChooseResource(areaResources)
-                if (chosenResource != null) {
-                    targetResource = chosenResource
-                    behavior = ClanBehavior.LABORING
-                    dataOutput.put("result", "${chieftainName} put the clan to work on ${targetResource}")
-                } else {
-                    behavior = ClanBehavior.WANDERING
-                    dataOutput.put("result", "${name} wander on")
-                }
-            } else if (personality.riskyVsCautious > 0.60) {
-                // Restless leader — keep moving, explore
-                behavior = ClanBehavior.WANDERING
-                dataOutput.put("result", "${chieftainName} wants to see what's over the next hill")
-            } else {
-                // Default: nothing pressing, wander
-                behavior = ClanBehavior.WANDERING
-                dataOutput.put("result", "${name} drift onward")
-            }
+            dataOutput = handleBehaviorSurplus(dataOutput)
         }
+
+        leaderDecision = dataOutput.getString("decision", "")
 
         entityController.saveProperties(this._id, JsonObject()
             .put("behavior", behavior)
             .put("targetResource", targetResource?.name)
             .put("targetNavigation", targetNavigation)
             .put("lastThought", System.currentTimeMillis())
+            .put("leaderDecision", leaderDecision)
         )
 
-        log.info("${name} chose behavior: ${dataOutput.toString()}")
+        log.info("$name chose behavior: $dataOutput")
+    }
+
+    /**
+     * Current food strategy is failing and morale is slipping.
+     * Branch on personality/traits to decide how to change tack.
+     * Returns non-null if a crisis response was chosen.
+     */
+    private fun handleFoodCrisis(dataOutput: JsonObject, areaResources: MapZoneResources): JsonObject? {
+        val personality = chieftainPersonality
+
+        // Prudent or greedy chieftain: pivot to producing goods for trade
+        if (personality.sumptuousVsPrudent < 0.50 ||
+            chieftain?.traits?.contains(Character.Companion.CharacterTraits.GREEDY) == true) {
+
+            val goodsRecipe = PRODUCTION_RECIPES
+                .filter { it.outputGroup != Depot.Companion.ResourceTypeGroup.FOOD }
+                .filter { areaResources.get(it.rawResource) > 0 && skills.getSkill(it.skill) > 0 }
+                .maxByOrNull { skills.getSkill(it.skill) * areaResources.get(it.rawResource) }
+
+            if (goodsRecipe != null) {
+                targetResource = goodsRecipe.output
+                behavior = ClanBehavior.LABORING
+                dataOutput.put("decision",
+                    "$chieftainName changed tack — $name will produce ${goodsRecipe.output} to trade for food")
+                return dataOutput
+            }
+        }
+
+        return null
     }
 
     private fun handleBehaviorFoodSeeking(dataOutput: JsonObject): JsonObject {
-        dataOutput.mergeIn(
-            JsonObject()
-                .put("decision", "${name} are in search of food")
-        )
+        dataOutput.put("decision", "${name} are in search of food")
 
         val areaResources = getMapZoneResources()
 
-        if (areaResources.hasFood()) {
-            if (haveAnySkills(areaResources)) {
-                val chosenResource = tryChooseResource(areaResources)
-
-                if (chosenResource != null) {
-                    targetResource = chosenResource
-                    behavior = ClanBehavior.LABORING
-                    dataOutput.put("decision", "${chieftainName} ordered the clan to gather ${targetResource}")
-                } else {
-                    behavior = ClanBehavior.WANDERING
-                    dataOutput.put("decision", "${name} decided to keep moving")
-                }
-            } else if (chieftainPersonality.riskyVsCautious > 0.50) {
-                // Risky chieftain tries to gather the best food here even without skill
-                val bestFood = PRODUCTION_RECIPES
-                    .filter { it.outputGroup == Depot.Companion.ResourceTypeGroup.FOOD && areaResources.get(it.rawResource) > 0 }
-                    .maxByOrNull { Depot.getFoodValue(it.output) * areaResources.get(it.rawResource) }
-
-                if (bestFood != null) {
-                    targetResource = bestFood.output
-                    behavior = ClanBehavior.LABORING
-                    dataOutput.put("decision", "${chieftainName} told ${name} to try gathering ${targetResource} despite inexperience")
-                } else {
-                    goProduceFood(dataOutput)
-                }
-            } else {
-                val wealth = countWealth()
-                if (wealth > 5) {
-                    goTradeAtMarket(dataOutput)
-                } else {
-                    goProduceFood(dataOutput)
-                }
-            }
-        } else {
-            goProduceFood(dataOutput)
+        // 0. Crisis: starving and morale slipping — current strategy isn't working
+        if (health.satiety <= 0 && health.heart < 100) {
+            val crisis = handleFoodCrisis(dataOutput, areaResources)
+            if (crisis != null) return crisis
         }
 
+        // 1. Have trade stock and know a market — go sell for food
+        log.info("$name food-seeking: tradeStock=${countTradeStock()}, memories=${locationMemory.toJson()}")
+        if (countTradeStock() > 0 &&
+            tryNavigateToMemory(AgentLocationMemory.AgentLocationMemoryType.MARKET, dataOutput)) {
+            dataOutput.put("decision", "$chieftainName leads $name to market with goods to trade for food")
+            return dataOutput
+        }
+
+        // 2. Can produce something here — tryChooseResource picks food-first when hungry
+        if (haveAnySkills(areaResources)) {
+            val chosenResource = tryChooseResource(areaResources)
+            if (chosenResource != null) {
+                targetResource = chosenResource
+                behavior = ClanBehavior.LABORING
+                dataOutput.put("decision", "$chieftainName ordered the clan to work on ${targetResource.toString().lowercase()}")
+                return dataOutput
+            }
+        }
+
+        // 3. Risky chieftain tries to gather food here despite no skill
+        if (chieftainPersonality.riskyVsCautious > 0.50 && areaResources.hasFood()) {
+            val bestFood = PRODUCTION_RECIPES
+                .filter { it.outputGroup == Depot.Companion.ResourceTypeGroup.FOOD && areaResources.get(it.rawResource) > 0 }
+                .maxByOrNull { Depot.getFoodValue(it.output) * areaResources.get(it.rawResource) }
+
+            if (bestFood != null) {
+                targetResource = bestFood.output
+                behavior = ClanBehavior.LABORING
+                dataOutput.put("decision", "$chieftainName told $name to try gathering $targetResource despite inexperience")
+                return dataOutput
+            }
+        }
+
+        // 4. Remember a food source — travel there
+        if (tryNavigateToMemory(AgentLocationMemory.AgentLocationMemoryType.HAS_FOOD, dataOutput)) {
+            return dataOutput
+        }
+
+        // 5. Nothing to work with — wander
+        behavior = ClanBehavior.WANDERING
+        dataOutput.put("result", "${name} are exploring")
+        return dataOutput
+    }
+
+    private fun handleBehaviorSurplus(dataOutput: JsonObject): JsonObject {
+        dataOutput.mergeIn(
+            JsonObject()
+                .put("decision", "${chieftainName} of ${name} is strategizing")
+        )
+
+        // Now the chieftain's personality matters a lot
+        val personality = chieftainPersonality
+        val areaResources = getMapZoneResources()
+
+        if (personality.sumptuousVsPrudent > 0.65 && countFoodQty() > population * 2) {
+            // Sumptuous leader with surplus — take a holiday
+            behavior = ClanBehavior.HOLIDAY
+            dataOutput.put("result", "$chieftainName declared a feast day")
+        } else if (haveAnySkills(areaResources) && areaResources.resources.any { it.value > 0 }) {
+            // There's something to work here — an industrious choice
+            val chosenResource = tryChooseResource(areaResources)
+            if (chosenResource != null) {
+                targetResource = chosenResource
+                behavior = ClanBehavior.LABORING
+                dataOutput.put("result", "$chieftainName put the clan to work on $targetResource")
+            } else {
+                behavior = ClanBehavior.WANDERING
+                dataOutput.put("result", "${name} wander on")
+            }
+        } else if (chieftain?.traits!!.contains(Character.Companion.CharacterTraits.RESTLESS)) {
+            // Restless leader — keep moving, explore
+            behavior = ClanBehavior.WANDERING
+            dataOutput.put("result", "$chieftainName wants to see what's over the next hill")
+        } else {
+            // Default: nothing pressing, wander
+            behavior = ClanBehavior.WANDERING
+            dataOutput.put("result", "${name} drift onward")
+        }
         return dataOutput
     }
 
@@ -352,14 +403,11 @@ class Clan: Entity(), Agent, Combatant {
         return FOOD_TYPES.sumOf { depot.get(Depot.Companion.ResourceTypeGroup.FOOD, it) * Depot.getFoodValue(it) }
     }
 
-    private fun countWealth(): Int {
-        return listOf(
-            depot.get(Depot.Companion.ResourceTypeGroup.METALS, Depot.Companion.ResourceType.TIN),
-            depot.get(Depot.Companion.ResourceTypeGroup.METALS, Depot.Companion.ResourceType.GOLD),
-            depot.get(Depot.Companion.ResourceTypeGroup.TREASURE, Depot.Companion.ResourceType.STATUES),
-            depot.get(Depot.Companion.ResourceTypeGroup.TREASURE, Depot.Companion.ResourceType.JEWELS),
-            depot.get(Depot.Companion.ResourceTypeGroup.TREASURE, Depot.Companion.ResourceType.COINS),
-        ).sum()
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun countTradeStock(): Int {
+        return Depot.Companion.ResourceType.entries
+            .mapNotNull { type -> getResourceGroup(type)?.let { group -> depot.get(group, type) } }
+            .sum()
     }
 
     private fun tryNavigateToMemory(
@@ -377,28 +425,6 @@ class Clan: Entity(), Agent, Combatant {
         dataOutput.put("decision", "${chieftainName} decided ${name} clan should travel")
         dataOutput.put("result", "${remembered.x},${remembered.y}")
         return true
-    }
-
-    private fun goTradeAtMarket(dataOutput: JsonObject): JsonObject {
-        dataOutput.put("decision", "${name} will try to trade at market")
-
-        if (!tryNavigateToMemory(AgentLocationMemory.AgentLocationMemoryType.MARKET, dataOutput)) {
-            dataOutput.put("result", "${name} don't know about any markets")
-        }
-
-        return dataOutput
-    }
-
-    private fun goProduceFood(dataOutput: JsonObject): JsonObject {
-        dataOutput.put("decision", "${name} will try to produce food")
-
-        if (!tryNavigateToMemory(AgentLocationMemory.AgentLocationMemoryType.HAS_FOOD, dataOutput)) {
-            dataOutput.put("decision", "${name} doesn't know about any places to find food")
-            behavior = ClanBehavior.WANDERING
-            dataOutput.put("result", "${name} are exploring")
-        }
-
-        return dataOutput
     }
 
     suspend fun queueLaborAction() {
@@ -419,8 +445,14 @@ class Clan: Entity(), Agent, Combatant {
             return
         }
 
-        // Production: yield equals skill level, capped by available raw resource
-        val yield = minOf(maxOf(skill, 1), rawAvailable) * (population.toDouble() * 0.60).roundToInt()
+        val populationMod = population.toDouble() *
+                // Population modifier considers chieftain's skill
+                // with the bulk accounted for by how many of the clan's
+                // laboring population are able to work.
+                ((0.0002 * chieftain?.stats!!.overseeing) + (0.0033 * health.stamina))
+
+        // Production: yield equals skill level, capped by available raw resource times pop mod
+        val yield = minOf(maxOf(skill, 1), rawAvailable) * populationMod.roundToInt()
         val currentAmt = depot.get(recipe.outputGroup, recipe.output)
         val updatedDepot = depot.set(recipe.outputGroup, recipe.output, currentAmt + yield)
 
