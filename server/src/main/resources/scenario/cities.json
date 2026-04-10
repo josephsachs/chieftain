@@ -9,23 +9,23 @@
     "y": 13,
     "exchangeRates": {
       "buyRates": {
-        "WOOD": 4,
+        "WOOD": 10,
         "PAPYRUS": 1,
-        "STONE": 1,
-        "IRON": 2,
-        "COPPER": 2,
-        "TIN": 2,
-        "GOLD": 5,
-        "JEWELS": 3,
-        "STATUES": 2,
-        "COINS": 1
+        "STONE": 3,
+        "IRON": 3,
+        "COPPER": 5,
+        "TIN": 15,
+        "GOLD": 28,
+        "JEWELS": 18,
+        "STATUES": 18,
+        "COINS": 10
       },
       "sellRates": {
         "CORN": 1,
-        "FRUIT": 2,
-        "FOWL": 2,
-        "MEAT": 3,
-        "HONEY": 2
+        "FRUIT": 3,
+        "FOWL": 3,
+        "MEAT": 6,
+        "HONEY": 4
       }
     }
   },
@@ -39,22 +39,23 @@
     "y": 1,
     "exchangeRates": {
       "buyRates": {
-        "WOOD": 3,
-        "STONE": 2,
+        "WOOD": 10,
+        "PAPYRUS": 1,
+        "STONE": 3,
         "IRON": 3,
-        "COPPER": 2,
-        "TIN": 3,
-        "GOLD": 4,
-        "JEWELS": 4,
-        "STATUES": 3,
-        "COINS": 1
+        "COPPER": 5,
+        "TIN": 15,
+        "GOLD": 28,
+        "JEWELS": 18,
+        "STATUES": 18,
+        "COINS": 10
       },
       "sellRates": {
         "CORN": 1,
-        "FRUIT": 1,
-        "FOWL": 1,
-        "MEAT": 2,
-        "HONEY": 3
+        "FRUIT": 3,
+        "FOWL": 3,
+        "MEAT": 6,
+        "HONEY": 4
       }
     }
   },
@@ -68,22 +69,23 @@
     "y": 3,
     "exchangeRates": {
       "buyRates": {
-        "WOOD": 5,
-        "STONE": 2,
-        "IRON": 2,
-        "COPPER": 3,
-        "TIN": 2,
-        "GOLD": 6,
-        "JEWELS": 3,
-        "STATUES": 2,
-        "COINS": 1
+        "WOOD": 10,
+        "PAPYRUS": 1,
+        "STONE": 3,
+        "IRON": 3,
+        "COPPER": 5,
+        "TIN": 15,
+        "GOLD": 28,
+        "JEWELS": 18,
+        "STATUES": 18,
+        "COINS": 10
       },
       "sellRates": {
         "CORN": 1,
-        "FRUIT": 2,
-        "FOWL": 1,
-        "MEAT": 2,
-        "HONEY": 2
+        "FRUIT": 3,
+        "FOWL": 3,
+        "MEAT": 6,
+        "HONEY": 4
       }
     }
   }

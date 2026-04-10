@@ -21,6 +21,7 @@ import com.minare.core.operation.models.OperationType
 import io.vertx.core.json.JsonObject
 import org.slf4j.LoggerFactory
 import java.io.Serializable
+import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -183,18 +184,17 @@ class Clan: Entity(), Agent, Combatant {
             .put("messageType", "chooseBehavior")
 
         // Low heart: compulsive wandering until morale recovers
-        if (health.heart < 25) {
-            behavior = ClanBehavior.WANDERING
-            leaderDecision = "$name are demoralized and wandering aimlessly"
-            entityController.saveProperties(this._id, JsonObject()
-                .put("behavior", behavior)
-                .put("targetNavigation", targetNavigation)
-                .put("lastThought", System.currentTimeMillis())
-                .put("leaderDecision", leaderDecision)
-            )
-            log.info("$name forced to wander (heart=${health.heart})")
-            return
-        }
+        //if (health.heart < 25 && behavior != ClanBehavior.NONE) {
+        //    behavior = ClanBehavior.NONE
+        //    leaderDecision = "$name are demoralized and idle"
+        //    entityController.saveProperties(this._id, JsonObject()
+        //        .put("behavior", behavior)
+        //        .put("lastThought", System.currentTimeMillis())
+        //        .put("leaderDecision", leaderDecision)
+        //    )
+        //    log.info("$name forced to reconsider (heart=${health.heart})")
+        //    return
+       // }
 
         // Low stamina: force reconsideration next turn
         if (health.stamina < 20) {
@@ -417,17 +417,27 @@ class Clan: Entity(), Agent, Combatant {
         memoryType: AgentLocationMemory.AgentLocationMemoryType,
         dataOutput: JsonObject
     ): Boolean {
-        val remembered = locationMemory.memories
+        val candidates = locationMemory.memories
             .filter { it.value.containsKey(memoryType) }
             .keys
-            .firstOrNull() ?: return false
+            .sortedBy { abs(it.x - location.x) + abs(it.y - location.y) }
 
-        targetNavigation.clear()
-        targetNavigation.add(Vector2(remembered.x, remembered.y))
-        behavior = ClanBehavior.TRAVELING
-        dataOutput.put("decision", "${chieftainName} decided ${name} clan should travel")
-        dataOutput.put("result", "${remembered.x},${remembered.y}")
-        return true
+        for (dest in candidates) {
+            val path = gameMapController.findPath(
+                Pair(location.x, location.y),
+                Pair(dest.x, dest.y)
+            )
+            if (path.isEmpty()) continue
+
+            targetNavigation.clear()
+            path.forEach { targetNavigation.add(Vector2(it.first, it.second)) }
+            behavior = ClanBehavior.TRAVELING
+            dataOutput.put("decision", "${chieftainName} decided ${name} clan should travel")
+            dataOutput.put("result", "${dest.x},${dest.y}")
+            return true
+        }
+
+        return false
     }
 
     suspend fun queueLaborAction() {
@@ -452,7 +462,7 @@ class Clan: Entity(), Agent, Combatant {
                 // Population modifier considers chieftain's skill
                 // with the bulk accounted for by how many of the clan's
                 // laboring population are able to work.
-                ((0.0002 * chieftain?.stats!!.overseeing) + (0.0033 * health.stamina))
+                ((0.0002 * chieftain?.stats!!.overseeing) + (0.0042 * health.stamina))
 
         // Production: yield equals skill level, capped by available raw resource times pop mod
         val yield = minOf(maxOf(skill, 1), rawAvailable) * populationMod.roundToInt()
