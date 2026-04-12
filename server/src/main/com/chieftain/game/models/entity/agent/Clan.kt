@@ -175,31 +175,19 @@ class Clan: Entity(), Agent, Combatant {
         return gameMapController.getResources(Pair(location.x, location.y))
     }
 
+    private fun buildDecision(fragments: List<String>): String =
+        fragments.joinToString("... ")
+
     suspend fun chooseBehavior() {
         if (sharedGameState.isGamePaused()) return
 
-        var dataOutput = JsonObject()
-            .put("entityType", "Clan")
-            .put("id", _id)
-            .put("messageType", "chooseBehavior")
-
-        // Low heart: compulsive wandering until morale recovers
-        //if (health.heart < 25 && behavior != ClanBehavior.NONE) {
-        //    behavior = ClanBehavior.NONE
-        //    leaderDecision = "$name are demoralized and idle"
-        //    entityController.saveProperties(this._id, JsonObject()
-        //        .put("behavior", behavior)
-        //        .put("lastThought", System.currentTimeMillis())
-        //        .put("leaderDecision", leaderDecision)
-        //    )
-        //    log.info("$name forced to reconsider (heart=${health.heart})")
-        //    return
-       // }
+        val fragments = mutableListOf<String>()
 
         // Low stamina: force reconsideration next turn
         if (health.stamina < 20) {
             behavior = ClanBehavior.NONE
-            leaderDecision = "$name are exhausted and must rest"
+            fragments += "Must rest"
+            leaderDecision = buildDecision(fragments)
             entityController.saveProperties(this._id, JsonObject()
                 .put("behavior", behavior)
                 .put("lastThought", System.currentTimeMillis())
@@ -211,7 +199,13 @@ class Clan: Entity(), Agent, Combatant {
 
         // Committed to traveling — don't reconsider until we arrive
         if (behavior == ClanBehavior.TRAVELING && targetNavigation.isNotEmpty()) {
-            log.info("$name continuing journey (${targetNavigation.size} waypoints remaining)")
+            fragments += "Journeying (${targetNavigation.size} waypoints)"
+            leaderDecision = buildDecision(fragments)
+            entityController.saveProperties(this._id, JsonObject()
+                .put("lastThought", System.currentTimeMillis())
+                .put("leaderDecision", leaderDecision)
+            )
+            log.info(leaderDecision)
             return
         }
 
@@ -227,15 +221,12 @@ class Clan: Entity(), Agent, Combatant {
 
             // If we have goods/metals/treasure to sell, or we need food and have wealth, trade
             val tradableWealth = countTradableValue(city)
-
-            // TEMPORARY DEBUG
-            log.info("DEBUG_WEALTH: $tradableWealth")
-
             val needFood = health.satiety < 90
 
             if (tradableWealth > 0 || (needFood && countTradeStock() > 0)) {
                 behavior = ClanBehavior.TRADING
-                leaderDecision = "$chieftainName brings $name to market at ${city.name}"
+                fragments += "$chieftainName brings clan to market at ${city.name}"
+                leaderDecision = buildDecision(fragments)
 
                 entityController.saveProperties(this._id, JsonObject()
                     .put("behavior", behavior)
@@ -246,18 +237,18 @@ class Clan: Entity(), Agent, Combatant {
                     .put("leaderDecision", leaderDecision)
                 )
 
-                log.info("$name chose behavior: $dataOutput")
+                log.info("$name: $leaderDecision")
                 return
             }
         }
 
         if (health.satiety < 75) {
-            dataOutput = handleBehaviorFoodSeeking(dataOutput)
+            handleBehaviorFoodSeeking(fragments)
         } else {
-            dataOutput = handleBehaviorSurplus(dataOutput)
+            handleBehaviorSurplus(fragments)
         }
 
-        leaderDecision = dataOutput.getString("result", dataOutput.getString("decision", ""))
+        leaderDecision = buildDecision(fragments)
 
         entityController.saveProperties(this._id, JsonObject()
             .put("behavior", behavior)
@@ -267,21 +258,19 @@ class Clan: Entity(), Agent, Combatant {
             .put("leaderDecision", leaderDecision)
         )
 
-        log.info("$name chose behavior: $dataOutput")
+        log.info("$name: $leaderDecision")
     }
 
     /**
      * Current food strategy is failing and morale is slipping.
      * Branch on personality/traits to decide how to change tack.
-     * Returns non-null if a crisis response was chosen.
      */
-    private fun handleFoodCrisis(dataOutput: JsonObject, areaResources: MapZoneResources): JsonObject? {
+    private fun handleFoodCrisis(fragments: MutableList<String>, areaResources: MapZoneResources): Boolean {
         val personality = chieftainPersonality
+        val isGreedy = chieftain?.traits?.contains(Character.Companion.CharacterTraits.GREEDY) == true
 
         // Prudent or greedy chieftain: pivot to producing goods for trade
-        if (personality.sumptuousVsPrudent < 0.50 ||
-            chieftain?.traits?.contains(Character.Companion.CharacterTraits.GREEDY) == true) {
-
+        if (personality.sumptuousVsPrudent < 0.50 || isGreedy) {
             val goodsRecipe = PRODUCTION_RECIPES
                 .filter { it.outputGroup != Depot.Companion.ResourceTypeGroup.FOOD }
                 .filter { areaResources.get(it.rawResource) > 0 && skills.getSkill(it.skill) > 0 }
@@ -290,45 +279,44 @@ class Clan: Entity(), Agent, Combatant {
             if (goodsRecipe != null) {
                 targetResource = goodsRecipe.output
                 behavior = ClanBehavior.LABORING
-                dataOutput.put("decision",
-                    "$chieftainName changed tack — $name will produce ${goodsRecipe.output} to trade for food")
-                return dataOutput
+                val prefix = if (isGreedy) "Greedy" else "Prudent"
+                fragments += "$prefix $chieftainName pivots to ${goodsRecipe.output.name.lowercase()} for trade"
+                return true
             }
         }
 
-        return null
+        return false
     }
 
-    private fun handleBehaviorFoodSeeking(dataOutput: JsonObject): JsonObject {
-        dataOutput.put("decision", "${name} are in search of food")
+    private fun handleBehaviorFoodSeeking(fragments: MutableList<String>) {
+        fragments += "Seeking food"
 
         val areaResources = getMapZoneResources()
 
         // 1. Have trade stock and know a market — go sell for food
         if (countTradeStock() > 0 &&
-            tryNavigateToMemory(AgentLocationMemory.AgentLocationMemoryType.MARKET, dataOutput)) {
-            dataOutput.put("decision", "$chieftainName leads $name to market with goods to trade for food")
-            return dataOutput
+            tryNavigateToMemory(AgentLocationMemory.AgentLocationMemoryType.MARKET, fragments)) {
+            fragments += "heading to market"
+            return
         }
 
         // 2. Crisis: starving and morale slipping — current strategy isn't working
         if (health.satiety <= 0 && health.heart < 100) {
-            val crisis = handleFoodCrisis(dataOutput, areaResources)
-            if (crisis != null) return crisis
+            if (handleFoodCrisis(fragments, areaResources)) return
         }
 
-        // 2. Can produce something here — tryChooseResource picks food-first when hungry
+        // 3. Can produce something here — tryChooseResource picks food-first when hungry
         if (haveAnySkills(areaResources)) {
             val chosenResource = tryChooseResource(areaResources)
             if (chosenResource != null) {
                 targetResource = chosenResource
                 behavior = ClanBehavior.LABORING
-                dataOutput.put("decision", "$chieftainName ordered the clan to work on ${targetResource.toString().lowercase()}")
-                return dataOutput
+                fragments += "producing ${targetResource.toString().lowercase()}"
+                return
             }
         }
 
-        // 3. Risky chieftain tries to gather food here despite no skill
+        // 4. Risky chieftain tries to gather food here despite no skill
         if (chieftainPersonality.riskyVsCautious > 0.50 && areaResources.hasFood()) {
             val bestFood = PRODUCTION_RECIPES
                 .filter { it.outputGroup == Depot.Companion.ResourceTypeGroup.FOOD && areaResources.get(it.rawResource) > 0 }
@@ -337,57 +325,49 @@ class Clan: Entity(), Agent, Combatant {
             if (bestFood != null) {
                 targetResource = bestFood.output
                 behavior = ClanBehavior.LABORING
-                dataOutput.put("decision", "$chieftainName told $name to try gathering $targetResource despite inexperience")
-                return dataOutput
+                fragments += "bold $chieftainName gambles on ${targetResource.toString().lowercase()}"
+                return
             }
         }
 
-        // 4. Remember a food source — travel there
-        if (tryNavigateToMemory(AgentLocationMemory.AgentLocationMemoryType.HAS_FOOD, dataOutput)) {
-            return dataOutput
+        // 5. Remember a food source — travel there
+        if (tryNavigateToMemory(AgentLocationMemory.AgentLocationMemoryType.HAS_FOOD, fragments)) {
+            return
         }
 
-        // 5. Nothing to work with — wander
+        // 6. Nothing to work with — wander
         behavior = ClanBehavior.WANDERING
-        dataOutput.put("result", "${name} are exploring")
-        return dataOutput
+        fragments += "wandering"
     }
 
-    private fun handleBehaviorSurplus(dataOutput: JsonObject): JsonObject {
-        dataOutput.mergeIn(
-            JsonObject()
-                .put("decision", "${chieftainName} of ${name} is strategizing")
-        )
-
-        // Now the chieftain's personality matters a lot
+    private fun handleBehaviorSurplus(fragments: MutableList<String>) {
         val personality = chieftainPersonality
         val areaResources = getMapZoneResources()
 
         if (personality.sumptuousVsPrudent > 0.65 && countFoodQty() > population * 2) {
             // Sumptuous leader with surplus — take a holiday
             behavior = ClanBehavior.HOLIDAY
-            dataOutput.put("result", "$chieftainName declared a feast day")
+            fragments += "$chieftainName declares a feast day"
         } else if (haveAnySkills(areaResources) && areaResources.resources.any { it.value > 0 }) {
             // There's something to work here — an industrious choice
             val chosenResource = tryChooseResource(areaResources)
             if (chosenResource != null) {
                 targetResource = chosenResource
                 behavior = ClanBehavior.LABORING
-                dataOutput.put("result", "$chieftainName put the clan to work on $targetResource")
+                fragments += "Laboring at ${targetResource.toString().lowercase()}"
             } else {
                 behavior = ClanBehavior.WANDERING
-                dataOutput.put("result", "${name} wander on")
+                fragments += "$chieftainName says push on"
             }
         } else if (chieftain?.traits!!.contains(Character.Companion.CharacterTraits.RESTLESS)) {
             // Restless leader — keep moving, explore
             behavior = ClanBehavior.WANDERING
-            dataOutput.put("result", "$chieftainName wants to see what's over the next hill")
+            fragments += "Restless $chieftainName pushes on"
         } else {
-            // Default: nothing pressing, wander
-            behavior = ClanBehavior.WANDERING
-            dataOutput.put("result", "${name} drift onward")
+            // Default: nothing pressing
+            behavior = ClanBehavior.NONE
+            fragments += "At ease"
         }
-        return dataOutput
     }
 
     private val FOOD_TYPES = listOf(
@@ -415,7 +395,7 @@ class Clan: Entity(), Agent, Combatant {
 
     private fun tryNavigateToMemory(
         memoryType: AgentLocationMemory.AgentLocationMemoryType,
-        dataOutput: JsonObject
+        fragments: MutableList<String>
     ): Boolean {
         val candidates = locationMemory.memories
             .filter { it.value.containsKey(memoryType) }
@@ -432,8 +412,7 @@ class Clan: Entity(), Agent, Combatant {
             targetNavigation.clear()
             path.forEach { targetNavigation.add(Vector2(it.first, it.second)) }
             behavior = ClanBehavior.TRAVELING
-            dataOutput.put("decision", "${chieftainName} decided ${name} clan should travel")
-            dataOutput.put("result", "${dest.x},${dest.y}")
+            fragments += "$chieftainName leads toward (${dest.x},${dest.y})"
             return true
         }
 
@@ -451,9 +430,11 @@ class Clan: Entity(), Agent, Combatant {
             // Resource depleted — fall back to wandering next turn
             behavior = ClanBehavior.WANDERING
             targetResource = null
+            leaderDecision = "Resource depleted, moving on"
             entityController.saveProperties(this._id, JsonObject()
                 .put("behavior", behavior)
                 .put("targetResource", null)
+                .put("leaderDecision", leaderDecision)
             )
             return
         }
@@ -462,7 +443,7 @@ class Clan: Entity(), Agent, Combatant {
                 // Population modifier considers chieftain's skill
                 // with the bulk accounted for by how many of the clan's
                 // laboring population are able to work.
-                ((0.0002 * chieftain?.stats!!.overseeing) + (0.0042 * health.stamina))
+                ((0.0002 * chieftain?.stats!!.overseeing) + (0.0070 * health.stamina))
 
         // Production: yield equals skill level, capped by available raw resource times pop mod
         val yield = minOf(maxOf(skill, 1), rawAvailable) * populationMod.roundToInt()
@@ -560,8 +541,10 @@ class Clan: Entity(), Agent, Combatant {
     suspend fun queueTravelAction() {
         if (targetNavigation.isEmpty()) {
             behavior = ClanBehavior.WANDERING
+            leaderDecision = "Arrived"
             entityController.saveProperties(this._id, JsonObject()
                 .put("behavior", behavior)
+                .put("leaderDecision", leaderDecision)
             )
             return
         }
@@ -581,9 +564,11 @@ class Clan: Entity(), Agent, Combatant {
                 // Path blocked — give up and wander
                 targetNavigation.clear()
                 behavior = ClanBehavior.WANDERING
+                leaderDecision = "Path blocked, wandering"
                 entityController.saveProperties(this._id, JsonObject()
                     .put("behavior", behavior)
                     .put("targetNavigation", targetNavigation)
+                    .put("leaderDecision", leaderDecision)
                 )
                 return
             }
@@ -623,9 +608,11 @@ class Clan: Entity(), Agent, Combatant {
                 // Can't path there — give up
                 targetNavigation.clear()
                 behavior = ClanBehavior.WANDERING
+                leaderDecision = "Can't find a path, wandering"
                 entityController.saveProperties(this._id, JsonObject()
                     .put("behavior", behavior)
                     .put("targetNavigation", targetNavigation)
+                    .put("leaderDecision", leaderDecision)
                 )
             }
         }
