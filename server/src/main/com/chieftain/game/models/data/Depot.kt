@@ -104,10 +104,10 @@ data class Depot @JsonCreator constructor(
         fun getFoodValue(type: ResourceType): Int {
             return when (type) {
                 ResourceType.CORN -> 1
-                ResourceType.FRUIT -> 2
-                ResourceType.FOWL -> 2
-                ResourceType.HONEY -> 2
-                ResourceType.MEAT -> 3
+                ResourceType.FRUIT -> 3
+                ResourceType.FOWL -> 3
+                ResourceType.HONEY -> 4
+                ResourceType.MEAT -> 6
                 else -> 0
             }
         }

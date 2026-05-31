@@ -101,8 +101,10 @@ const ClanPanel: React.FC<ClanPanelProps> = ({ clan, entities, onClose, onOpenCh
         {/* Behavior */}
         <div className="p-4 border-b border-gray-700">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-400">Behavior</span>
-            <span className="text-sm text-white">{BEHAVIOR_LABELS[behavior] || behavior}</span>
+            <span className="text-sm text-gray-400">{BEHAVIOR_LABELS[behavior]} </span>
+            <span className="text-sm text-white">
+              {clan?.properties?.leaderDecision}
+            </span>
           </div>
           <div className="flex justify-between items-center mt-1">
             <span className="text-sm text-gray-400">Location</span>
@@ -177,6 +179,37 @@ const ClanPanel: React.FC<ClanPanelProps> = ({ clan, entities, onClose, onOpenCh
             </div>
           </div>
         )}
+        {/* Location Memory */}
+        {(() => {
+          const memData = clan.properties?.locationMemory?.memories as
+            Record<string, Record<string, Record<string, number>>> | undefined;
+          if (!memData || Object.keys(memData).length === 0) return null;
+
+          return (
+            <div className="p-4">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase mb-2">Memories</h3>
+              <div className="text-sm">
+                {Object.entries(memData).map(([coord, types]) => (
+                  <div key={coord} className="mb-2">
+                    <div className="text-xs text-gray-500 font-mono mb-1">({coord})</div>
+                    {Object.entries(types)
+                      .filter(([t]) => t !== 'VISITED')
+                      .map(([typeName, reasons]) => (
+                        <div key={typeName} className="flex justify-between py-0.5 pl-2">
+                          <span className="text-gray-300 capitalize">
+                            {typeName.toLowerCase().replace('_', ' ')}
+                          </span>
+                          <span className="text-gray-500 text-xs">
+                            {Object.keys(reasons).join(', ')}
+                          </span>
+                        </div>
+                      ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Backdrop */}

@@ -40,6 +40,7 @@ export interface Clan extends GameEntity {
   };
   properties?: {
     behavior?: ClanBehavior;
+    leaderDecision?: string;
     [key: string]: any;
   };
 }

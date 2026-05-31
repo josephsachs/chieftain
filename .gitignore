@@ -9,3 +9,4 @@ target/
 client/node_modules
 client/build
 dbExec.sh
+Claude.md

@@ -23,23 +23,20 @@ const CityPanel: React.FC<CityPanelProps> = ({ city, entities, onClose, onOpenCh
   const s = city.state;
   const color = CULTURE_COLORS[s?.culture || 'UNASSIGNED'] || CULTURE_COLORS.UNASSIGNED;
 
-  // Navigate City -> alignedWith (Polity) -> leader (Character)
-  // alignedWith may come as an object with _id, or the polity may be in the entities list
+  // Find the prince Character entity by princeId
+  const princeId = s?.princeId as string | undefined;
+  const princeEntity = princeId
+    ? entities.find(e => e._id === princeId && isCharacter(e)) as Character | undefined
+    : undefined;
+  const princeName = princeEntity?.state?.name || princeId || 'None';
+
+  // Navigate City -> alignedWith (Polity)
   const alignedWith = s?.alignedWith;
   const polityId = typeof alignedWith === 'string' ? alignedWith : alignedWith?._id;
   const polityEntity = polityId
     ? entities.find(e => e._id === polityId)
     : undefined;
   const polityName = polityEntity?.state?.name || alignedWith?.name || polityId;
-
-  // Find the prince/leader character
-  const leaderRef = polityEntity?.state?.leader || alignedWith?.state?.leader;
-  const leaderId = typeof leaderRef === 'string' ? leaderRef : leaderRef?._id;
-  const leaderEntity = leaderId
-    ? entities.find(e => e._id === leaderId && isCharacter(e)) as Character | undefined
-    : undefined;
-  const leaderName = leaderEntity?.state?.name || leaderRef?.state?.name || leaderRef?.name || leaderId;
-  const leaderTitle = leaderEntity?.state?.title || leaderRef?.state?.title || 'Prince';
 
   // Market depot
   const marketContents = s?.market?.contents as Record<string, Record<string, number>> | undefined;
@@ -95,21 +92,19 @@ const CityPanel: React.FC<CityPanelProps> = ({ city, entities, onClose, onOpenCh
           )}
         </div>
 
-        {/* Prince / Leader */}
-        {(leaderEntity || leaderName) && (
+        {/* Prince */}
+        {princeId && (
           <div className="p-4 border-b border-gray-700">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase mb-2">
-              {typeof leaderTitle === 'string' ? leaderTitle.charAt(0) + leaderTitle.slice(1).toLowerCase() : 'Prince'}
-            </h3>
-            {leaderEntity ? (
+            <h3 className="text-sm font-semibold text-gray-400 uppercase mb-2">Prince</h3>
+            {princeEntity ? (
               <button
-                onClick={() => onOpenCharacter(leaderEntity)}
+                onClick={() => onOpenCharacter(princeEntity)}
                 className="text-blue-400 hover:text-blue-300 text-sm underline cursor-pointer"
               >
-                {leaderName}
+                {princeName}
               </button>
             ) : (
-              <span className="text-sm text-gray-300">{leaderName}</span>
+              <span className="text-sm text-gray-300">{princeName}</span>
             )}
           </div>
         )}

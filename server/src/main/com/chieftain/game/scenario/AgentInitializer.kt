@@ -39,7 +39,9 @@ class AgentInitializer @Inject constructor(
         // Characters must be created first so clans can reference them
         val characterMap = mutableMapOf<String, Character>()
 
-        readJsonFile("scenario/characters.json").forEach { json ->
+        readJsonFile("scenario/characters.json")
+            .filter { it.getString("title") != "PRINCE" }
+            .forEach { json ->
             val character = entityFactory.createEntity(Character::class.java) as Character
             val id = json.getString("id")
             character._id = "${id}-unsaved"

@@ -39,7 +39,7 @@ class GameTurnHandler @Inject constructor(
         setGameProperties(TurnPhase.ACT, true)
 
         var data = JsonObject()
-            .put("map", mapZoneTurnHandler.handleTurn(TurnPhase.ACT))
+            //.put("map", mapZoneTurnHandler.handleTurn(TurnPhase.ACT))
             .put("clans", clanTurnHandler.handleTurn(TurnPhase.ACT))
             .put("fights", fightTurnHandler.handleTurn(TurnPhase.ACT))
 
@@ -50,7 +50,7 @@ class GameTurnHandler @Inject constructor(
         log.info("TURN_LOOP: EXECUTE Phase Start")
         setGameProperties(TurnPhase.EXECUTE, true)
         var data = JsonObject()
-            .put("map", mapZoneTurnHandler.handleTurn(TurnPhase.EXECUTE))
+            //.put("map", mapZoneTurnHandler.handleTurn(TurnPhase.EXECUTE))
             .put("clans", clanTurnHandler.handleTurn(TurnPhase.EXECUTE))
             .put("fights", fightTurnHandler.handleTurn(TurnPhase.EXECUTE))
 
@@ -61,7 +61,7 @@ class GameTurnHandler @Inject constructor(
         log.info("TURN_LOOP: RESOLVE Phase Start")
         setGameProperties(TurnPhase.RESOLVE, true)
         var data = JsonObject()
-            .put("map", mapZoneTurnHandler.handleTurn(TurnPhase.RESOLVE))
+           // .put("map", mapZoneTurnHandler.handleTurn(TurnPhase.RESOLVE))
             .put("clans", clanTurnHandler.handleTurn(TurnPhase.RESOLVE))
             .put("fights", fightTurnHandler.handleTurn(TurnPhase.RESOLVE))
 
@@ -90,11 +90,18 @@ class GameTurnHandler @Inject constructor(
         turnStateMachine.start()
     }
 
+    private var phaseFrameCount = 0
+
     /**
-     * Called each frame/tick. It attempts to advance the state ONLY if the previous state is finished.
+     * Called each frame/tick. Enforces a minimum number of idle frames between
+     * phase transitions so that queued operations have time to be applied.
      */
     suspend fun handleFrame() {
-        turnStateMachine.tryNext()
+        phaseFrameCount++
+        if (phaseFrameCount >= MIN_FRAMES_PER_PHASE) {
+            turnStateMachine.tryNext()
+            phaseFrameCount = 0
+        }
     }
 
     private suspend fun setGameProperties(turnPhase: TurnPhase?, isProcessing: Boolean?) {
@@ -105,7 +112,7 @@ class GameTurnHandler @Inject constructor(
         if (turnPhase !== null) properties.put("turnPhase", turnPhase.name)
         if (isProcessing !== null) properties.put("turnProcessing", isProcessing)
 
-        entityController.saveProperties(game._id!!, properties)
+        entityController.saveProperties(game._id, properties)
     }
 
     private suspend fun incrementGameTurn() {
@@ -130,6 +137,7 @@ class GameTurnHandler @Inject constructor(
 
     companion object {
         const val ADDRESS_TURN_COMPLETE = "turn.handler.turn.complete"
+        const val MIN_FRAMES_PER_PHASE = 5
 
         enum class TurnPhase { ACT, EXECUTE, RESOLVE }
     }
